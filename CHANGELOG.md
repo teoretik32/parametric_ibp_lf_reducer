@@ -9,8 +9,8 @@
   deterministic fingerprint: `n_rows=2092`, `n_records=108`, `n_selected=102`,
   `rank_histogram={1995: 6, 2041: 102}`.
 - **CLI**: `python -m parametric_ibp_lf_reducer reduce <input.wl.txt>` with
-  `--out`, `--diagnostics-json`, `--max-ibp-degree`, `--min-valid-records`,
-  `--no-certificate`; stable exit codes (`EXIT_SUCCESS`/`EXIT_FAILURE`/`EXIT_USAGE`).
+  `--out`, `--diagnostics-json`, `--max-ibp-degree`, `--min-valid-records`;
+  stable exit codes (`EXIT_SUCCESS`/`EXIT_FAILURE`/`EXIT_USAGE`).
 - **Python API**: `reduce_wolfram_style_input` / `reduce_wolfram_style_input_to_text`
   returning typed `ReducerRunResult` with structured `ReductionDiagnostics`.
 - **Certificate gate**: independent exact-modular verification of the reduction
