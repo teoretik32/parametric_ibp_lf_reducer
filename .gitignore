@@ -6,3 +6,7 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+*.zip
+outputs/*
+!outputs/example4_star_result.m
+!outputs/example4_star_diagnostics.json

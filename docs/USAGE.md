@@ -65,6 +65,15 @@ RUN_D4_FULL=1 python -m pytest tests/test_d4_vertical.py tests/test_d4_cli_e2e.p
 | 1 | reduction ran but did not reach `Success` — honest typed failure; result text and JSON are still written; reason on stderr and in `"error"` |
 | 2 | usage / I/O / malformed-document error — nothing was reduced |
 
+## Statuses
+
+| status | meaning |
+|--------|---------|
+| `Success` | all terms locally finite **and** the certificate gate passed |
+| `Failure` (coarse exported `Status`; concrete reason in `Error` / JSON `status`) | honest typed failure: `TargetNotReducible`, `InterpolationFailed`, `NormalFormNotLocallyFinite`, `ResourceLimitReached` |
+| `VerificationFailed` | a reduction was found formally, but independent verification (reconstruction check / row-span certificate) rejected it |
+| `ParserNeedsExplicitFamily` | the input document lacks an explicit parametric family; nothing was reduced |
+
 ## diagnostics JSON fields
 
 - `status` / `exported_status` / `success` / `error` — typed outcome; `status` is either
@@ -95,6 +104,20 @@ RUN_D4_FULL=1 python -m pytest tests/test_d4_vertical.py tests/test_d4_cli_e2e.p
 - **D4 reduces to a 3-term LF basis** {M1,M2,M3}, equivalent to (and certified against
   the row span containing) the 5-term reference basis M1..M5; the reference basis is
   deliberately NOT forced.
+
+## Example 4* (exploratory, known-value-only)
+
+`examples/example4_star_input.wl.txt` is a *known-value-only* example: the
+ε-expansion of the integral itself is known
+(`validation/notebook_star_example4_known_value_expansion.txt`), but **no**
+reference LF decomposition exists for it. An exploratory reducer run returned a
+certified `Success` (certificate `Passed` 3/3) with a 2-term all-locally-finite
+reduction — artifacts: `outputs/example4_star_result.m`,
+`outputs/example4_star_diagnostics.json`; details:
+`notes/example4_star_exploratory.md`. This is **not** part of the certified
+baseline (the single curated end-to-end configuration remains D4), and a numeric
+cross-check against the known value is impossible without the master-integral
+values.
 
 ## Release sanity check
 
