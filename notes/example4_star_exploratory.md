@@ -31,7 +31,7 @@ Target `{0,0,0,0,0,0,0}` → 2 терма, `all_locally_finite = true`:
 | `{1,1,0,-1,0,0,0}` | `x4*x7/G0` | `-(3703*ep^3 - 521*ep^2 - 57*ep - 1)/(5500*ep^3)` |
 | `{1,1,0,0,0,-1,0}` | `x4*x7/G2` | `-(ep + 1)*(17*ep + 1)*(48*ep + 1)/(5500*ep^3)` |
 
-Артефакты: `outputs/example4_star_result.m`, `outputs/example4_star_diagnostics.json`.
+Артефакты: `validation/example4_star_result.m`, `validation/example4_star_diagnostics.json`.
 
 ## Ограничения интерпретации (политика docs/05)
 

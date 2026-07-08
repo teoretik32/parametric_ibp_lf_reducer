@@ -112,8 +112,8 @@ RUN_D4_FULL=1 python -m pytest tests/test_d4_vertical.py tests/test_d4_cli_e2e.p
 (`validation/notebook_star_example4_known_value_expansion.txt`), but **no**
 reference LF decomposition exists for it. An exploratory reducer run returned a
 certified `Success` (certificate `Passed` 3/3) with a 2-term all-locally-finite
-reduction — artifacts: `outputs/example4_star_result.m`,
-`outputs/example4_star_diagnostics.json`; details:
+reduction — artifacts: `validation/example4_star_result.m`,
+`validation/example4_star_diagnostics.json`; details:
 `notes/example4_star_exploratory.md`. This is **not** part of the certified
 baseline (the single curated end-to-end configuration remains D4), and a numeric
 cross-check against the known value is impossible without the master-integral

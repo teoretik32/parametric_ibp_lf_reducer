@@ -228,7 +228,7 @@ Status: **complete, verified**.
 
 - `examples/example4_star_input.wl.txt` → **Success**, certificate **Passed 3/3**
   (selected_rank=7257, n_records=36, 0 skipped), 2-term all-LF reduction:
-  `x4*x7/G0` и `x4*x7/G2` (коэффициенты в `outputs/example4_star_result.m`).
+  `x4*x7/G0` и `x4*x7/G2` (коэффициенты в `validation/example4_star_result.m`).
 - Детали и caveats: `notes/example4_star_exploratory.md`. Exploratory, не baseline;
   known-value-only пример (политика docs/05 соблюдена: без сравнения с deprecated
   артефактами, ε-разложение не использовалось как коэффициент).

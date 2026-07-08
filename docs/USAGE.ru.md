@@ -117,8 +117,8 @@ RUN_D4_FULL=1 python -m pytest tests/test_d4_vertical.py tests/test_d4_cli_e2e.p
 (`validation/notebook_star_example4_known_value_expansion.txt`), но НЕ референсная
 LF-декомпозиция. Exploratory-прогон редьюсера вернул сертифицированный `Success`
 (certificate `Passed` 3/3) с 2-термной полностью локально-конечной редукцией —
-артефакты: `outputs/example4_star_result.m`,
-`outputs/example4_star_diagnostics.json`; детали:
+артефакты: `validation/example4_star_result.m`,
+`validation/example4_star_diagnostics.json`; детали:
 `notes/example4_star_exploratory.md`. Это **не** часть certified baseline
 (единственная curated end-to-end конфигурация — D4), и численный кросс-чек против
 известного значения невозможен без значений master-интегралов.
