@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-07-06T12:40:26.236905Z",
+  "scenario": 1,
+  "package": "parametric_ibp_lf_reducer",
+  "python_only": true,
+  "wolfram_mathematica_usage": "textual IO notation only; no runtime dependency",
+  "source_files_used": [
+    "parametric_ibp_python_tz_ru.txt",
+    "parametric_ibp_method_review_ru.txt",
+    "parametric_ibp_docs_manifest.txt"
+  ],
+  "start_prompt_file": "PROMPT_FOR_CLAUDE_CODE_RU.md",
+  "read_first": [
+    "CLAUDE.md",
+    "TASK.md",
+    "docs/00_READ_ME_FIRST_RU.md"
+  ]
+}

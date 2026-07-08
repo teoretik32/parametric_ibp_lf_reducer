@@ -1,0 +1,5 @@
+{
+  "deprecated": true,
+  "reason": "Previous patch incorrectly associated Notebook Example 4* with main-spec 11.5. Starred Example 4* is a known-integral-value example, not an LF IBP decomposition example.",
+  "correct_policy": "Do not use this file as expected LF basis output. It is still okay to use the Example 4* input as a parser/sparse-poly fixture for the x4^2 monomial. Main-spec 11.5 remains pending unless its actual input family and LF decomposition expectation are provided separately."
+}

@@ -1,0 +1,33 @@
+IBPInput = <|
+  "Variables" -> {x2,x4,x5,x7},
+  "Parameters" -> {ep},
+  "Regulators" -> {ep},
+  "Domain" -> "PositiveOrthant",
+
+  "Polynomials" -> <|
+    "G0" -> 1 + x4,
+    "G1" -> 1 + x7 + x2*x7 + x4*x7 + x2*x4*x7,
+    "G2" -> x5 + x7 + x2*x7 + x4*x7 + x2*x4*x7
+  |>,
+
+  "MonomialExponents" -> <|
+    x2 -> 5*ep,
+    x4 -> 11*ep,
+    x5 -> -1 - 20*ep,
+    x7 -> 0
+  |>,
+
+  "PolynomialExponents" -> <|
+    "G0" -> 9*ep,
+    "G1" -> 1 - 6*ep,
+    "G2" -> -1 + 34*ep
+  |>,
+
+  "TargetMultiplier" -> 1,
+  "Assumptions" -> {},
+
+  "Options" -> <|
+    "RegressionName" -> "id4example2_candidate_from_notebook_example3",
+    "OutputFormat" -> "WolframStyleText"
+  |>
+|>;

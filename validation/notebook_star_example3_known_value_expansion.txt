@@ -1,0 +1,10 @@
+Source: Examples_for_IBP_parametric.nb / Example 3* / I4exampl3.
+Role: known integral value / epsilon expansion only. Not a locally-finite IBP decomposition.
+
+Answer expansion as shown in notebook:
+
+3/(112000*ep^4)
+- 3/(8000*ep^3)
++ (96 + 11*Pi^2)/(32000*ep^2)
++ (-2688 - 539*Pi^2 - 24636*Zeta[3])/(112000*ep)
++ (122880 + 24640*Pi^2 - 42749*Pi^4 + 1970880*Zeta[3])/640000

@@ -1,0 +1,10 @@
+IBPInput = <|
+  "Variables" -> {u, v},
+  "Parameters" -> {ep},
+  "Regulators" -> {ep},
+  "Domain" -> "PositiveOrthant",
+  "Polynomials" -> <| "P0" -> 1 + u, "P1" -> 1 + v |>,
+  "MonomialExponents" -> <| u -> -1 - ep, v -> ep |>,
+  "PolynomialExponents" -> <| "P0" -> -1 + ep, "P1" -> -2 - ep |>,
+  "TargetMultiplier" -> 1
+|>;

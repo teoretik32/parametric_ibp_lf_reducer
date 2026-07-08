@@ -1,0 +1,13 @@
+Source: Examples_for_IBP_parametric.nb / Example 4* / tm1Int / I3exampl4.
+Role: known integral value / epsilon expansion only. Not a locally-finite IBP decomposition.
+
+Answer expansion as shown in notebook:
+
+1/(169290000*ee^6)
++ 739*Pi^2/(677160000*ee^4)
+- 11861*Zeta[3]/(15390000*ee^3)
++ 610267*Pi^4/(1425600000*ee^2)
++ (-43826395*Pi^2*Zeta[3] - 458354172*Zeta[5])/(307800000*ee)
++ (367802819507*Pi^6 + 74219827746240*Zeta[3]^2)/2925331200000
+
+Note: the notebook uses both ep/epsilon and ee conventions around this example. Do not use this expansion as a reducer coefficient in MVP.

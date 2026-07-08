@@ -1,0 +1,35 @@
+IBPInput = <|
+  "Variables" -> {x4,x7,x8},
+  "Parameters" -> {ep},
+  "Regulators" -> {ep},
+  "Domain" -> "PositiveOrthant",
+
+  "Polynomials" -> <|
+    "G0" -> 1 + x4,
+    "G1" -> 1 + x7,
+    "G2" -> 1 + x4 + x8 + x7*x8,
+    "G3" -> x4 + x4^2 + x8 + x4*x8 + x4*x7*x8
+  |>,
+
+  "MonomialExponents" -> <|
+    x4 -> -1 - 11*ep,
+    x7 -> -1 - 25*ep,
+    x8 -> 3*ep
+  |>,
+
+  "PolynomialExponents" -> <|
+    "G0" -> 1 - 3*ep,
+    "G1" -> -1 + 9*ep,
+    "G2" -> -1 - 48*ep,
+    "G3" -> -1 + 28*ep
+  |>,
+
+  "TargetMultiplier" -> 1,
+  "Assumptions" -> {},
+
+  "Options" -> <|
+    "RegressionName" -> "notebook_star_example4_known_integral_value_only_x4_squared",
+    "NotebookRole" -> "KnownIntegralValueNotLFDecomposition",
+    "OutputFormat" -> "WolframStyleText"
+  |>
+|>;

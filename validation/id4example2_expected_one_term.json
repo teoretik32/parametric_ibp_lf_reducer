@@ -1,0 +1,5 @@
+{
+  "deprecated": true,
+  "reason": "Previous patch incorrectly associated Notebook Example 3* with main-spec 11.4. Starred Example 3* is a known-integral-value example, not an LF IBP decomposition example.",
+  "correct_policy": "Do not use this file as expected output. Main-spec 11.4 remains pending unless its actual input family and LF decomposition expectation are provided separately."
+}

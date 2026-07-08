@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "parametric-ibp-lf-reducer"
+version = "0.1.0"
+description = "Python reducer for parametric IBP to locally finite integrands"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "sympy>=1.12",
+  "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.5", "mypy>=1.10"]
+speed = ["numba>=0.59"]
+cas = []
+
+[project.scripts]
+parametric-ibp-lf-reducer = "parametric_ibp_lf_reducer.__main__:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+pythonpath = ["src"]
+markers = [
+  "integration: heavy end-to-end reduction tests (deselect with '-m \"not integration\"')",
+  "pending_family: regression case awaiting a confirmed input family (xfail until reducer exists)",
+]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]

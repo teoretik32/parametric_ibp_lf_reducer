@@ -1,0 +1,25 @@
+{
+  "source": "Examples_for_IBP_parametric.nb / Example 2 / I3exampl2",
+  "note": "Concrete candidate for regression 11.2. In Pass 1A use as parser/coeff fixture only; e2e should be xfail until reducer exists and mapping to old A/B/C notation is documented.",
+  "base_family": {
+    "G0": "1 + x",
+    "G1": "1 + y",
+    "G2": "1 + z",
+    "G3": "r*x + y + z + y*z",
+    "F_base": "G0^ep*y^(-1-ep)*G1^(1+3*ep)*G2^ep*G3^(-2-ep)"
+  },
+  "relative_factors": [
+    "y/(G0*G1)",
+    "y/(G0*G1^2)",
+    "y/(G0*G1*G2)",
+    "y/(G1^2*G2)",
+    "y/(G1^2*G2^2)"
+  ],
+  "coefficients": [
+    "11/4 + (-2 + 3*ep)/(4*ep*r)",
+    "-3*(-1 + 2*ep)*(1 + 1/r)/(4*ep)",
+    "-9*(1 + ep)/(4*ep) - (1 + ep)/(4*ep*r)",
+    "(-8 + 13*ep)/(2*ep)",
+    "-2 + 2/ep^2"
+  ]
+}
