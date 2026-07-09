@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.1.1 — 2026 (candidate, not pushed)
+
+### Added
+- **Corrected Example 4\*** (exploratory, known-value-only): fixed integrand
+  multiplier `15*ep + 24*ep*x7`, handled by linearity as
+  `15*ep*J[{0,0,0,0,0,0,0}] + 24*ep*J[{0,1,0,0,0,0,0}]` with orchestration in
+  `scripts/run_example4_star_corrected.py` (core `src/` unchanged; `lhs_terms`
+  handling is fully generic). Certified `Success` (certificate `Passed`,
+  `selected_rank=9924`); artifacts:
+  `validation/example4_star_corrected_result.m`,
+  `validation/example4_star_corrected_diagnostics.json`; tests:
+  `tests/test_example4_star_corrected.py`.
+- `docs/USAGE.md` / `docs/USAGE.ru.md`: "Corrected Example 4*" subsection.
+
+### Unchanged
+- Certified baseline remains D4 only; Example 4* stays exploratory
+  (no reference LF decomposition, no numeric cross-check without
+  master-integral values).
+
 ## v0.1.0 — 2026 (initial release)
 
 ### Added

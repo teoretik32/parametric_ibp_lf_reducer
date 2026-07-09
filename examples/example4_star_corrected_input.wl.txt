@@ -1,0 +1,42 @@
+IBPInput = <|
+  "Description" -> "Example 4* (corrected, known-value-only). The corrected integrand carries an extra polynomial multiplier (15*ep + 24*ep*x7), which is NOT parameter-only, so TargetMultiplier cannot express it. The certified reduction is obtained by linearity over ONE shared row system: I_corrected = 15*ep*J[{0,0,0,0,0,0,0}] + 24*ep*J[{0,1,0,0,0,0,0}] (the x7-monomial of the multiplier is exactly the n7 = +1 label shift). Do not reduce this document via the plain CLI; use scripts/run_example4_star_corrected.py, which runs both targets with the full strict gate, combines them symbolically, and re-certifies the combined relation in the row span at independent off-sample points.",
+  "CorrectedIntegrand" -> "x4^(-1 - 11*ep) * (1 + x4)^(1 - 3*ep) * x7^(-1 - 25*ep) * (1 + x7)^(-1 + 9*ep) * (15*ep + 24*ep*x7) * x8^(3*ep) * (1 + x4 + x8 + x7*x8)^(-1 - 48*ep) * (x4 + x4^2 + x8 + x4*x8 + x4*x7*x8)^(-1 + 28*ep)",
+  "ExtraMultiplier" -> "15*ep + 24*ep*x7",
+
+  "Variables" -> {x4, x7, x8},
+  "Parameters" -> {ep},
+  "Regulators" -> {ep},
+  "Domain" -> "PositiveOrthant",
+
+  "Polynomials" -> <|
+    "G0" -> 1 + x4,
+    "G1" -> 1 + x7,
+    "G2" -> 1 + x4 + x8 + x7*x8,
+    "G3" -> x4 + x4^2 + x8 + x4*x8 + x4*x7*x8
+  |>,
+
+  "MonomialExponents" -> <|
+    x4 -> -1 - 11*ep,
+    x7 -> -1 - 25*ep,
+    x8 -> 3*ep
+  |>,
+
+  "PolynomialExponents" -> <|
+    "G0" -> 1 - 3*ep,
+    "G1" -> -1 + 9*ep,
+    "G2" -> -1 - 48*ep,
+    "G3" -> -1 + 28*ep
+  |>,
+
+  "TargetMultiplier" -> 1,
+
+  "Options" -> <|
+    "LHSTerms" -> <|
+      "{0,0,0,0,0,0,0}" -> "15*ep",
+      "{0,1,0,0,0,0,0}" -> "24*ep"
+    |>,
+    "MaxIBPDegree" -> 2,
+    "TangentDegrees" -> {{1,1},{2,2}},
+    "LabelBox" -> {{{0,1},{0,2},{0,1}}, {{-2,0},{-2,0},{-2,0},{-2,0}}}
+  |>
+|>;

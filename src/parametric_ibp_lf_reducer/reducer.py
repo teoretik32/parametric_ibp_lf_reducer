@@ -181,8 +181,13 @@ def _run_certificate_step(
     primes: Sequence[int],
     selected_rank: int | None,
     min_points: int,
+    lhs_terms: Mapping | None = None,
 ) -> dict:
     """Certify the reconstructed relation at the given points; never stamps ``Success``.
+
+    ``lhs_terms`` (label -> coefficient) optionally generalizes the certified left-hand side to
+    a linear combination (see :func:`certificate.verify_reduction_relation_mod_p`); ``None``
+    keeps the classic single-target LHS.
 
     A point is *informative* only when its matrix rank equals ``selected_rank`` (the rank the
     reconstruction was built on): rank-DEFICIENT points solve a smaller system and are counted
@@ -201,7 +206,7 @@ def _run_certificate_step(
     for k, point in enumerate(points):
         prime = primes[k % len(primes)]
         cert = verify_reduction_relation_mod_p(
-            family, rows, target_label, coeffs, dict(point), prime
+            family, rows, target_label, coeffs, dict(point), prime, lhs_terms=lhs_terms
         )
         if cert.status not in ("InSpan", "NotInSpan"):
             n_bad += 1

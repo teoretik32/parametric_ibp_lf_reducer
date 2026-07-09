@@ -119,6 +119,18 @@ baseline (the single curated end-to-end configuration remains D4), and a numeric
 cross-check against the known value is impossible without the master-integral
 values.
 
+### Corrected Example 4* (v0.1.1)
+
+`examples/example4_star_corrected_input.wl.txt` fixes the integrand: the
+multiplier is `15*ep + 24*ep*x7`, handled by linearity as two family runs,
+`15*ep*J[{0,0,0,0,0,0,0}] + 24*ep*J[{0,1,0,0,0,0,0}]`, with the combined
+result assembled by `scripts/run_example4_star_corrected.py`. The corrected
+run returned a certified `Success` (certificate `Passed`, `selected_rank`
+9924) — artifacts: `validation/example4_star_corrected_result.m`,
+`validation/example4_star_corrected_diagnostics.json`; tests:
+`tests/test_example4_star_corrected.py`. Still exploratory (known-value-only,
+not part of the certified baseline).
+
 ## Release sanity check
 
 ```bash

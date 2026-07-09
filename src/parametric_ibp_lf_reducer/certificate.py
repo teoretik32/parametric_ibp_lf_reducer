@@ -115,14 +115,18 @@ def verify_reduction_relation_mod_p(
     sample: Mapping,
     prime: int,
     column_order: Sequence[Label] | None = None,
+    lhs_terms: Mapping[Label, object] | None = None,
 ) -> CertificateResult:
     """Certify (mod ``prime``, at ``sample``) that ``J[target] = sum terms[label]*J[label]``
     is in the span of ``rows``.
 
     ``terms`` maps master label -> claimed coefficient (SymPy expr, ``ParamExpr``, ``int`` or
-    ``Fraction``). ``column_order`` optionally fixes the RREF pivot order (span membership does
-    not depend on it; exposed for determinism experiments). Returns a :class:`CertificateResult`;
-    bad specializations reject the point honestly (status, never a patch).
+    ``Fraction``). ``lhs_terms`` optionally generalizes the left-hand side to a linear
+    combination ``sum lhs_terms[label]*J[label]`` (same coefficient types); when ``None`` the
+    LHS is the classic single ``J[target]`` with unit coefficient. ``column_order`` optionally
+    fixes the RREF pivot order (span membership does not depend on it; exposed for determinism
+    experiments). Returns a :class:`CertificateResult`; bad specializations reject the point
+    honestly (status, never a patch).
     """
     rows = list(rows)
     base = dict(
@@ -138,9 +142,15 @@ def verify_reduction_relation_mod_p(
     if not matrix:
         return CertificateResult(status=STATUS_EMPTY_SYSTEM, **base)
 
-    # relation vector for J[target] - sum_i C_i * J[label_i] = 0
+    # relation vector for sum_j L_j * J[lhs_label_j] - sum_i C_i * J[label_i] = 0
+    # (default LHS: the single target with unit coefficient, i.e. J[target] - sum C_i J_i = 0)
+    if lhs_terms is None:
+        lhs_terms = {target_label: 1}
     try:
-        relation = {target_label: 1 % prime}
+        relation: dict = {}
+        for label in sorted(lhs_terms):
+            c = _coeff_mod_p(lhs_terms[label], sample, prime)
+            relation[label] = (relation.get(label, 0) + c) % prime
         for label in sorted(terms):
             c = _coeff_mod_p(terms[label], sample, prime)
             relation[label] = (relation.get(label, 0) - c) % prime

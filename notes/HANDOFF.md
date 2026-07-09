@@ -232,3 +232,15 @@ Status: **complete, verified**.
 - Детали и caveats: `notes/example4_star_exploratory.md`. Exploratory, не baseline;
   known-value-only пример (политика docs/05 соблюдена: без сравнения с deprecated
   артефактами, ε-разложение не использовалось как коэффициент).
+
+## Corrected Example 4* (v0.1.1 candidate)
+
+- `examples/example4_star_corrected_input.wl.txt`: исправленный множитель
+  `15*ep + 24*ep*x7`, по линейности `15*ep*J[{0,0,0,0,0,0,0}] +
+  24*ep*J[{0,1,0,0,0,0,0}]` (оркестрация: `scripts/run_example4_star_corrected.py`;
+  ядро `src/` не менялось — обработка `lhs_terms` полностью generic).
+- Результат: **Success**, certificate **Passed**, `selected_rank=9924`;
+  артефакты: `validation/example4_star_corrected_result.m`,
+  `validation/example4_star_corrected_diagnostics.json`.
+- Тесты: `tests/test_example4_star_corrected.py`. Статус: v0.1.1 candidate,
+  тег локальный, **не запушено**.

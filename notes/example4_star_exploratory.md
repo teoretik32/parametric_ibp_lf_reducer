@@ -47,3 +47,14 @@ Target `{0,0,0,0,0,0,0}` → 2 терма, `all_locally_finite = true`:
   выполняться не должно.
 - Прогон тяжёлый (~45–50 мин) — в regression-набор не включён; повтор вручную по
   команде выше.
+
+## Corrected Example 4* (v0.1.1)
+
+Исправленная версия примера: `examples/example4_star_corrected_input.wl.txt`
+(множитель `15*ep + 24*ep*x7`, по линейности `15*ep*J[{0,0,0,0,0,0,0}] +
+24*ep*J[{0,1,0,0,0,0,0}]`, оркестрация `scripts/run_example4_star_corrected.py`).
+Результат: `Success`, certificate `Passed`, `selected_rank=9924`; артефакты
+`validation/example4_star_corrected_result.m` /
+`validation/example4_star_corrected_diagnostics.json`; тесты
+`tests/test_example4_star_corrected.py`. Caveats этого документа (known-value-only,
+не baseline, без численного кросс-чека) остаются в силе.

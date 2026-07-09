@@ -1,0 +1,309 @@
+{
+  "example": "example4_star_corrected",
+  "input": "examples\\example4_star_corrected_input.wl.txt",
+  "status": "Success",
+  "success": true,
+  "error": null,
+  "target": "15*ep*J[{0,0,0,0,0,0,0}] + 24*ep*J[{0,1,0,0,0,0,0}]",
+  "lhs_terms": [
+    {
+      "label": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficient": "15*ep"
+    },
+    {
+      "label": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficient": "24*ep"
+    }
+  ],
+  "combined": {
+    "all_locally_finite": true,
+    "terms": [
+      {
+        "label": [
+          1,
+          1,
+          0,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "coefficient": "(47703*ep^3-521*ep^2-57*ep-1)/(3300*ep^2)",
+        "locally_finite": true
+      },
+      {
+        "label": [
+          1,
+          1,
+          0,
+          0,
+          0,
+          -1,
+          0
+        ],
+        "coefficient": "(816*ep^3+881*ep^2+66*ep+1)/(3300*ep^2)",
+        "locally_finite": true
+      }
+    ],
+    "certificate": {
+      "certificate_status": "Passed",
+      "n_certificate_points": 5,
+      "n_certificate_points_passed": 5,
+      "n_certificate_points_failed": 0,
+      "n_certificate_rank_filtered": 0,
+      "n_certificate_rank_exceeded": 0,
+      "n_certificate_bad_points": 0,
+      "selected_rank": 9924,
+      "certificate_rank_histogram": {
+        "9924": 5
+      },
+      "certificate_points_used": [
+        {
+          "ep": "631/91"
+        },
+        {
+          "ep": "837/119"
+        },
+        {
+          "ep": "947/133"
+        },
+        {
+          "ep": "673/91"
+        },
+        {
+          "ep": "879/119"
+        }
+      ],
+      "first_nonzero_residual": null
+    }
+  },
+  "selected_ranks": {
+    "{0,0,0,0,0,0,0}": 9924,
+    "{0,1,0,0,0,0,0}": 9924
+  },
+  "subruns": {
+    "{0,0,0,0,0,0,0}": {
+      "status": "Success",
+      "exported_status": "Success",
+      "success": true,
+      "error": null,
+      "certificate_status": "Passed",
+      "certificate": {
+        "certificate_status": "Passed",
+        "n_certificate_points": 3,
+        "n_certificate_points_passed": 3,
+        "n_certificate_points_failed": 0,
+        "n_certificate_rank_filtered": 0,
+        "n_certificate_rank_exceeded": 0,
+        "n_certificate_bad_points": 0,
+        "selected_rank": 9924,
+        "first_nonzero_residual": null
+      },
+      "target_label": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_locally_finite": true,
+      "terms": [
+        {
+          "label": [
+            1,
+            1,
+            0,
+            -1,
+            0,
+            0,
+            0
+          ],
+          "coefficient": "-(3703*ep^3 - 521*ep^2 - 57*ep - 1)/(5500*ep^3)",
+          "integrand": "x4*x7/G0",
+          "locally_finite": true
+        },
+        {
+          "label": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "coefficient": "-(ep + 1)*(17*ep + 1)*(48*ep + 1)/(5500*ep^3)",
+          "integrand": "x4*x7/G2",
+          "locally_finite": true
+        }
+      ],
+      "diagnostics": {
+        "formal_success": true,
+        "reconstruction_verified": true,
+        "independent_validation_passed": true,
+        "n_terms": 2,
+        "non_lf_terms": [],
+        "unknown_lf_terms": [],
+        "n_records": 36,
+        "n_skipped_records": 0,
+        "zero_reduction": false,
+        "messages": [
+          "certificate: Passed (passed 3/3, rank-filtered 0, rank-exceeded 0, bad 0)"
+        ]
+      }
+    },
+    "{0,1,0,0,0,0,0}": {
+      "status": "Success",
+      "exported_status": "Success",
+      "success": true,
+      "error": null,
+      "certificate_status": "Passed",
+      "certificate": {
+        "certificate_status": "Passed",
+        "n_certificate_points": 3,
+        "n_certificate_points_passed": 3,
+        "n_certificate_points_failed": 0,
+        "n_certificate_rank_filtered": 0,
+        "n_certificate_rank_exceeded": 0,
+        "n_certificate_bad_points": 0,
+        "selected_rank": 9924,
+        "first_nonzero_residual": null
+      },
+      "target_label": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_locally_finite": true,
+      "terms": [
+        {
+          "label": [
+            1,
+            1,
+            0,
+            -1,
+            0,
+            0,
+            0
+          ],
+          "coefficient": "(37*ep + 1)*(219*ep^2 - 20*ep - 1)/(7920*ep^3)",
+          "integrand": "x4*x7/G0",
+          "locally_finite": true
+        },
+        {
+          "label": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "coefficient": "(ep + 1)*(17*ep + 1)*(48*ep + 1)/(7920*ep^3)",
+          "integrand": "x4*x7/G2",
+          "locally_finite": true
+        }
+      ],
+      "diagnostics": {
+        "formal_success": true,
+        "reconstruction_verified": true,
+        "independent_validation_passed": true,
+        "n_terms": 2,
+        "non_lf_terms": [],
+        "unknown_lf_terms": [],
+        "n_records": 36,
+        "n_skipped_records": 0,
+        "zero_reduction": false,
+        "messages": [
+          "certificate: Passed (passed 3/3, rank-filtered 0, rank-exceeded 0, bad 0)"
+        ]
+      }
+    }
+  },
+  "config": {
+    "label_box": [
+      [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      [
+        [
+          -2,
+          0
+        ],
+        [
+          -2,
+          0
+        ],
+        [
+          -2,
+          0
+        ],
+        [
+          -2,
+          0
+        ]
+      ]
+    ],
+    "n_labels": 972,
+    "n_rows": 12360,
+    "rows_by_kind": {
+      "algebraic": 3888,
+      "coordinate_ibp": 8295,
+      "tangent_ibp": 177
+    },
+    "max_ibp_degree": 2,
+    "tangent_degree_blocks": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    "primes": [
+      2147483647,
+      2147483629,
+      2147483587
+    ],
+    "n_samples": 12,
+    "min_valid_records": 1,
+    "n_certificate_points": 5
+  },
+  "note": "Known-value-only (docs/05): corrected integrand certified via linearity I_corrected = sum_j L_j*J[lhs_j] over one shared row system; combined relation re-certified in the row span at independent off-sample points. No reference LF decomposition exists; the notebook value expansion is not a reducer coefficient."
+}
