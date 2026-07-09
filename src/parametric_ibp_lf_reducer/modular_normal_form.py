@@ -21,9 +21,10 @@ from dataclasses import dataclass, field
 
 from .family import ParametricFamily
 from .labels import Label
-from .ranking import rank_labels
+from .ranking import RankedLabels, rank_labels
 from .row_generation import Row
 from .sparse_rref import rref_mod_p
+from .timing import StageTimings
 from .valuations import is_locally_finite
 
 STATUS_REDUCED = "Reduced"
@@ -85,8 +86,21 @@ def modular_normal_form(
     prime: int,
     preferred_masters: Iterable[Label] = (),
     lf_map: dict | None = None,
+    timings: StageTimings | None = None,
+    ranking: RankedLabels | None = None,
 ) -> NormalFormResult:
-    """Extract the target's normal form at one ``(prime, sample)`` point."""
+    """Extract the target's normal form at one ``(prime, sample)`` point.
+
+    ``timings`` (Perf.0) optionally accumulates per-stage wall-clock seconds; it never
+    affects the result.
+
+    ``ranking`` (Perf.1) optionally supplies a precomputed :class:`RankedLabels` covering (a
+    superset of) the labels appearing in ``rows``; when given, ``rank_labels`` is not called
+    here. The elimination order is total per-label (``(tier, -complexity, label)``), so
+    filtering a superset ranking to the labels present at this point (done by ``rref_mod_p``)
+    yields exactly the same pivot order as ranking the subset directly — results are identical.
+    """
+    t = timings if timings is not None else StageTimings()
     rows = list(rows)
     base = dict(status=STATUS_EMPTY_SYSTEM, target_label=target_label, prime=prime,
                 sample=dict(sample), formal_success=False)
@@ -94,7 +108,8 @@ def modular_normal_form(
         return NormalFormResult(**base)
 
     try:
-        matrix = assemble_rows_mod_p(family, rows, sample, prime)
+        with t.stage("assemble_rows_mod_p"):
+            matrix = assemble_rows_mod_p(family, rows, sample, prime)
     except BadSpecialization:
         return NormalFormResult(**{**base, "status": STATUS_BAD_SPECIALIZATION})
 
@@ -108,40 +123,47 @@ def modular_normal_form(
             **{**base, "status": STATUS_TARGET_NOT_REDUCIBLE, "nrows": nrows}
         )
 
-    ranked = rank_labels(
-        family, labels, target=target_label, preferred_masters=preferred_masters, lf_map=lf_map
-    )
-    res = rref_mod_p(matrix, prime, column_order=ranked.ordered)
+    if ranking is not None:
+        ranked = ranking  # Perf.1: hoisted — built once per run, reused at every point
+    else:
+        with t.stage("ranking"):
+            ranked = rank_labels(
+                family, labels, target=target_label, preferred_masters=preferred_masters,
+                lf_map=lf_map,
+            )
+    with t.stage("rref_mod_p"):
+        res = rref_mod_p(matrix, prime, column_order=ranked.ordered)
 
     if target_label not in res.pivots:
         return NormalFormResult(
             **{**base, "status": STATUS_TARGET_NOT_REDUCIBLE, "nrows": nrows, "rank": res.rank}
         )
 
-    pivot_row = res.pivots[target_label]  # {target: 1, free cols...}
-    # target + sum v*col = 0  =>  target = sum (-v)*col
-    terms = {
-        c: (prime - v) % prime
-        for c, v in sorted(pivot_row.items())
-        if c != target_label
-    }
+    with t.stage("extract_normal_form"):
+        pivot_row = res.pivots[target_label]  # {target: 1, free cols...}
+        # target + sum v*col = 0  =>  target = sum (-v)*col
+        terms = {
+            c: (prime - v) % prime
+            for c, v in sorted(pivot_row.items())
+            if c != target_label
+        }
 
-    non_lf: list = []
-    unknown: list = []
-    for c in terms:
-        verdict = ranked.lf.get(c, None)
-        if verdict is None:
-            verdict = is_locally_finite(family, c)
-        if verdict is False:
-            non_lf.append(c)
-        elif verdict is not True:
-            unknown.append(c)
-    if non_lf:
-        all_lf: object = False
-    elif unknown:
-        all_lf = "Unknown"
-    else:
-        all_lf = True
+        non_lf: list = []
+        unknown: list = []
+        for c in terms:
+            verdict = ranked.lf.get(c, None)
+            if verdict is None:
+                verdict = is_locally_finite(family, c)
+            if verdict is False:
+                non_lf.append(c)
+            elif verdict is not True:
+                unknown.append(c)
+        if non_lf:
+            all_lf: object = False
+        elif unknown:
+            all_lf = "Unknown"
+        else:
+            all_lf = True
 
     return NormalFormResult(
         status=STATUS_REDUCED,

@@ -17,6 +17,7 @@ Strict rules honoured here:
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping, Sequence
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 
 from .family import ParametricFamily
@@ -29,7 +30,9 @@ from .modular_normal_form import (
     NormalFormResult,
     modular_normal_form,
 )
+from .ranking import RankedLabels, rank_labels
 from .row_generation import Row
+from .timing import StageTimings
 
 
 @dataclass
@@ -78,6 +81,36 @@ def record_from_result(result: NormalFormResult) -> NormalFormRecord:
     )
 
 
+# --- Perf.3: process-parallel point collection ------------------------------------------------
+# The per-run inputs (family/rows/ranking/...) are installed once per worker process by the
+# executor initializer, so each ``(sample, prime)`` task ships only the point itself.
+_POINT_CTX: dict = {}
+
+
+def _init_point_worker(
+    family, rows, target_label, preferred_masters, lf_map, ranking
+) -> None:  # pragma: no cover - runs inside worker processes
+    """Executor initializer: stash the shared per-run inputs in this worker process."""
+    _POINT_CTX["ctx"] = (family, rows, target_label, preferred_masters, lf_map, ranking)
+
+
+def _run_point(task: tuple) -> NormalFormRecord:  # pragma: no cover - runs inside workers
+    """Compute one ``(sample, prime)`` record in a worker process (math identical to serial)."""
+    sample, prime = task
+    family, rows, target_label, preferred_masters, lf_map, ranking = _POINT_CTX["ctx"]
+    result = modular_normal_form(
+        family,
+        rows,
+        target_label,
+        dict(sample),
+        prime,
+        preferred_masters=preferred_masters,
+        lf_map=lf_map,
+        ranking=ranking,
+    )
+    return record_from_result(result)
+
+
 def collect_normal_form_records(
     family: ParametricFamily,
     rows: Iterable[Row],
@@ -86,29 +119,73 @@ def collect_normal_form_records(
     samples: Sequence[Mapping],
     preferred_masters: Iterable[Label] = (),
     lf_map: dict | None = None,
+    timings: StageTimings | None = None,
+    ranking: RankedLabels | None = None,
+    jobs: int = 1,
 ) -> list[NormalFormRecord]:
     """Run :func:`modular_normal_form` over ``samples x primes`` and collect every point.
 
     Iterates samples in the outer loop and primes in the inner loop, both in the given order, so
     the returned list is deterministic. Bad/absent-target points are recorded honestly (their
     status is preserved), never skipped — reconstruction decides what to consume.
+
+    Perf.1: the label ranking is built **once** here (timing key ``ranking_once``) from the
+    union of all row labels and reused at every ``(prime, sample)`` point — ``rank_labels`` is
+    no longer called per record. The elimination order is total per-label, so filtering the
+    once-built superset order to the labels present at a point (done inside ``rref_mod_p``)
+    is identical to ranking that point's labels directly; results are bit-for-bit unchanged.
+    A caller may also pass a precomputed ``ranking`` covering all row labels.
+
+    Perf.3: ``jobs`` (int >= 1) selects how many worker *processes* compute the independent
+    ``(prime, sample)`` points. ``jobs=1`` (default) is the exact serial path. For ``jobs>1``
+    the shared inputs are pickled once per worker (executor initializer) and results come back
+    via ``ProcessPoolExecutor.map``, which preserves task order — the returned list is
+    bit-identical to the serial one (same records, same order). Math is untouched. Caveat:
+    per-point stage keys (``assemble_rows_mod_p``, ``rref_mod_p``, ``extract_normal_form``)
+    accumulate inside the workers and are *not* merged back, so they read ``0.0`` in the
+    caller's ``timings`` when ``jobs>1``; the caller-side ``records_total`` stage is unaffected.
     """
+    if not isinstance(jobs, int) or isinstance(jobs, bool) or jobs < 1:
+        raise ValueError(f"jobs must be an int >= 1, got {jobs!r}")
     rows = list(rows)
     primes = list(primes)
     samples = list(samples)
-    records: list[NormalFormRecord] = []
-    for sample in samples:
-        for prime in primes:
-            result = modular_normal_form(
+    preferred_masters = tuple(preferred_masters)
+    t = timings if timings is not None else StageTimings()
+    if ranking is None:
+        with t.stage("ranking_once"):
+            labels = sorted({c for row in rows for c in row.terms} | {target_label})
+            ranking = rank_labels(
                 family,
-                rows,
-                target_label,
-                dict(sample),
-                prime,
+                labels,
+                target=target_label,
                 preferred_masters=preferred_masters,
                 lf_map=lf_map,
             )
-            records.append(record_from_result(result))
+    tasks = [(sample, prime) for sample in samples for prime in primes]
+    if jobs > 1 and len(tasks) > 1:
+        max_workers = min(jobs, len(tasks))
+        chunksize = max(1, len(tasks) // (max_workers * 4))
+        with ProcessPoolExecutor(
+            max_workers=max_workers,
+            initializer=_init_point_worker,
+            initargs=(family, rows, target_label, preferred_masters, lf_map, ranking),
+        ) as pool:
+            return list(pool.map(_run_point, tasks, chunksize=chunksize))
+    records: list[NormalFormRecord] = []
+    for sample, prime in tasks:
+        result = modular_normal_form(
+            family,
+            rows,
+            target_label,
+            dict(sample),
+            prime,
+            preferred_masters=preferred_masters,
+            lf_map=lf_map,
+            timings=timings,
+            ranking=ranking,
+        )
+        records.append(record_from_result(result))
     return records
 
 

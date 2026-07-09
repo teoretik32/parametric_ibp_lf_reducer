@@ -39,9 +39,7 @@ def _diagnostics_payload(result: ReductionResult) -> dict:
         # Row-span certificate verdict (gate is default-ON; "NotRun" only when the
         # reduction never reached the certificate stage).
         "certificate_status": cert.get("certificate_status"),
-        "certificate": {
-            k: v for k, v in cert.items() if isinstance(v, (str, int, type(None)))
-        },
+        "certificate": {k: v for k, v in cert.items() if isinstance(v, (str, int, type(None)))},
         "target_label": list(result.target_label),
         "all_locally_finite": result.all_locally_finite,
         "terms": [
@@ -64,6 +62,8 @@ def _diagnostics_payload(result: ReductionResult) -> dict:
             "n_skipped_records": d.n_skipped_records,
             "zero_reduction": bool(d.zero_reduction),
             "messages": list(d.messages),
+            # Perf.0: stage -> seconds wall-clock snapshot (observability only).
+            "timings": {k: float(v) for k, v in (d.extra.get("timings") or {}).items()},
         },
     }
 
@@ -102,6 +102,12 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="N",
         help="override MinValidRecords (reconstruction evidence floor)",
     )
+    reduce_p.add_argument(
+        "--jobs",
+        type=int,
+        metavar="N",
+        help="worker processes for (prime, sample) record collection (default: 1 = serial)",
+    )
     return parser
 
 
@@ -117,6 +123,8 @@ def _cmd_reduce(args: argparse.Namespace) -> int:
         overrides["max_ibp_degree"] = args.max_ibp_degree
     if args.min_valid_records is not None:
         overrides["min_valid_records"] = args.min_valid_records
+    if args.jobs is not None:
+        overrides["jobs"] = args.jobs
 
     try:
         result = api.reduce_wolfram_style_input(input_text, overrides)

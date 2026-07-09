@@ -26,6 +26,8 @@ from __future__ import annotations
 import random
 import re
 from dataclasses import dataclass
+from fractions import Fraction
+from functools import lru_cache
 from math import gcd
 
 import sympy as sp
@@ -143,7 +145,8 @@ def _classify(score: sp.Expr, positive_symbols: set[str]) -> str:
     return "unknown"
 
 
-def _random_directions(nvars: int, trials: int, seed: int, bound: int = 3) -> list[Direction]:
+@lru_cache(maxsize=None)  # Perf.2: deterministic in (nvars, trials, seed, bound) — build once
+def _random_directions(nvars: int, trials: int, seed: int, bound: int = 3) -> tuple[Direction, ...]:
     rng = random.Random(seed)
     out: list[Direction] = []
     seen: set[Direction] = set()
@@ -155,7 +158,82 @@ def _random_directions(nvars: int, trials: int, seed: int, bound: int = 3) -> li
             continue
         seen.add(p)
         out.append(p)
+    return tuple(out)
+
+
+# --- Perf.2: per-family caches -----------------------------------------------------------------
+# Everything cached here is a deterministic function of the (effectively immutable) family, so a
+# cache hit is bit-for-bit identical to recomputation. The cache is stashed on the family
+# instance itself (families are plain attribute holders — never hashed, compared or serialized
+# through ``__dict__`` by the reducer), so its lifetime matches the family's.
+
+
+def _family_cache(family: ParametricFamily) -> dict:
+    cache = family.__dict__.get("_valuations_cache")
+    if cache is None:
+        possyms = _positive_symbols(family.assumptions)
+        cache = {
+            "rays": tuple(compute_candidate_rays(family)),
+            "positive_symbols": possyms,
+            "pos_subs": {sp.Symbol(s): sp.Symbol(s, positive=True) for s in possyms},
+            "dir_vals": {},  # Direction -> per-polynomial tropical valuations
+            "poly_pos": None,  # poly name -> all coefficients provably positive (lazy)
+            "lf_memo": {},  # (label, random_trials, seed) -> True | False | "Unknown"
+        }
+        object.__setattr__(family, "_valuations_cache", cache)
+    return cache
+
+
+def _poly_valuations(family: ParametricFamily, cache: dict, direction: Direction):
+    """``tuple(val_direction(G_l))`` in ``poly_names`` order — label-independent, cached."""
+    vals = cache["dir_vals"].get(direction)
+    if vals is None:
+        vals = tuple(
+            family.polynomials[name].valuation(direction) for name in family.poly_names
+        )
+        cache["dir_vals"][direction] = vals
+    return vals
+
+
+def _as_fractions(values) -> list[Fraction] | None:
+    """Exact ``Fraction`` copies of SymPy rationals; ``None`` if any value is not Rational."""
+    out: list[Fraction] = []
+    for v in values:
+        if v.is_Rational:
+            out.append(Fraction(v.p, v.q))
+        else:
+            return None
     return out
+
+
+def _classify_at_direction(
+    e0, f0, e_frac, f_frac, family: ParametricFamily, cache: dict,
+    direction: Direction, positive_symbols: set[str],
+) -> str:
+    """Classify ``base_score`` along ``direction`` using cached polynomial valuations.
+
+    When all exponents are rational (``e_frac``/``f_frac`` given), the score is an exact
+    rational number and classification is its strict sign — ``> 0`` is ``"pos"``, anything
+    else (including exactly 0, STRICT RULE) is ``"nonpos"``; identical to what
+    ``_classify(score_from_exponents(...))`` returns on a Rational. Otherwise the original
+    symbolic path is used, only with the per-direction valuations shared across labels.
+    """
+    vals = _poly_valuations(family, cache, direction)
+    if e_frac is not None:
+        total = Fraction(0)
+        for d, ev in zip(direction, e_frac):
+            if d:
+                total += d * (ev + 1)
+        for fv, val in zip(f_frac, vals):
+            if fv and val:
+                total += fv * val
+        return "pos" if total > 0 else "nonpos"
+    total = sp.Integer(0)
+    for i, ev in enumerate(e0):
+        total += int(direction[i]) * (ev + 1)
+    for j, fv in enumerate(f0):
+        total += fv * vals[j]
+    return _classify(sp.expand(total), positive_symbols)
 
 
 def _bulk_safe(family: ParametricFamily, f0, positive_symbols: set[str]) -> bool:
@@ -179,6 +257,28 @@ def _bulk_safe(family: ParametricFamily, f0, positive_symbols: set[str]) -> bool
     return True
 
 
+def _bulk_safe_cached(family: ParametricFamily, f0, cache: dict) -> bool:
+    """Same decision as :func:`_bulk_safe`; per-polynomial positivity is label-independent."""
+    poly_pos = cache["poly_pos"]
+    if poly_pos is None:
+        subsyms = cache["pos_subs"]
+        poly_pos = {
+            name: all(
+                bool(coeff.to_sympy().subs(subsyms).is_positive)
+                for coeff in family.polynomials[name].terms.values()
+            )
+            for name in family.poly_names
+        }
+        cache["poly_pos"] = poly_pos
+    for j, name in enumerate(family.poly_names):
+        fj = f0[j]
+        # Only denominators (possibly-negative exponent) can create a blow-up.
+        is_denominator = bool(fj.is_negative) or (bool(fj.free_symbols) and not fj.is_nonnegative)
+        if is_denominator and not poly_pos[name]:
+            return False
+    return True
+
+
 def is_locally_finite(
     family: ParametricFamily,
     label: Label,
@@ -191,17 +291,40 @@ def is_locally_finite(
     all exponents are numeric at ``epsilon = 0``, and every denominator polynomial is provably
     positive (no bulk singularity). Any confirmed ``base_score <= 0`` gives ``False``. Anything
     undecidable gives ``"Unknown"`` (never ``True``).
+
+    Perf.2: verdicts are memoized per ``(label, random_trials, seed)`` on the family, and the
+    label-independent pieces (candidate rays, random safety-net directions, per-direction
+    polynomial valuations, denominator positivity) are computed once per family. The decision
+    itself is unchanged and deterministic.
     """
+    cache = _family_cache(family)
+    key = (label, random_trials, seed)
+    memo = cache["lf_memo"]
+    if key not in memo:
+        memo[key] = _is_locally_finite_impl(family, label, random_trials, seed, cache)
+    return memo[key]
+
+
+def _is_locally_finite_impl(
+    family: ParametricFamily, label: Label, random_trials: int, seed: int, cache: dict
+):
     try:
         e0, f0 = exponents_at_eps0(family, label)
     except ValueError:
         return "Unknown"
-    positive_symbols = _positive_symbols(family.assumptions)
+    positive_symbols = cache["positive_symbols"]
     numeric = all(not v.free_symbols for v in (*e0, *f0))
+    # Rational fast path (exact): available whenever every exponent is a SymPy Rational.
+    e_frac = _as_fractions(e0)
+    f_frac = _as_fractions(f0) if e_frac is not None else None
+    if f_frac is None:
+        e_frac = None
 
     saw_unknown = False
-    for ray in compute_candidate_rays(family):
-        cls = _classify(score_from_exponents(e0, f0, family, ray.direction), positive_symbols)
+    for ray in cache["rays"]:
+        cls = _classify_at_direction(
+            e0, f0, e_frac, f_frac, family, cache, ray.direction, positive_symbols
+        )
         if cls == "nonpos":
             return False
         if cls == "unknown":
@@ -209,7 +332,9 @@ def is_locally_finite(
 
     if numeric and not saw_unknown:
         for direction in _random_directions(family.nvars, random_trials, seed):
-            cls = _classify(score_from_exponents(e0, f0, family, direction), positive_symbols)
+            cls = _classify_at_direction(
+                e0, f0, e_frac, f_frac, family, cache, direction, positive_symbols
+            )
             if cls == "nonpos":
                 return False
             if cls == "unknown":  # pragma: no cover - numeric scores are always decidable
@@ -217,6 +342,6 @@ def is_locally_finite(
 
     if saw_unknown:
         return "Unknown"
-    if not _bulk_safe(family, f0, positive_symbols):
+    if not _bulk_safe_cached(family, f0, cache):
         return "Unknown"
     return True

@@ -59,6 +59,7 @@ from .row_generation import (
     generate_tangent_ibp_rows,
 )
 from .tangent_fields import generate_tangent_fields
+from .timing import StageTimings, new_stage_timings
 from .valuations import is_locally_finite
 
 
@@ -81,6 +82,7 @@ class ReducerConfig:
     require_certificate_for_success: bool = True  # Success needs certificate_status == "Passed"
     min_certificate_points: int = 1  # informative (rank-generic) passing points required
     certificate_rank_policy: str = "selected_rank"  # only supported policy (explicit contract)
+    jobs: int = 1  # Perf.3: worker processes for (prime, sample) record collection; 1 = serial
 
 
 @dataclass
@@ -113,8 +115,12 @@ def _enumerate_labels(family: ParametricFamily, config: ReducerConfig) -> list[L
 
 
 def _generate_rows(
-    family: ParametricFamily, seed_labels: Sequence[Label], config: ReducerConfig
+    family: ParametricFamily,
+    seed_labels: Sequence[Label],
+    config: ReducerConfig,
+    timings: StageTimings | None = None,
 ) -> tuple[list[Row], dict]:
+    t = timings if timings is not None else StageTimings()
     rows: list[Row] = []
     by_kind: dict[str, int] = {}
     rejected: dict[str, int] = {}
@@ -125,21 +131,23 @@ def _generate_rows(
         for rr in res.rejected:
             rejected[rr.reason] = rejected.get(rr.reason, 0) + 1
 
-    _tally(generate_algebraic_rows(family, seed_labels), "algebraic")
-    _tally(
-        generate_coordinate_ibp_rows(
-            family, seed_labels, config.max_ibp_degree, eps_direction=config.eps_direction
-        ),
-        "coordinate_ibp",
-    )
-    if config.tangent_degree_blocks:
-        fields = generate_tangent_fields(family, list(config.tangent_degree_blocks))
-        _tally(
-            generate_tangent_ibp_rows(
-                family, seed_labels, fields, eps_direction=config.eps_direction
-            ),
-            "tangent_ibp",
-        )
+    with t.stage("row_generation_total"):
+        with t.stage("algebraic_rows"):
+            res_alg = generate_algebraic_rows(family, seed_labels)
+        _tally(res_alg, "algebraic")
+        with t.stage("coordinate_rows"):
+            res_coord = generate_coordinate_ibp_rows(
+                family, seed_labels, config.max_ibp_degree, eps_direction=config.eps_direction
+            )
+        _tally(res_coord, "coordinate_ibp")
+        if config.tangent_degree_blocks:
+            with t.stage("tangent_fields"):
+                fields = generate_tangent_fields(family, list(config.tangent_degree_blocks))
+            with t.stage("tangent_rows"):
+                res_tan = generate_tangent_ibp_rows(
+                    family, seed_labels, fields, eps_direction=config.eps_direction
+                )
+            _tally(res_tan, "tangent_ibp")
     return rows, {"by_kind": by_kind, "rejected": rejected}
 
 
@@ -165,7 +173,8 @@ def _default_certificate_points(samples: Sequence[Mapping], n: int = 3) -> list[
     for k in range(n):
         points.append(
             {
-                p: maxima[p] + Fraction(2 * k + 1, _AUTO_CERT_DENOMS[(k + j) % len(_AUTO_CERT_DENOMS)])
+                p: maxima[p]
+                + Fraction(2 * k + 1, _AUTO_CERT_DENOMS[(k + j) % len(_AUTO_CERT_DENOMS)])
                 for j, p in enumerate(params)
             }
         )
@@ -182,6 +191,7 @@ def _run_certificate_step(
     selected_rank: int | None,
     min_points: int,
     lhs_terms: Mapping | None = None,
+    timings: StageTimings | None = None,
 ) -> dict:
     """Certify the reconstructed relation at the given points; never stamps ``Success``.
 
@@ -203,11 +213,13 @@ def _run_certificate_step(
     histogram: dict[int, int] = {}
     first_residual: tuple | None = None
     primes = list(primes)
+    t = timings if timings is not None else StageTimings()
     for k, point in enumerate(points):
         prime = primes[k % len(primes)]
-        cert = verify_reduction_relation_mod_p(
-            family, rows, target_label, coeffs, dict(point), prime, lhs_terms=lhs_terms
-        )
+        with t.stage("certificate_points_total"):
+            cert = verify_reduction_relation_mod_p(
+                family, rows, target_label, coeffs, dict(point), prime, lhs_terms=lhs_terms
+            )
         if cert.status not in ("InSpan", "NotInSpan"):
             n_bad += 1
             continue
@@ -261,20 +273,31 @@ def _reduce_core(
     require_certificate_for_success: bool = True,
     min_certificate_points: int = 1,
     certificate_rank_policy: str = "selected_rank",
+    jobs: int = 1,
+    timings: StageTimings | None = None,
 ) -> ReductionResult:
     if certificate_rank_policy != "selected_rank":
         raise ValueError(
             f"unsupported certificate_rank_policy {certificate_rank_policy!r} "
             "(only 'selected_rank' is implemented)"
         )
+    timings = timings if timings is not None else new_stage_timings()
     run = ReducerRunDiagnostics(
         n_labels=len(labels), n_rows=len(rows), row_diagnostics=dict(row_diagnostics)
     )
 
-    records = collect_normal_form_records(
-        family, rows, target_label, list(primes), list(samples),
-        preferred_masters=tuple(preferred_masters), lf_map=lf_map,
-    )
+    with timings.stage("records_total"):
+        records = collect_normal_form_records(
+            family,
+            rows,
+            target_label,
+            list(primes),
+            list(samples),
+            preferred_masters=tuple(preferred_masters),
+            lf_map=lf_map,
+            timings=timings,
+            jobs=jobs,
+        )
     run.n_records = len(records)
     for rec in records:
         if rec.status == STATUS_REDUCED and rec.formal_success:
@@ -319,7 +342,8 @@ def _reduce_core(
             )
         else:
             try:
-                coeffs = reconstruct_coefficients(selected, family.parameters)
+                with timings.stage("reconstruction"):
+                    coeffs = reconstruct_coefficients(selected, family.parameters)
                 verified = True  # reconstruction validated on independent holdout points
             except InterpolationFailed:
                 coeffs = None
@@ -334,11 +358,18 @@ def _reduce_core(
         if not points and require_certificate_for_success:
             points = _default_certificate_points(samples, n=max(3, min_certificate_points))
         if points:
-            run.certificate = _run_certificate_step(
-                family, rows, target_label, coeffs, points,
-                list(certificate_primes) or list(primes),
-                selected_rank=selection["selected_rank"], min_points=min_certificate_points,
-            )
+            with timings.stage("certificate_total"):
+                run.certificate = _run_certificate_step(
+                    family,
+                    rows,
+                    target_label,
+                    coeffs,
+                    points,
+                    list(certificate_primes) or list(primes),
+                    selected_rank=selection["selected_rank"],
+                    min_points=min_certificate_points,
+                    timings=timings,
+                )
         else:
             run.certificate = {"certificate_status": CERTIFICATE_NOT_RUN}
         cert_status = run.certificate["certificate_status"]
@@ -364,8 +395,9 @@ def _reduce_core(
 
     lf_flags: dict = {}
     if coeffs is not None:
-        for lab in coeffs:
-            lf_flags[lab] = lf_map[lab] if lab in lf_map else is_locally_finite(family, lab)
+        with timings.stage("lf_flags"):
+            for lab in coeffs:
+                lf_flags[lab] = lf_map[lab] if lab in lf_map else is_locally_finite(family, lab)
 
     run.reconstruction_diagnostics = {
         "verified": verified,
@@ -387,11 +419,13 @@ def _reduce_core(
         n_skipped_records=run.n_skipped_records,
         messages=messages,
     )
-    _attach_run_diagnostics(result, run)
+    _attach_run_diagnostics(result, run, timings)
     return result
 
 
-def _attach_run_diagnostics(result: ReductionResult, run: ReducerRunDiagnostics) -> None:
+def _attach_run_diagnostics(
+    result: ReductionResult, run: ReducerRunDiagnostics, timings: StageTimings | None = None
+) -> None:
     result.diagnostics.extra.update(
         {
             "n_labels": run.n_labels,
@@ -409,6 +443,9 @@ def _attach_run_diagnostics(result: ReductionResult, run: ReducerRunDiagnostics)
             "certificate": run.certificate,
         }
     )
+    if timings is not None:
+        # Perf.0: stage -> seconds snapshot (pure observability; never decides anything).
+        result.diagnostics.extra["timings"] = {k: float(v) for k, v in timings.items()}
     result.diagnostics.extra["run"] = run
 
 
@@ -417,9 +454,11 @@ def reduce_family_once(
     family: ParametricFamily, target_label: Label, config: ReducerConfig
 ) -> ReductionResult:
     """Run one fixed reduction pass for a parsed family and return a typed result."""
+    timings = new_stage_timings()
     labels = _enumerate_labels(family, config)
-    lf_map = {lab: is_locally_finite(family, lab) for lab in labels}
-    rows, row_diag = _generate_rows(family, labels, config)
+    with timings.stage("lf_flags"):
+        lf_map = {lab: is_locally_finite(family, lab) for lab in labels}
+    rows, row_diag = _generate_rows(family, labels, config, timings)
     return _reduce_core(
         family,
         target_label,
@@ -436,6 +475,8 @@ def reduce_family_once(
         require_certificate_for_success=config.require_certificate_for_success,
         min_certificate_points=config.min_certificate_points,
         certificate_rank_policy=config.certificate_rank_policy,
+        jobs=config.jobs,
+        timings=timings,
     )
 
 
@@ -454,6 +495,7 @@ def reduce_rows_once(
     require_certificate_for_success: bool = True,
     min_certificate_points: int = 1,
     certificate_rank_policy: str = "selected_rank",
+    jobs: int = 1,
 ) -> ReductionResult:
     """Orchestrate a reduction over ready-made ``rows`` (for testing without row generation).
 
@@ -462,9 +504,12 @@ def reduce_rows_once(
     """
     labels = list(labels)
     rows = list(rows)
-    lf_map = dict(lf_flags) if lf_flags is not None else {
-        lab: is_locally_finite(family, lab) for lab in labels
-    }
+    timings = new_stage_timings()
+    if lf_flags is not None:
+        lf_map = dict(lf_flags)
+    else:
+        with timings.stage("lf_flags"):
+            lf_map = {lab: is_locally_finite(family, lab) for lab in labels}
     return _reduce_core(
         family,
         target_label,
@@ -481,4 +526,6 @@ def reduce_rows_once(
         require_certificate_for_success=require_certificate_for_success,
         min_certificate_points=min_certificate_points,
         certificate_rank_policy=certificate_rank_policy,
+        jobs=jobs,
+        timings=timings,
     )

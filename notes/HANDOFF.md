@@ -244,3 +244,21 @@ Status: **complete, verified**.
   `validation/example4_star_corrected_diagnostics.json`.
 - Тесты: `tests/test_example4_star_corrected.py`. Статус: v0.1.1 candidate,
   тег локальный, **не запушено**.
+
+## Perf status (Perf.0–Perf.3, 2026-07; детали — `notes/PERF_STATUS.md`)
+
+- **Perf.0 — stage timing diagnostics** (`timing.py`, `StageTimings`): чистая наблюдаемость,
+  wall-clock по стадиям в `diagnostics.extra["timings"]` + CLI JSON. Математика/гейты не тронуты.
+- **Perf.1 — ranking hoist** (принят): ranking вынесен из per-record цикла, строится один раз
+  на прогон (`ranking_once`); verdict-equality harness подтвердил идентичность рангов/лейблов.
+- **Perf.2 — ranking profiling** (принят, без дальнейшего копания): ranking — не доминанта
+  на representative configs.
+- **Perf.3 — parallel normal-form records (ОТРИЦАТЕЛЬНЫЙ результат, принят):**
+  `collect_normal_form_records(..., jobs=N)` / `ReducerConfig.jobs` / CLI `--jobs` —
+  корректно (равенство serial↔parallel: `tests/test_perf3_jobs_equality.py`, 12 тестов),
+  но на Windows (`spawn`) старт пула + импорты (0.68 s @1 worker … 1.56 s @8) больше всей
+  параллелизуемой record-работы (~0.96 s на heavy 2×49). Замеры: fast 2×9 jobs=1 0.814 s
+  vs jobs=4 3.929 s; heavy 2×49 jobs=1 1.636 s vs jobs=2 2.693 s / jobs=4 4.107 s / jobs=8
+  6.329 s. **Default `jobs=1` остаётся; `--jobs` — experimental**, пересматривать только
+  когда record-работа на прогон достигнет десятков секунд.
+- Tests после Perf.3: **245 passed, 7 skipped**; `ruff check .` — clean.

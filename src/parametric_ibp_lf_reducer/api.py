@@ -183,6 +183,7 @@ _COERCERS = {
     "min_certificate_points": _as_int,
     "require_certificate_for_success": _as_bool,  # explicit opt-out only; default stays ON
     "eps_direction": str,
+    "jobs": _as_int,  # Perf.3: worker processes for record collection (1 = serial)
 }
 
 # Python-side override aliases (CLAUDE.md's preferred API spells ``tangent_degrees``).
@@ -221,9 +222,7 @@ def build_reducer_config(
     if target is None:
         target = zero_label(family.nvars, family.npolys)
     elif len(target) != width:
-        raise ValueError(
-            f"target_label has length {len(target)}, expected nvars+npolys = {width}"
-        )
+        raise ValueError(f"target_label has length {len(target)}, expected nvars+npolys = {width}")
 
     settings.setdefault("primes", list(_DEFAULT_PRIMES))
     settings.setdefault("samples", default_scattered_samples(family.parameters))
