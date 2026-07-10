@@ -118,3 +118,33 @@ Expected: path under `B:\soft\math_scratch\src\`.
   clean; `ruff format --check` on the five Perf.3-touched files
   (`records.py`, `reducer.py`, `api.py`, `cli.py`,
   `tests/test_perf3_jobs_equality.py`) — already formatted.
+
+## Perf.4 — DONE: heavy corrected Example 4* profile (script-level stages)
+
+- Instrumented `scripts/run_example4_star_corrected.py` with script-level
+  stage timings (`_timed` wrapper, stderr log, exported under
+  `perf4_timings` in `validation/example4_star_corrected_diagnostics.json`).
+  Non-invasive (no library changes), so the instrumentation stays in the
+  script permanently.
+- Heavy run (RUN_D4_FULL-class config, two LHS targets, rank 9924,
+  12360 rows x 972 labels; editable install): **total runtime ~2h24m**,
+  status Success, combined certificate Passed 5/5, results identical to
+  the certified baseline.
+- Stage profile (seconds):
+  - `row_generation_shared` **56.7** (shared; `rows_generated_once=True`,
+    `row_generation_total=0.0` inside both subruns — sharing works);
+  - `target_zero_reduction` **3724.7**;
+  - `target_x7_reduction` **3571.7**;
+  - `combined_certificate` **1300.5**;
+  - `rref_mod_p` total across targets **5631.8** — **~77%** of the two
+    reductions; certificate work total **~2877** (1576.2 per-target
+    + 1300.5 combined) — **~40%** of wall-clock;
+  - everything else is noise: `ranking_once` 19.3 (cached on the second
+    target: 0.1), `assemble_rows_mod_p` 65.4, `reconstruction` 0.4.
+- Conclusion / next step: **Perf.5 should target multi-target /
+  linear-LHS normal-form reuse** (the RREF/ranking work is recomputed
+  per target and per certificate point on the same row system;
+  `rank_labels(..., target=...)` is target-dependent, so reuse needs a
+  real design, not a one-line change) — **not multiprocessing**
+  (Perf.3 verdict stands; per-point tasks are too small on Windows
+  spawn, and here the cost is a few huge RREFs, not many small ones).
