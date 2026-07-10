@@ -57,15 +57,24 @@ def rank_labels(
     preferred_masters: Iterable[Label] = (),
     lf_map: dict[Label, object] | None = None,
     weights: dict[str, float] | None = None,
+    targets: Iterable[Label] = (),
 ) -> RankedLabels:
     """Order ``labels`` by elimination priority. Returns all input labels (deduplicated), reordered.
 
     ``lf_map`` may supply precomputed local-finiteness verdicts to avoid recomputation; any label
     not present is evaluated via :func:`is_locally_finite`.
+
+    Perf.5: ``targets`` optionally names *several* target labels; every one of them lands in
+    tier 0 (eliminated before everything else), ordered among themselves by the same
+    ``(-complexity, label)`` rule as within any tier. ``targets=(t,)`` is bit-identical to
+    ``target=t``; ``target`` and ``targets`` may be combined (the union is used).
     """
     unique = list(dict.fromkeys(labels))  # dedup, preserve first-seen order
     preferred = set(preferred_masters)
     lf_map = dict(lf_map or {})
+    target_set = set(targets)
+    if target is not None:
+        target_set.add(target)
 
     lf: dict[Label, object] = {}
     complexity: dict[Label, float] = {}
@@ -74,14 +83,14 @@ def rank_labels(
         verdict = lf_map[label] if label in lf_map else is_locally_finite(family, label)
         lf[label] = verdict
         complexity[label] = label_complexity(label, family.nvars, family.npolys, weights)
-        tiers[label] = _tier(label, verdict, target, preferred)
+        tiers[label] = _tier(label, verdict, target_set, preferred)
 
     ordered = sorted(unique, key=lambda lab: (tiers[lab], -complexity[lab], lab))
     return RankedLabels(ordered=ordered, tiers=tiers, complexity=complexity, lf=lf)
 
 
-def _tier(label: Label, verdict, target: Label | None, preferred: set[Label]) -> int:
-    if target is not None and label == target:
+def _tier(label: Label, verdict, targets: set[Label], preferred: set[Label]) -> int:
+    if label in targets:
         return TIER_TARGET
     if verdict is not True:  # False or "Unknown" -> must not be left free
         return TIER_NON_LF

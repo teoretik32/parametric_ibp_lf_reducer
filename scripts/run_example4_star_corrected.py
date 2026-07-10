@@ -13,8 +13,10 @@ is exactly the ``n7 = +1`` shift). Pipeline:
 1. parse ``examples/example4_star_corrected_input.wl.txt`` (the LHS decomposition is
    read from the document's ``Options -> "LHSTerms"``, so the claim lives with the data);
 2. enumerate ONE label box, generate ONE row system, evaluate local finiteness once;
-3. run the full strict reduction gate (LF + row-span certificate, default-ON) for each
-   LHS label via ``reduce_rows_once`` over the SAME rows;
+3. run the full strict reduction gate (LF + row-span certificate, default-ON) for ALL
+   LHS labels via ``reduce_rows_multi`` (Perf.5) over the SAME rows — ONE shared
+   assemble + RREF per ``(prime, sample)`` point and per certificate point, with
+   per-target selection/reconstruction/gates identical to the single-target pipeline;
 4. require every sub-run to be ``Success`` with pairwise-equal ``selected_rank``;
 5. combine the two reductions symbolically (exact SymPy ``cancel``; zero terms drop);
 6. re-certify the COMBINED relation ``sum_j L_j*J[lhs_j] - sum_i C_i*J[master_i] = 0``
@@ -26,8 +28,9 @@ is exactly the ``n7 = +1`` shift). Pipeline:
 Exit codes: 0 = Success (all gates), 1 = honest failure (artifacts still written),
 2 = usage/input problem.
 
-Heavy (two reductions over a 972-label box; the single-target 648-label run took
-~45-50 min on this machine). Known-value-only policy (docs/05): the notebook provides
+Heavy (one multi-target reduction over a 972-label box; before Perf.5 this ran two
+separate RREF pipelines — the single-target 648-label run took ~45-50 min on this
+machine). Known-value-only policy (docs/05): the notebook provides
 only the value expansion, not a reference LF decomposition; nothing here compares
 against it.
 """
@@ -56,7 +59,7 @@ from parametric_ibp_lf_reducer.reducer import (  # noqa: E402
     _enumerate_labels,
     _generate_rows,
     _run_certificate_step,
-    reduce_rows_once,
+    reduce_rows_multi,
 )
 from parametric_ibp_lf_reducer.result import (  # noqa: E402
     FAILURE_NORMAL_FORM_NOT_LOCALLY_FINITE,
@@ -88,16 +91,7 @@ def _timed(store: dict, key: str):
         store[key] = store.get(key, 0.0) + (time.perf_counter() - t0)
 
 
-def _target_key(label: tuple[int, ...]) -> str:
-    """Stable per-target timing key: zero label -> ``target_zero``, n7=+1 shift -> ``target_x7``."""
-    if all(x == 0 for x in label):
-        return "target_zero"
-    if label[1] == 1 and all(x == 0 for i, x in enumerate(label) if i != 1):
-        return "target_x7"
-    return "target_" + "_".join(str(x) for x in label)
-
-
-#: Subrun stage keys reported per target (from ``diagnostics.extra["timings"]``).
+#: Shared multi-pass stage keys (from ``diagnostics.extra["timings"]``, one pipeline for all targets).
 _SUBRUN_KEYS = (
     "records_total",
     "ranking_once",
@@ -270,40 +264,42 @@ def main(argv=None) -> int:
         )
     )
 
-    results: dict[tuple[int, ...], object] = {}
-    sub_timings: dict[tuple[int, ...], dict[str, float]] = {}
-    for target in sorted(lhs):
-        tkey = _target_key(target)
-        _log(f"reducing target {_label_text(target)} ...")
-        with _timed(perf, f"{tkey}_reduction"):
-            res = reduce_rows_once(
-                family,
-                target,
-                labels,
-                rows,
-                config.primes,
-                config.samples,
-                lf_flags=lf_map,
-                preferred_masters=config.preferred_masters,
-                min_valid_records=config.min_valid_records,
-            )
-        sub_t = {k: float(v) for k, v in (res.diagnostics.extra.get("timings") or {}).items()}
-        sub_timings[target] = sub_t
+    targets = sorted(lhs)
+    _log(f"reducing {len(targets)} targets via shared-RREF multi pass (Perf.5) ...")
+    with _timed(perf, "multi_target_reduction"):
+        results = reduce_rows_multi(
+            family,
+            targets,
+            labels,
+            rows,
+            config.primes,
+            config.samples,
+            lf_flags=lf_map,
+            preferred_masters=config.preferred_masters,
+            min_valid_records=config.min_valid_records,
+        )
+    # The timings snapshot is SHARED across targets (records/certificate stages ran once for
+    # all of them); per-target timing attribution is intentionally not claimed (Perf.5).
+    shared_stages = {
+        k: float(v)
+        for k, v in (next(iter(results.values())).diagnostics.extra.get("timings") or {}).items()
+    }
+    for target in targets:
+        res = results[target]
         _log(
             f"target {_label_text(target)}: status={res.status} "
-            f"terms={len(res.terms)} rank={_selected_rank(res)} "
-            f"({perf[f'{tkey}_reduction']:.0f}s)"
+            f"terms={len(res.terms)} rank={_selected_rank(res)}"
         )
+    _log(
+        f"  shared stages (s, one pipeline for all targets; total "
+        f"{perf['multi_target_reduction']:.0f}s): "
+        + ", ".join(f"{k}={shared_stages.get(k, 0.0):.1f}" for k in _SUBRUN_KEYS)
+    )
+    if shared_stages.get("row_generation_total", 0.0) > 0.0:
         _log(
-            f"  {tkey} stages (s): "
-            + ", ".join(f"{k}={sub_t.get(k, 0.0):.1f}" for k in _SUBRUN_KEYS)
+            f"  WARNING: multi pass regenerated rows internally "
+            f"({shared_stages['row_generation_total']:.1f}s) — rows were NOT shared!"
         )
-        if sub_t.get("row_generation_total", 0.0) > 0.0:
-            _log(
-                f"  WARNING: {tkey} regenerated rows internally "
-                f"({sub_t['row_generation_total']:.1f}s) — rows were NOT shared!"
-            )
-        results[target] = res
 
     all_success = all(res.status == STATUS_SUCCESS for res in results.values())
     ranks = {tgt: _selected_rank(res) for tgt, res in results.items()}
@@ -359,24 +355,21 @@ def main(argv=None) -> int:
         else:
             status = STATUS_SUCCESS
 
-    # --- Perf.4 stage timing summary (observability only) ---------------------------------
-    rows_generated_once = all(
-        st.get("row_generation_total", 0.0) == 0.0 for st in sub_timings.values()
-    )
-    subrun_sums = {k: sum(st.get(k, 0.0) for st in sub_timings.values()) for k in _SUBRUN_KEYS}
+    # --- Perf.4/Perf.5 stage timing summary (observability only) --------------------------
+    rows_generated_once = shared_stages.get("row_generation_total", 0.0) == 0.0
     sharing_note = (
-        "shared across targets: labels, rows, lf_flags (computed once in this script); "
-        "recomputed per target inside reduce_rows_once: ranking_once, assemble_rows_mod_p, "
-        "rref_mod_p, extract_normal_form, records, reconstruction, certificate "
-        "(rank_labels(..., target=...) is target-dependent, so RREF/ranking reuse is NOT a "
-        "one-line change; not done here per Perf.4 scope)"
+        "shared across targets: labels, rows, lf_flags (computed once in this script) PLUS "
+        "ranking, assemble_rows_mod_p, rref_mod_p, record collection and certificate points "
+        "(ONE pipeline inside reduce_rows_multi, Perf.5); per target: record selection, "
+        "reconstruction, Success gate, certificate verdicts. The stage timings snapshot is "
+        "shared across targets, so per-target timing attribution is intentionally NOT claimed."
     )
-    _log("=== Perf.4 stage timings (s) ===")
+    _log("=== Perf.4/Perf.5 stage timings (s) ===")
     for key in sorted(perf):
         _log(f"  {key}: {perf[key]:.1f}")
     _log(
-        "  subrun totals across targets (s): "
-        + ", ".join(f"{k}={subrun_sums[k]:.1f}" for k in _SUBRUN_KEYS)
+        "  shared multi-pass stages (s): "
+        + ", ".join(f"{k}={shared_stages.get(k, 0.0):.1f}" for k in _SUBRUN_KEYS)
     )
     _log(f"  rows_generated_once={rows_generated_once}")
     _log(f"  sharing: {sharing_note}")
@@ -444,11 +437,7 @@ def main(argv=None) -> int:
                     "tangent_rows",
                 )
             },
-            "subrun_stage_seconds": {
-                _label_text(t): {k: float(v) for k, v in sorted(st.items())}
-                for t, st in sub_timings.items()
-            },
-            "subrun_stage_sums_seconds": {k: float(v) for k, v in subrun_sums.items()},
+            "multi_pass_stage_seconds": {k: float(v) for k, v in sorted(shared_stages.items())},
             "rows_generated_once": rows_generated_once,
             "sharing": sharing_note,
         },

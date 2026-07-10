@@ -148,3 +148,40 @@ Expected: path under `B:\soft\math_scratch\src\`.
   real design, not a one-line change) — **not multiprocessing**
   (Perf.3 verdict stands; per-point tasks are too small on Windows
   spawn, and here the cost is a few huge RREFs, not many small ones).
+
+## Perf.5 — DONE: multi-target / linear-LHS normal-form reuse
+
+- Change: `collect_normal_form_records_multi` / `reduce_rows_multi` —
+  ONE shared pipeline (ranking, `assemble_rows_mod_p`, `rref_mod_p`,
+  record collection, certificate points) over the SAME row system for
+  several targets at once; per target only: record selection,
+  reconstruction, Success gate, certificate verdicts.
+  `scripts/run_example4_star_corrected.py` now reduces both LHS targets
+  via the shared multi pass (`multi_target_reduction` stage replaces the
+  two per-target stages; `sharing` note exported in `perf4_timings`).
+- Correctness: `tests/test_perf5_multi_target.py` — 15 passed
+  (multi vs serial equality incl. statuses, records, coefficients,
+  plural certificate relations; singular/plural parity). Full suite +
+  ruff clean after the edits. Heavy-run results **identical** to the
+  certified baseline: same 2 combined terms
+  (`(47703*ep^3-521*ep^2-57*ep-1)/(3300*ep^2)` on `{1,1,0,-1,0,0,0}`,
+  `(816*ep^3+881*ep^2+66*ep+1)/(3300*ep^2)` on `{1,1,0,0,0,-1,0}`),
+  `all_locally_finite=True`, rank 9924 for both targets, combined
+  certificate **Passed 5/5** (filtered 0, exceeded 0, bad 0).
+- Measured (same heavy corrected Example 4* config as Perf.4,
+  12360 rows x 972 labels, editable install): **wall ~1h22m**
+  (07:10 first log → 08:32 done) vs Perf.4 **~2h24m** — **~1.75x**.
+  Stage profile (s): `multi_target_reduction` **3545.6** (was
+  3724.7 + 3571.7 = 7296.4 across two targets), of which
+  `rref_mod_p` **2715.1** ONCE (was 5631.8 = ~77% of two reductions),
+  `records_total` 2768.3, `ranking_once` 19.1,
+  `assemble_rows_mod_p` 32.5, `certificate_total` 776.9;
+  `combined_certificate` 1293.3 (unchanged, ~= Perf.4's 1300.5);
+  `row_generation_shared` 56.4, `rows_generated_once=True`.
+  Caveat: the stage-timings snapshot is shared across targets, so
+  per-target timing attribution is intentionally NOT claimed.
+- Remaining hotspots (post-Perf.5): the single big `rref_mod_p`
+  (2715 s) and certificate work (776.9 shared-pass + 1293.3 combined
+  ≈ 2070 s). Further wins would need a faster mod-p RREF kernel
+  (bit-packing / numpy) or certificate-point reuse — new designs,
+  not reshuffling.

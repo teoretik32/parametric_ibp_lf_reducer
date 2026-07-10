@@ -58,6 +58,7 @@ from .ranking import RankedLabels, ordered_labels, rank_labels
 from .records import (
     NormalFormRecord,
     collect_normal_form_records,
+    collect_normal_form_records_multi,
     record_from_result,
     summarize_records,
 )
@@ -98,6 +99,7 @@ from .reducer import (
     ReducerConfig,
     ReducerRunDiagnostics,
     reduce_family_once,
+    reduce_rows_multi,
     reduce_rows_once,
 )
 from .row_generation import (
@@ -200,6 +202,7 @@ __all__ = [
     # multi-sample record collector (Pass 2G.1)
     "NormalFormRecord",
     "collect_normal_form_records",
+    "collect_normal_form_records_multi",
     "record_from_result",
     "summarize_records",
     # coefficient reconstruction (Pass 2G)
@@ -239,6 +242,7 @@ __all__ = [
     "ReducerConfig",
     "ReducerRunDiagnostics",
     "reduce_family_once",
+    "reduce_rows_multi",
     "reduce_rows_once",
     # reducer certificate gate (Pass D4.5)
     "CERTIFICATE_PASSED",

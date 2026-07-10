@@ -167,7 +167,24 @@
         "zero_reduction": false,
         "messages": [
           "certificate: Passed (passed 3/3, rank-filtered 0, rank-exceeded 0, bad 0)"
-        ]
+        ],
+        "timings": {
+          "row_generation_total": 0.0,
+          "algebraic_rows": 0.0,
+          "coordinate_rows": 0.0,
+          "tangent_fields": 0.0,
+          "tangent_rows": 0.0,
+          "lf_flags": 4.800036549568176e-06,
+          "records_total": 2768.3239332998637,
+          "ranking_once": 19.05495829996653,
+          "assemble_rows_mod_p": 32.462228199699894,
+          "ranking": 0.0,
+          "rref_mod_p": 2715.148548799334,
+          "extract_normal_form": 0.0008014016784727573,
+          "reconstruction": 0.37787650036625564,
+          "certificate_total": 776.9182488999795,
+          "certificate_points_total": 776.9181096998509
+        }
       }
     },
     "{0,1,0,0,0,0,0}": {
@@ -239,7 +256,24 @@
         "zero_reduction": false,
         "messages": [
           "certificate: Passed (passed 3/3, rank-filtered 0, rank-exceeded 0, bad 0)"
-        ]
+        ],
+        "timings": {
+          "row_generation_total": 0.0,
+          "algebraic_rows": 0.0,
+          "coordinate_rows": 0.0,
+          "tangent_fields": 0.0,
+          "tangent_rows": 0.0,
+          "lf_flags": 1.0799849405884743e-05,
+          "records_total": 2768.3239332998637,
+          "ranking_once": 19.05495829996653,
+          "assemble_rows_mod_p": 32.462228199699894,
+          "ranking": 0.0,
+          "rref_mod_p": 2715.148548799334,
+          "extract_normal_form": 0.0008014016784727573,
+          "reconstruction": 0.37787650036625564,
+          "certificate_total": 776.9182488999795,
+          "certificate_points_total": 776.9181096998509
+        }
       }
     }
   },
@@ -304,6 +338,43 @@
     "n_samples": 12,
     "min_valid_records": 1,
     "n_certificate_points": 5
+  },
+  "perf4_timings": {
+    "script_stages_seconds": {
+      "combined_certificate": 1293.3053956001531,
+      "combined_symbolic_merge": 0.02026410005055368,
+      "family_label_box": 0.0003149998374283314,
+      "lf_flags_shared": 1.2253268000204116,
+      "multi_target_reduction": 3545.6354431000073,
+      "parse_input": 0.0555869999807328,
+      "row_generation_shared": 56.44112600013614
+    },
+    "row_generation_breakdown_seconds": {
+      "row_generation_total": 56.43865350005217,
+      "algebraic_rows": 0.5060289001557976,
+      "coordinate_rows": 43.91422490007244,
+      "tangent_fields": 0.5860492999199778,
+      "tangent_rows": 11.430800499860197
+    },
+    "multi_pass_stage_seconds": {
+      "algebraic_rows": 0.0,
+      "assemble_rows_mod_p": 32.462228199699894,
+      "certificate_points_total": 776.9181096998509,
+      "certificate_total": 776.9182488999795,
+      "coordinate_rows": 0.0,
+      "extract_normal_form": 0.0008014016784727573,
+      "lf_flags": 4.800036549568176e-06,
+      "ranking": 0.0,
+      "ranking_once": 19.05495829996653,
+      "reconstruction": 0.37787650036625564,
+      "records_total": 2768.3239332998637,
+      "row_generation_total": 0.0,
+      "rref_mod_p": 2715.148548799334,
+      "tangent_fields": 0.0,
+      "tangent_rows": 0.0
+    },
+    "rows_generated_once": true,
+    "sharing": "shared across targets: labels, rows, lf_flags (computed once in this script) PLUS ranking, assemble_rows_mod_p, rref_mod_p, record collection and certificate points (ONE pipeline inside reduce_rows_multi, Perf.5); per target: record selection, reconstruction, Success gate, certificate verdicts. The stage timings snapshot is shared across targets, so per-target timing attribution is intentionally NOT claimed."
   },
   "note": "Known-value-only (docs/05): corrected integrand certified via linearity I_corrected = sum_j L_j*J[lhs_j] over one shared row system; combined relation re-certified in the row span at independent off-sample points. No reference LF decomposition exists; the notebook value expansion is not a reducer coefficient."
 }

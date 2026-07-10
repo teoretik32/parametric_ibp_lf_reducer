@@ -245,7 +245,7 @@ Status: **complete, verified**.
 - Тесты: `tests/test_example4_star_corrected.py`. Статус: v0.1.1 candidate,
   тег локальный, **не запушено**.
 
-## Perf status (Perf.0–Perf.3, 2026-07; детали — `notes/PERF_STATUS.md`)
+## Perf status (Perf.0–Perf.5, 2026-07; детали — `notes/PERF_STATUS.md`)
 
 - **Perf.0 — stage timing diagnostics** (`timing.py`, `StageTimings`): чистая наблюдаемость,
   wall-clock по стадиям в `diagnostics.extra["timings"]` + CLI JSON. Математика/гейты не тронуты.
@@ -262,3 +262,17 @@ Status: **complete, verified**.
   6.329 s. **Default `jobs=1` остаётся; `--jobs` — experimental**, пересматривать только
   когда record-работа на прогон достигнет десятков секунд.
 - Tests после Perf.3: **245 passed, 7 skipped**; `ruff check .` — clean.
+- **Perf.4 — heavy profile Corrected Example 4*** (принят): script-level stage timings в
+  `scripts/run_example4_star_corrected.py` (`perf4_timings` в diagnostics JSON). Heavy run
+  ~2h24m; доминанты: `rref_mod_p` (5631.8 s суммарно по двум таргетам, ~77% редукций) и
+  certificate-работа (~40% wall). Вывод: цель Perf.5 — multi-target reuse, НЕ multiprocessing.
+- **Perf.5 — multi-target / linear-LHS normal-form reuse (принят):**
+  `collect_normal_form_records_multi` / `reduce_rows_multi` — ОДИН shared pipeline
+  (ranking, assemble, `rref_mod_p`, record collection, certificate points) на общей
+  row system для нескольких таргетов; per-target только selection / reconstruction /
+  Success gate / certificate verdicts. Heavy run corrected Example 4*: **wall ~1h22m**
+  (было ~2h24m, ~1.75x); `rref_mod_p` 2715.1 s ОДИН раз (было 5631.8 s);
+  результаты идентичны certified baseline (2 terms, rank 9924, certificate Passed 5/5).
+  Тесты: `tests/test_perf5_multi_target.py` — 15 passed (multi↔serial equality);
+  full suite + ruff clean. Остаточные hotspots: один большой mod-p RREF (~2715 s)
+  и certificate-работа (~2070 s) — дальше нужны новые kernel-дизайны, не reshuffling.

@@ -67,15 +67,43 @@ def assemble_rows_mod_p(
         for label, coeff in row.terms.items():
             v = coeff.eval_mod_p(sample, prime)
             if v is None:
-                raise BadSpecialization(
-                    f"coefficient denominator vanishes mod {prime} at {sample}"
-                )
+                raise BadSpecialization(f"coefficient denominator vanishes mod {prime} at {sample}")
             v %= prime
             if v:
                 specialized[label] = v
         if specialized:
             matrix.append(specialized)
     return matrix
+
+
+def _extract_target_terms(
+    family: ParametricFamily, ranked, pivot_row: dict, target_label: Label, prime: int
+) -> tuple[dict, object, list, list]:
+    """Read a target's normal form off its (fully reduced) RREF pivot row.
+
+    Returns ``(terms, all_terms_lf, non_lf_terms, unknown_lf_terms)`` exactly as the strict
+    single-target path always has; shared by the single- and multi-target extractions.
+    """
+    # target + sum v*col = 0  =>  target = sum (-v)*col
+    terms = {c: (prime - v) % prime for c, v in sorted(pivot_row.items()) if c != target_label}
+
+    non_lf: list = []
+    unknown: list = []
+    for c in terms:
+        verdict = ranked.lf.get(c, None)
+        if verdict is None:
+            verdict = is_locally_finite(family, c)
+        if verdict is False:
+            non_lf.append(c)
+        elif verdict is not True:
+            unknown.append(c)
+    if non_lf:
+        all_lf: object = False
+    elif unknown:
+        all_lf = "Unknown"
+    else:
+        all_lf = True
+    return terms, all_lf, non_lf, unknown
 
 
 def modular_normal_form(
@@ -102,8 +130,13 @@ def modular_normal_form(
     """
     t = timings if timings is not None else StageTimings()
     rows = list(rows)
-    base = dict(status=STATUS_EMPTY_SYSTEM, target_label=target_label, prime=prime,
-                sample=dict(sample), formal_success=False)
+    base = dict(
+        status=STATUS_EMPTY_SYSTEM,
+        target_label=target_label,
+        prime=prime,
+        sample=dict(sample),
+        formal_success=False,
+    )
     if not rows:
         return NormalFormResult(**base)
 
@@ -119,16 +152,17 @@ def modular_normal_form(
     labels = sorted({c for r in matrix for c in r})
     nrows = len(matrix)
     if target_label not in set(labels):
-        return NormalFormResult(
-            **{**base, "status": STATUS_TARGET_NOT_REDUCIBLE, "nrows": nrows}
-        )
+        return NormalFormResult(**{**base, "status": STATUS_TARGET_NOT_REDUCIBLE, "nrows": nrows})
 
     if ranking is not None:
         ranked = ranking  # Perf.1: hoisted — built once per run, reused at every point
     else:
         with t.stage("ranking"):
             ranked = rank_labels(
-                family, labels, target=target_label, preferred_masters=preferred_masters,
+                family,
+                labels,
+                target=target_label,
+                preferred_masters=preferred_masters,
                 lf_map=lf_map,
             )
     with t.stage("rref_mod_p"):
@@ -141,29 +175,9 @@ def modular_normal_form(
 
     with t.stage("extract_normal_form"):
         pivot_row = res.pivots[target_label]  # {target: 1, free cols...}
-        # target + sum v*col = 0  =>  target = sum (-v)*col
-        terms = {
-            c: (prime - v) % prime
-            for c, v in sorted(pivot_row.items())
-            if c != target_label
-        }
-
-        non_lf: list = []
-        unknown: list = []
-        for c in terms:
-            verdict = ranked.lf.get(c, None)
-            if verdict is None:
-                verdict = is_locally_finite(family, c)
-            if verdict is False:
-                non_lf.append(c)
-            elif verdict is not True:
-                unknown.append(c)
-        if non_lf:
-            all_lf: object = False
-        elif unknown:
-            all_lf = "Unknown"
-        else:
-            all_lf = True
+        terms, all_lf, non_lf, unknown = _extract_target_terms(
+            family, ranked, pivot_row, target_label, prime
+        )
 
     return NormalFormResult(
         status=STATUS_REDUCED,
@@ -179,3 +193,120 @@ def modular_normal_form(
         nrows=nrows,
         rank=res.rank,
     )
+
+
+def modular_normal_forms_multi(
+    family: ParametricFamily,
+    rows: Iterable[Row],
+    target_labels: Iterable[Label],
+    sample: dict,
+    prime: int,
+    preferred_masters: Iterable[Label] = (),
+    lf_map: dict | None = None,
+    timings: StageTimings | None = None,
+    ranking: RankedLabels | None = None,
+) -> dict[Label, NormalFormResult]:
+    """Perf.5: extract *several* targets' normal forms from ONE shared RREF at one point.
+
+    The expensive per-point work (``assemble_rows_mod_p`` + ``rref_mod_p``) does not depend on
+    the target, so it is done once; every requested target is then read off the same reduced
+    system. All targets sit in ranking tier 0 (see :func:`ranking.rank_labels` ``targets``), so
+    each reducible target's pivot row is fully reduced against the other targets and its normal
+    form contains free (master) columns only.
+
+    Returns ``{target_label: NormalFormResult}`` in input target order. Per-target semantics are
+    the strict single-target ones (same statuses, same LF diagnosis via
+    :func:`_extract_target_terms`); a bad specialization rejects the whole point for every target
+    (assembly is target-independent), never patched. For a single target this is bit-identical
+    to :func:`modular_normal_form` (the tier-0 set is the same singleton).
+
+    NB (honesty): for **two or more** targets the elimination order differs from any
+    single-target run (the other targets are promoted to tier 0), so masters/coefficients are
+    not guaranteed identical to per-target runs. Each result is still a genuine row-span
+    relation and passes through the unchanged strict gates downstream.
+    """
+    targets = list(dict.fromkeys(target_labels))  # dedup, preserve order
+    if not targets:
+        raise ValueError("modular_normal_forms_multi requires at least one target label")
+    t = timings if timings is not None else StageTimings()
+    rows = list(rows)
+
+    def _base(target_label: Label) -> dict:
+        return dict(
+            status=STATUS_EMPTY_SYSTEM,
+            target_label=target_label,
+            prime=prime,
+            sample=dict(sample),
+            formal_success=False,
+        )
+
+    if not rows:
+        return {tgt: NormalFormResult(**_base(tgt)) for tgt in targets}
+
+    try:
+        with t.stage("assemble_rows_mod_p"):
+            matrix = assemble_rows_mod_p(family, rows, sample, prime)
+    except BadSpecialization:
+        return {
+            tgt: NormalFormResult(**{**_base(tgt), "status": STATUS_BAD_SPECIALIZATION})
+            for tgt in targets
+        }
+
+    if not matrix:
+        return {tgt: NormalFormResult(**_base(tgt)) for tgt in targets}
+
+    labels = sorted({c for r in matrix for c in r})
+    label_set = set(labels)
+    nrows = len(matrix)
+
+    if ranking is not None:
+        ranked = ranking  # hoisted — built once per run (Perf.1), reused at every point
+    else:
+        with t.stage("ranking"):
+            ranked = rank_labels(
+                family,
+                labels,
+                targets=targets,
+                preferred_masters=preferred_masters,
+                lf_map=lf_map,
+            )
+    with t.stage("rref_mod_p"):
+        res = rref_mod_p(matrix, prime, column_order=ranked.ordered)
+
+    out: dict[Label, NormalFormResult] = {}
+    for tgt in targets:
+        if tgt not in label_set:
+            # mirrors the single-target pre-RREF check: nrows only, rank left at 0
+            out[tgt] = NormalFormResult(
+                **{**_base(tgt), "status": STATUS_TARGET_NOT_REDUCIBLE, "nrows": nrows}
+            )
+            continue
+        if tgt not in res.pivots:
+            out[tgt] = NormalFormResult(
+                **{
+                    **_base(tgt),
+                    "status": STATUS_TARGET_NOT_REDUCIBLE,
+                    "nrows": nrows,
+                    "rank": res.rank,
+                }
+            )
+            continue
+        with t.stage("extract_normal_form"):
+            terms, all_lf, non_lf, unknown = _extract_target_terms(
+                family, ranked, res.pivots[tgt], tgt, prime
+            )
+        out[tgt] = NormalFormResult(
+            status=STATUS_REDUCED,
+            target_label=tgt,
+            prime=prime,
+            sample=dict(sample),
+            formal_success=True,
+            terms=terms,
+            pivot_label=tgt,
+            all_terms_lf=all_lf,
+            non_lf_terms=non_lf,
+            unknown_lf_terms=unknown,
+            nrows=nrows,
+            rank=res.rank,
+        )
+    return out

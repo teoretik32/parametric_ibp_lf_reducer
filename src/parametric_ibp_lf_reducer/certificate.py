@@ -107,6 +107,100 @@ def _reduce_vector_by_pivots(vec: dict, pivots: Mapping, prime: int) -> dict:
     return w
 
 
+def _relation_vector_mod_p(
+    target_label: Label,
+    terms: Mapping[Label, object],
+    lhs_terms: Mapping[Label, object] | None,
+    sample: Mapping,
+    prime: int,
+) -> dict:
+    """Assemble the relation vector ``sum L_j J_j - sum C_i J_i`` mod ``prime`` (may raise
+    :class:`BadSpecialization`)."""
+    if lhs_terms is None:
+        lhs_terms = {target_label: 1}
+    relation: dict = {}
+    for label in sorted(lhs_terms):
+        c = _coeff_mod_p(lhs_terms[label], sample, prime)
+        relation[label] = (relation.get(label, 0) + c) % prime
+    for label in sorted(terms):
+        c = _coeff_mod_p(terms[label], sample, prime)
+        relation[label] = (relation.get(label, 0) - c) % prime
+    return {c: v for c, v in relation.items() if v}
+
+
+def verify_reduction_relations_mod_p(
+    family: ParametricFamily,
+    rows: Sequence[Row],
+    relations: Mapping[Label, Mapping[Label, object]],
+    sample: Mapping,
+    prime: int,
+    column_order: Sequence[Label] | None = None,
+    lhs_terms_map: Mapping[Label, Mapping[Label, object]] | None = None,
+) -> dict[Label, CertificateResult]:
+    """Perf.5: certify *several* claimed relations at ONE ``(sample, prime)`` point, sharing the
+    assemble + RREF work.
+
+    ``relations`` maps target label -> ``terms`` (as in
+    :func:`verify_reduction_relation_mod_p`); ``lhs_terms_map`` optionally supplies a per-target
+    ``lhs_terms``. Returns ``{target: CertificateResult}`` with each result identical to what the
+    single-relation verifier would produce at the same point: the matrix assembly and RREF do not
+    depend on the claimed relation, so only the cheap per-relation coefficient evaluation and
+    pivot reduction are repeated. A bad specialization *in the rows* rejects the whole point (all
+    targets get ``BadSpecialization``); a bad specialization in one relation's claimed
+    coefficients rejects only that target.
+    """
+    rows = list(rows)
+    targets = list(relations)
+    lhs_terms_map = lhs_terms_map or {}
+
+    def _all(status: str) -> dict[Label, CertificateResult]:
+        return {
+            tgt: CertificateResult(
+                status=status,
+                in_span=False,
+                target_label=tgt,
+                prime=prime,
+                sample=dict(sample),
+            )
+            for tgt in targets
+        }
+
+    if not rows:
+        return _all(STATUS_EMPTY_SYSTEM)
+    try:
+        matrix = assemble_rows_mod_p(family, rows, dict(sample), prime)
+    except BadSpecialization:
+        return _all(STATUS_BAD_SPECIALIZATION)
+    if not matrix:
+        return _all(STATUS_EMPTY_SYSTEM)
+
+    res = rref_mod_p(matrix, prime, column_order=column_order)
+    out: dict[Label, CertificateResult] = {}
+    for tgt in targets:
+        base = dict(in_span=False, target_label=tgt, prime=prime, sample=dict(sample))
+        try:
+            relation = _relation_vector_mod_p(
+                tgt, relations[tgt], lhs_terms_map.get(tgt), sample, prime
+            )
+        except BadSpecialization:
+            out[tgt] = CertificateResult(status=STATUS_BAD_SPECIALIZATION, **base)
+            continue
+        residual = _reduce_vector_by_pivots(relation, res.pivots, prime)
+        in_span = residual == {}
+        out[tgt] = CertificateResult(
+            status=STATUS_IN_SPAN if in_span else STATUS_NOT_IN_SPAN,
+            in_span=in_span,
+            target_label=tgt,
+            prime=prime,
+            sample=dict(sample),
+            relation=relation,
+            residual=residual,
+            nrows=len(matrix),
+            rank=res.rank,
+        )
+    return out
+
+
 def verify_reduction_relation_mod_p(
     family: ParametricFamily,
     rows: Sequence[Row],

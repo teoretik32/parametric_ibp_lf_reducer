@@ -29,6 +29,7 @@ from .modular_normal_form import (
     STATUS_TARGET_NOT_REDUCIBLE,
     NormalFormResult,
     modular_normal_form,
+    modular_normal_forms_multi,
 )
 from .ranking import RankedLabels, rank_labels
 from .row_generation import Row
@@ -187,6 +188,107 @@ def collect_normal_form_records(
         )
         records.append(record_from_result(result))
     return records
+
+
+# --- Perf.5: multi-target collection over ONE shared RREF per point ---------------------------
+def _run_point_multi(task: tuple) -> tuple:  # pragma: no cover - runs inside workers
+    """Compute one ``(sample, prime)`` multi-target point in a worker (math identical to serial)."""
+    sample, prime = task
+    family, rows, target_labels, preferred_masters, lf_map, ranking = _POINT_CTX["ctx"]
+    results = modular_normal_forms_multi(
+        family,
+        rows,
+        target_labels,
+        dict(sample),
+        prime,
+        preferred_masters=preferred_masters,
+        lf_map=lf_map,
+        ranking=ranking,
+    )
+    return tuple(record_from_result(results[tgt]) for tgt in target_labels)
+
+
+def collect_normal_form_records_multi(
+    family: ParametricFamily,
+    rows: Iterable[Row],
+    target_labels: Sequence[Label],
+    primes: Sequence[int],
+    samples: Sequence[Mapping],
+    preferred_masters: Iterable[Label] = (),
+    lf_map: dict | None = None,
+    timings: StageTimings | None = None,
+    ranking: RankedLabels | None = None,
+    jobs: int = 1,
+) -> dict[Label, list[NormalFormRecord]]:
+    """Perf.5: collect records for *several* targets from ONE RREF per ``(prime, sample)`` point.
+
+    Same iteration order and per-target record semantics as :func:`collect_normal_form_records`
+    (samples outer, primes inner; every point recorded honestly), but the per-point
+    assemble + RREF work is shared across all targets via
+    :func:`modular_normal_forms_multi`. Returns ``{target: [records...]}`` with every list in
+    the same deterministic point order.
+
+    The hoisted ranking (Perf.1) is built once with **all** targets in tier 0
+    (``rank_labels(..., targets=target_labels)``); a caller may pass a precomputed ``ranking``
+    built the same way. For a single target this is bit-identical to the single-target
+    collector; for several targets the elimination order (hence masters) may differ from
+    per-target runs — see the :func:`modular_normal_forms_multi` honesty note.
+
+    ``jobs`` behaves exactly as in :func:`collect_normal_form_records` (Perf.3):
+    ``jobs=1`` is the exact serial path; ``jobs>1`` computes points in worker processes with
+    order-preserving ``ProcessPoolExecutor.map`` — bit-identical records, with the same caveat
+    that per-point stage timings accumulate inside workers and read ``0.0`` in the caller's
+    ``timings``.
+    """
+    if not isinstance(jobs, int) or isinstance(jobs, bool) or jobs < 1:
+        raise ValueError(f"jobs must be an int >= 1, got {jobs!r}")
+    targets = list(dict.fromkeys(target_labels))
+    if not targets:
+        raise ValueError("collect_normal_form_records_multi requires at least one target label")
+    rows = list(rows)
+    primes = list(primes)
+    samples = list(samples)
+    preferred_masters = tuple(preferred_masters)
+    t = timings if timings is not None else StageTimings()
+    if ranking is None:
+        with t.stage("ranking_once"):
+            labels = sorted({c for row in rows for c in row.terms} | set(targets))
+            ranking = rank_labels(
+                family,
+                labels,
+                targets=targets,
+                preferred_masters=preferred_masters,
+                lf_map=lf_map,
+            )
+    tasks = [(sample, prime) for sample in samples for prime in primes]
+    out: dict[Label, list[NormalFormRecord]] = {tgt: [] for tgt in targets}
+    if jobs > 1 and len(tasks) > 1:
+        max_workers = min(jobs, len(tasks))
+        chunksize = max(1, len(tasks) // (max_workers * 4))
+        with ProcessPoolExecutor(
+            max_workers=max_workers,
+            initializer=_init_point_worker,
+            initargs=(family, rows, tuple(targets), preferred_masters, lf_map, ranking),
+        ) as pool:
+            for point_records in pool.map(_run_point_multi, tasks, chunksize=chunksize):
+                for tgt, rec in zip(targets, point_records):
+                    out[tgt].append(rec)
+        return out
+    for sample, prime in tasks:
+        results = modular_normal_forms_multi(
+            family,
+            rows,
+            targets,
+            dict(sample),
+            prime,
+            preferred_masters=preferred_masters,
+            lf_map=lf_map,
+            timings=timings,
+            ranking=ranking,
+        )
+        for tgt in targets:
+            out[tgt].append(record_from_result(results[tgt]))
+    return out
 
 
 def summarize_records(records: Iterable[NormalFormRecord]) -> dict:
