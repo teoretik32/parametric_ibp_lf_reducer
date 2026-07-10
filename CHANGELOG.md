@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.1.2 — 2026
+
+### Performance
+- **Shared-RREF reuse for linear-LHS / multi-target normal forms** (Perf.5,
+  `e60763b`): when the LHS is a linear combination of targets over one shared
+  row system, per-target normal forms are computed from a single RREF instead
+  of re-running the full pipeline per target.
+- Corrected Example 4\* runtime improved from ~2h24m to ~1h22m.
+- RREF work reduced from ~5631.8s to ~2715.1s total (`rref_mod_p`) in the
+  corrected Example 4\* profile.
+
+### Tests
+- New/updated tests for multi-target LHS equality
+  (`tests/test_perf5_multi_target.py`) and the corrected Example 4\* path;
+  full suite green (260 passed, 7 skipped), ruff clean.
+
+### Unchanged
+- **No math-result change**: coefficients and certificate remain unchanged
+  (Status `Success`, `AllLocallyFinite` True, combined certificate
+  **Passed 5/5**, `selected_rank=9924`).
+
+### Known hotspots
+- Remaining cost is dominated by one single large modular RREF (~2715s) and
+  the certificate RREFs; further wins need a faster RREF kernel or
+  certificate-point reuse, not orchestration changes.
+
 ## v0.1.1 — 2026 (candidate, not pushed)
 
 ### Added

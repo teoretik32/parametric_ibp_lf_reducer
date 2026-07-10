@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "parametric-ibp-lf-reducer"
-version = "0.1.1"
+version = "0.1.2"
 description = "Python reducer for parametric IBP to locally finite integrands"
 readme = "README.md"
 requires-python = ">=3.11"
