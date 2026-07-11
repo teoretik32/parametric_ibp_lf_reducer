@@ -322,3 +322,31 @@ Expected: path under `B:\soft\math_scratch\src\`.
   `tests/test_rref_numba_backend.py` unchanged and green (skips
   cleanly without numba). Full suite + `ruff check`/`ruff format`
   clean.
+
+## Perf.12 — `rref_backend="auto"` heuristic selection (branch `perf/rref-auto-backend`)
+
+- New accepted name `"auto"` (`sparse_rref.AUTO_RREF_BACKEND`);
+  `RREF_BACKEND_CHOICES = (*RREF_BACKENDS, "auto")` is what
+  config/API/CLI validate against. `DEFAULT_RREF_BACKEND` stays
+  `"dict"` — auto is strictly opt-in.
+- `select_rref_backend()` resolves `"auto"` *per matrix, up front* in
+  `sparse_rref` (so serial path and ProcessPool workers behave
+  identically): numba is chosen only when it is available, `prime <
+  2**31` (int64 guard) *and* the matrix clears every
+  `AUTO_RREF_THRESHOLDS` gate (`min_rows: 500`, `min_cols: 400`,
+  `min_nnz: 3000` — conservative, subject to change); otherwise
+  `"dict"`. Missing numba is a silent fallback for `"auto"` only; an
+  *explicit* backend request is never substituted and still fails
+  fast.
+- Selection is observability-only in effect: the chosen backend runs
+  the same pivot/elimination logic, so results stay backend-identical
+  (Perf.10 parity suite still applies). Stats record the decision:
+  `requested_rref_backend`, `selected_rref_backend`,
+  `backend_selection_reason` (human-readable, e.g. size vs
+  thresholds), `numba_available`, `auto_thresholds_used`.
+- CLI: `--rref-backend auto` accepted (help marks it experimental,
+  Perf.12).
+- Tests: new `tests/test_rref_backend_auto.py` — small matrix → dict,
+  large without numba → dict fallback, threshold/prime gates, explicit
+  request never silently substituted, end-to-end run; `tests/test_cli.py`
+  extended for `auto`. Full suite + ruff clean.

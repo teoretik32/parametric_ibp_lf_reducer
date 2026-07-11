@@ -34,7 +34,7 @@ from .input_parser import (
 )
 from .labels import Label, zero_label
 from .reducer import ReducerConfig, reduce_family_once
-from .sparse_rref import RREF_BACKENDS
+from .sparse_rref import RREF_BACKEND_CHOICES
 from .result import (
     FAILURE_PARSER_NEEDS_EXPLICIT_FAMILY,
     ReductionDiagnostics,
@@ -171,11 +171,16 @@ _OPTION_KEYS = {
 
 
 def _as_rref_backend(value) -> str:
-    """Validate an RREF backend name against :data:`sparse_rref.RREF_BACKENDS` (Perf.11)."""
+    """Validate an RREF backend name against :data:`sparse_rref.RREF_BACKEND_CHOICES`.
+
+    Perf.11 added the concrete backends; Perf.12 adds ``"auto"`` (experimental heuristic
+    that resolves to dict or numba per matrix — selection only, identical results).
+    """
     name = str(value).strip().strip('"')
-    if name not in RREF_BACKENDS:
-        raise ValueError(f"unknown RREF backend {name!r}; expected one of {RREF_BACKENDS}")
+    if name not in RREF_BACKEND_CHOICES:
+        raise ValueError(f"unknown RREF backend {name!r}; expected one of {RREF_BACKEND_CHOICES}")
     return name
+
 
 # Canonical setting -> coercer. Everything here (minus ``target_label``) is a ReducerConfig field.
 _COERCERS = {

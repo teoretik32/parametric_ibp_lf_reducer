@@ -20,7 +20,7 @@ from pathlib import Path
 
 from .input_parser import ParserError
 from .result import ReductionResult
-from .sparse_rref import RREF_BACKENDS
+from .sparse_rref import RREF_BACKEND_CHOICES
 from . import api
 
 EXIT_SUCCESS = 0
@@ -111,11 +111,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     reduce_p.add_argument(
         "--rref-backend",
-        choices=RREF_BACKENDS,
+        choices=RREF_BACKEND_CHOICES,
         metavar="NAME",
         help=(
             "RREF implementation for records + certificate points "
-            f"(one of {', '.join(RREF_BACKENDS)}; default: dict). "
+            f"(one of {', '.join(RREF_BACKEND_CHOICES)}; default: dict). "
+            "'auto' (experimental, Perf.12) picks numba per matrix for large systems "
+            "when numba is available and prime < 2**31, else dict. "
             "Backend selection only — all backends return identical results."
         ),
     )
