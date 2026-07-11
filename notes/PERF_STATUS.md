@@ -223,3 +223,35 @@ Expected: path under `B:\soft\math_scratch\src\`.
   (~2900 s, now ~2/3 of wall) and the certificate points that still
   need fresh RREFs. Further wins need a faster mod-p RREF kernel
   (bit-packing / numpy) — a new design, not reshuffling.
+
+## Perf.7 — DONE (branch `perf/rref-backend-prototype`): RREF backend A
+
+- See `docs/RREF_BACKEND_PLAN.md` for the full plan, candidate table,
+  and measured tables. Summary: `rref_mod_p` gained optional
+  `collect_stats=True` counters (nnz before/after, row-nnz profiles,
+  fill-in ratio, inversions, elimination time; JSON-safe) and an
+  opt-in `rref_backend="int_sparse_experimental"` (label→int column
+  relabeling, identical `_eliminate` loop; default stays `"dict"`).
+- Equivalence: `tests/test_rref_backend.py` (15 tests) — results
+  identical across backends on every shape.
+- Synthetic bench (`scripts/bench_rref_backends.py`): 0.90–0.92x at
+  scale — verified but only ~8–10%; NOT plumbed upward.
+
+## Perf.8 — DONE (same branch): real-matrix stats; candidate B REJECTED
+
+- Real profile (`scripts/profile_rref_real_matrix.py` →
+  `validation/rref_real_matrix_profile.json`): corrected Example 4*
+  medium subset, 512×917 rank 512, nnz 2640→27762 (**fill-in 10.5x**,
+  final row-nnz median 62 / max 114 of 917 cols — still sparse);
+  elimination dict 0.81 s vs int backend 0.56 s (**0.69x** — the int
+  backend wins MORE on real label tuples than on synthetic).
+- Candidate B (sorted int-array rows, pure Python) micro-experiment at
+  the measured real nnz profile: merge-axpy is **1.5–1.9x SLOWER**
+  than dict-axpy (worst at the final median nnz 62: 1.91x). Numbers
+  and methodology recorded in `docs/RREF_BACKEND_PLAN.md`.
+- Verdict: B/C/D rejected in pure Python; dict stays default;
+  `int_sparse_experimental` stays opt-in (confirmed useful on real
+  matrices). Remaining RREF headroom requires leaving Python bytecode
+  (Numba/native) — parked under the project's pure-Python constraint.
+- Health: full suite green, `ruff check .` clean, profile script
+  `ruff format --check` clean.
