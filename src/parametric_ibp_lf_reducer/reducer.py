@@ -32,7 +32,7 @@ Failure mapping (honest, conservative):
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Iterable, Mapping, MutableMapping, Sequence
 from dataclasses import dataclass, field
 from fractions import Fraction
 
@@ -245,6 +245,7 @@ def _run_certificate_step(
     min_points: int,
     lhs_terms: Mapping | None = None,
     timings: StageTimings | None = None,
+    rref_cache: MutableMapping | None = None,
 ) -> dict:
     """Certify the reconstructed relation at the given points; never stamps ``Success``.
 
@@ -269,7 +270,14 @@ def _run_certificate_step(
         prime = primes[k % len(primes)]
         with t.stage("certificate_points_total"):
             cert = verify_reduction_relation_mod_p(
-                family, rows, target_label, coeffs, dict(point), prime, lhs_terms=lhs_terms
+                family,
+                rows,
+                target_label,
+                coeffs,
+                dict(point),
+                prime,
+                lhs_terms=lhs_terms,
+                rref_cache=rref_cache,
             )
         tally.add(cert, selected_rank)
     return tally.payload(points, min_points, selected_rank)
@@ -284,6 +292,7 @@ def _run_certificate_step_multi(
     selected_ranks: Mapping[Label, int | None],
     min_points: int,
     timings: StageTimings | None = None,
+    rref_cache: MutableMapping | None = None,
 ) -> dict[Label, dict]:
     """Perf.5: certify *several* reconstructed relations at the same points, sharing the
     assemble + RREF work per point via :func:`certificate.verify_reduction_relations_mod_p`.
@@ -298,7 +307,9 @@ def _run_certificate_step_multi(
     for k, point in enumerate(points):
         prime = primes[k % len(primes)]
         with t.stage("certificate_points_total"):
-            certs = verify_reduction_relations_mod_p(family, rows, relations, dict(point), prime)
+            certs = verify_reduction_relations_mod_p(
+                family, rows, relations, dict(point), prime, rref_cache=rref_cache
+            )
         for tgt, tally in tallies.items():
             tally.add(certs[tgt], selected_ranks[tgt])
     return {
@@ -662,6 +673,7 @@ def reduce_rows_multi(
     min_certificate_points: int = 1,
     certificate_rank_policy: str = "selected_rank",
     jobs: int = 1,
+    certificate_rref_cache: MutableMapping | None = None,
 ) -> dict[Label, ReductionResult]:
     """Perf.5: reduce *several* targets over the same rows, sharing the per-point RREF work.
 
@@ -676,6 +688,12 @@ def reduce_rows_multi(
     - certification: ONE assemble + RREF per certificate point via
       :func:`_run_certificate_step_multi`, with per-target verdicts identical to the singular
       verifier (certificate points are computed once from the shared ``samples``).
+
+    ``certificate_rref_cache`` (Perf.6, optional): a mutable mapping that receives the per-point
+    assemble+RREF results (keyed by :func:`certificate.rref_cache_key`) so a *later* certificate
+    over the SAME ``rows`` (e.g. a combined-relation certificate at overlapping points) can reuse
+    them instead of recomputing. Verdicts are unchanged — the cache must not be shared across
+    different row systems (caller contract).
 
     Diagnostics: every result carries its own per-target ``run`` counters; the ``timings``
     snapshot is shared across targets (stages like ``records_total`` and ``certificate_total``
@@ -741,6 +759,7 @@ def reduce_rows_multi(
                     selected_ranks={tgt: states[tgt].selected_rank for tgt in to_certify},
                     min_points=min_certificate_points,
                     timings=timings,
+                    rref_cache=certificate_rref_cache,
                 )
             for tgt, payload in payloads.items():
                 states[tgt].run.certificate = payload

@@ -185,3 +185,41 @@ Expected: path under `B:\soft\math_scratch\src\`.
   ≈ 2070 s). Further wins would need a faster mod-p RREF kernel
   (bit-packing / numpy) or certificate-point reuse — new designs,
   not reshuffling.
+
+## Perf.6 — DONE: certificate-point RREF reuse (combined certificate)
+
+- Change: the combined certificate reuses RREFs already computed for
+  the multi-pass certificate points instead of redoing them — an RREF
+  cache keyed by certificate point is filled during the shared
+  multi-pass certificate and handed to the combined-certificate step
+  (`_run_certificate_step(..., rref_cache)` in `reducer.py`; cache-aware
+  `verify_reduction_relation_mod_p` path in `certificate.py`). Points
+  not present in the cache fall back to the exact previous behavior.
+- Heavy-run log line confirms the reuse:
+  `combined certificate: 5 points, reusing 3 RREF(s) from the
+  multi-pass certificate (Perf.6)`.
+- Correctness: certificate-gate + perf suites re-run
+  (`tests/test_certificate_gate.py`, `tests/test_perf5_multi_target.py`,
+  `tests/test_perf3_jobs_equality.py`) and the full suite + ruff —
+  all clean. Heavy-run results **identical** to the certified
+  baseline: same 2 combined terms
+  (`(47703*ep^3-521*ep^2-57*ep-1)/(3300*ep^2)` on `{1,1,0,-1,0,0,0}`,
+  `(816*ep^3+881*ep^2+66*ep+1)/(3300*ep^2)` on `{1,1,0,0,0,-1,0}`),
+  `all_locally_finite=True`, rank 9924 for both targets, combined
+  certificate **Passed 5/5** (filtered 0, exceeded 0, bad 0;
+  rank histogram `{9924: 5}`, `first_nonzero_residual=null`).
+- Measured (same heavy corrected Example 4* config, 12360 rows x
+  972 labels, editable install): **wall ~1h15m** (~07:39 launch →
+  08:54 done) vs Perf.5 ~1h22m. Stage profile (s):
+  `combined_certificate` **518.7** (was 1293.3, **~2.5x** on the
+  targeted stage); `multi_target_reduction` 3798.5 (was 3545.6 —
+  run-to-run noise on the big RREF, of which `rref_mod_p` 2949.4,
+  `records_total` 3004.6, `certificate_total` 793.6, `ranking_once`
+  19.8, `assemble_rows_mod_p` 33.7); `row_generation_shared` 58.7,
+  `rows_generated_once=True`. Net targeted-stage sum
+  (`multi_target_reduction` + `combined_certificate`): 4317 s vs
+  Perf.5's 4839 s.
+- Remaining hotspots (post-Perf.6): the single shared `rref_mod_p`
+  (~2900 s, now ~2/3 of wall) and the certificate points that still
+  need fresh RREFs. Further wins need a faster mod-p RREF kernel
+  (bit-packing / numpy) — a new design, not reshuffling.

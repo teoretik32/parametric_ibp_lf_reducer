@@ -245,7 +245,7 @@ Status: **complete, verified**.
 - Тесты: `tests/test_example4_star_corrected.py`. Статус: v0.1.1 candidate,
   тег локальный, **не запушено**.
 
-## Perf status (Perf.0–Perf.5, 2026-07; детали — `notes/PERF_STATUS.md`)
+## Perf status (Perf.0–Perf.6, 2026-07; детали — `notes/PERF_STATUS.md`)
 
 - **Perf.0 — stage timing diagnostics** (`timing.py`, `StageTimings`): чистая наблюдаемость,
   wall-clock по стадиям в `diagnostics.extra["timings"]` + CLI JSON. Математика/гейты не тронуты.
@@ -276,3 +276,13 @@ Status: **complete, verified**.
   Тесты: `tests/test_perf5_multi_target.py` — 15 passed (multi↔serial equality);
   full suite + ruff clean. Остаточные hotspots: один большой mod-p RREF (~2715 s)
   и certificate-работа (~2070 s) — дальше нужны новые kernel-дизайны, не reshuffling.
+- **Perf.6 — certificate-point RREF reuse (принят):** combined certificate
+  переиспользует RREF-ы, уже посчитанные для multi-pass certificate points
+  (`rref_cache` в `_run_certificate_step` / cache-aware путь в `certificate.py`;
+  cache miss = прежнее поведение). Heavy run: лог
+  `combined certificate: 5 points, reusing 3 RREF(s) ... (Perf.6)`;
+  `combined_certificate` **518.7 s** (было 1293.3 s, ~2.5x на стадии),
+  wall ~1h15m; результаты идентичны certified baseline (2 terms, rank 9924
+  на всех 5 точках, certificate Passed 5/5). Тесты: certificate-gate +
+  perf-сьюты + full suite + ruff — clean. Остаточный hotspot: сам shared
+  `rref_mod_p` (~2900 s, ~2/3 wall) — дальше только быстрый mod-p RREF kernel.

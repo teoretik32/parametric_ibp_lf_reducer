@@ -20,7 +20,7 @@ this one-off coefficient evaluation (validation utility, not the row-generation/
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping, MutableMapping, Sequence
 from dataclasses import dataclass, field
 from fractions import Fraction
 
@@ -39,6 +39,18 @@ from .sparse_rref import rref_mod_p
 
 STATUS_IN_SPAN = "InSpan"
 STATUS_NOT_IN_SPAN = "NotInSpan"
+
+
+def rref_cache_key(sample: Mapping, prime: int) -> tuple:
+    """Cache key for the assemble+RREF work of ONE certificate ``(sample, prime)`` point (Perf.6).
+
+    The matrix (and hence its RREF) depends only on ``(rows, column_order, sample, prime)`` —
+    not on the claimed relation. A cache passed as ``rref_cache`` to the verifiers below maps
+    this key to the shared RREF result for a FIXED ``(rows, column_order)`` pair; the *caller*
+    owns that contract and must never share one cache across different row systems or column
+    orders. Values are compared via ``str`` (exact ``Fraction``/``int`` rendering — no floats).
+    """
+    return (prime, tuple(sorted((str(k), str(v)) for k, v in dict(sample).items())))
 
 
 @dataclass
@@ -73,9 +85,7 @@ def _coeff_mod_p(coeff, sample: Mapping, prime: int) -> int:
     subs = {sp.Symbol(str(k)): sp.Rational(Fraction(v)) for k, v in sample.items()}
     value = expr.subs(subs)
     if value.is_finite is False:  # pole at the sample (zoo/oo) -> reject the point, honestly
-        raise BadSpecialization(
-            f"claimed coefficient {coeff!r} has a pole at {dict(sample)}"
-        )
+        raise BadSpecialization(f"claimed coefficient {coeff!r} has a pole at {dict(sample)}")
     try:
         value = sp.Rational(value)
     except (TypeError, ValueError) as exc:
@@ -136,6 +146,7 @@ def verify_reduction_relations_mod_p(
     prime: int,
     column_order: Sequence[Label] | None = None,
     lhs_terms_map: Mapping[Label, Mapping[Label, object]] | None = None,
+    rref_cache: MutableMapping | None = None,
 ) -> dict[Label, CertificateResult]:
     """Perf.5: certify *several* claimed relations at ONE ``(sample, prime)`` point, sharing the
     assemble + RREF work.
@@ -167,14 +178,20 @@ def verify_reduction_relations_mod_p(
 
     if not rows:
         return _all(STATUS_EMPTY_SYSTEM)
-    try:
-        matrix = assemble_rows_mod_p(family, rows, dict(sample), prime)
-    except BadSpecialization:
-        return _all(STATUS_BAD_SPECIALIZATION)
-    if not matrix:
-        return _all(STATUS_EMPTY_SYSTEM)
-
-    res = rref_mod_p(matrix, prime, column_order=column_order)
+    cached = rref_cache.get(rref_cache_key(sample, prime)) if rref_cache is not None else None
+    if cached is not None:
+        res, nrows = cached  # Perf.6: identical (rows, column_order) contract — see rref_cache_key
+    else:
+        try:
+            matrix = assemble_rows_mod_p(family, rows, dict(sample), prime)
+        except BadSpecialization:
+            return _all(STATUS_BAD_SPECIALIZATION)
+        if not matrix:
+            return _all(STATUS_EMPTY_SYSTEM)
+        res = rref_mod_p(matrix, prime, column_order=column_order)
+        nrows = len(matrix)
+        if rref_cache is not None:
+            rref_cache[rref_cache_key(sample, prime)] = (res, nrows)
     out: dict[Label, CertificateResult] = {}
     for tgt in targets:
         base = dict(in_span=False, target_label=tgt, prime=prime, sample=dict(sample))
@@ -195,7 +212,7 @@ def verify_reduction_relations_mod_p(
             sample=dict(sample),
             relation=relation,
             residual=residual,
-            nrows=len(matrix),
+            nrows=nrows,
             rank=res.rank,
         )
     return out
@@ -210,6 +227,7 @@ def verify_reduction_relation_mod_p(
     prime: int,
     column_order: Sequence[Label] | None = None,
     lhs_terms: Mapping[Label, object] | None = None,
+    rref_cache: MutableMapping | None = None,
 ) -> CertificateResult:
     """Certify (mod ``prime``, at ``sample``) that ``J[target] = sum terms[label]*J[label]``
     is in the span of ``rows``.
@@ -223,18 +241,18 @@ def verify_reduction_relation_mod_p(
     honestly (status, never a patch).
     """
     rows = list(rows)
-    base = dict(
-        in_span=False, target_label=target_label, prime=prime, sample=dict(sample)
-    )
+    base = dict(in_span=False, target_label=target_label, prime=prime, sample=dict(sample))
     if not rows:
         return CertificateResult(status=STATUS_EMPTY_SYSTEM, **base)
 
-    try:
-        matrix = assemble_rows_mod_p(family, rows, dict(sample), prime)
-    except BadSpecialization:
-        return CertificateResult(status=STATUS_BAD_SPECIALIZATION, **base)
-    if not matrix:
-        return CertificateResult(status=STATUS_EMPTY_SYSTEM, **base)
+    cached = rref_cache.get(rref_cache_key(sample, prime)) if rref_cache is not None else None
+    if cached is None:
+        try:
+            matrix = assemble_rows_mod_p(family, rows, dict(sample), prime)
+        except BadSpecialization:
+            return CertificateResult(status=STATUS_BAD_SPECIALIZATION, **base)
+        if not matrix:
+            return CertificateResult(status=STATUS_EMPTY_SYSTEM, **base)
 
     # relation vector for sum_j L_j * J[lhs_label_j] - sum_i C_i * J[label_i] = 0
     # (default LHS: the single target with unit coefficient, i.e. J[target] - sum C_i J_i = 0)
@@ -252,7 +270,13 @@ def verify_reduction_relation_mod_p(
         return CertificateResult(status=STATUS_BAD_SPECIALIZATION, **base)
     relation = {c: v for c, v in relation.items() if v}
 
-    res = rref_mod_p(matrix, prime, column_order=column_order)
+    if cached is not None:
+        res, nrows = cached  # Perf.6: identical (rows, column_order) contract — see rref_cache_key
+    else:
+        res = rref_mod_p(matrix, prime, column_order=column_order)
+        nrows = len(matrix)
+        if rref_cache is not None:
+            rref_cache[rref_cache_key(sample, prime)] = (res, nrows)
     residual = _reduce_vector_by_pivots(relation, res.pivots, prime)
     in_span = residual == {}
     return CertificateResult(
@@ -263,6 +287,6 @@ def verify_reduction_relation_mod_p(
         sample=dict(sample),
         relation=relation,
         residual=residual,
-        nrows=len(matrix),
+        nrows=nrows,
         rank=res.rank,
     )

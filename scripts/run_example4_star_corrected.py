@@ -52,6 +52,7 @@ import sympy as sp  # noqa: E402
 
 from parametric_ibp_lf_reducer import parse_family_text, zero_label  # noqa: E402
 from parametric_ibp_lf_reducer.api import build_reducer_config  # noqa: E402
+from parametric_ibp_lf_reducer.certificate import rref_cache_key  # noqa: E402
 from parametric_ibp_lf_reducer.cli import _diagnostics_payload  # noqa: E402
 from parametric_ibp_lf_reducer.reducer import (  # noqa: E402
     CERTIFICATE_PASSED,
@@ -265,6 +266,10 @@ def main(argv=None) -> int:
     )
 
     targets = sorted(lhs)
+    # Perf.6: certificate points are deterministic in (samples, k), so the combined
+    # certificate below revisits the multi pass's points over the SAME rows — share the
+    # per-point assemble+RREF results (verdicts unchanged; see certificate.rref_cache_key).
+    cert_rref_cache: dict = {}
     _log(f"reducing {len(targets)} targets via shared-RREF multi pass (Perf.5) ...")
     with _timed(perf, "multi_target_reduction"):
         results = reduce_rows_multi(
@@ -277,6 +282,7 @@ def main(argv=None) -> int:
             lf_flags=lf_map,
             preferred_masters=config.preferred_masters,
             min_valid_records=config.min_valid_records,
+            certificate_rref_cache=cert_rref_cache,
         )
     # The timings snapshot is SHARED across targets (records/certificate stages ran once for
     # all of them); per-target timing attribution is intentionally not claimed (Perf.5).
@@ -327,6 +333,15 @@ def main(argv=None) -> int:
         _log(f"combined: {len(combined)} terms, all_locally_finite={all_lf}")
 
         points = _default_certificate_points(config.samples, n=max(1, args.cert_points))
+        n_reused = sum(
+            1
+            for k in range(len(points))
+            if rref_cache_key(points[k], config.primes[k % len(config.primes)]) in cert_rref_cache
+        )
+        _log(
+            f"combined certificate: {len(points)} points, reusing {n_reused} "
+            f"RREF(s) from the multi-pass certificate (Perf.6)"
+        )
         with _timed(perf, "combined_certificate"):
             cert = _run_certificate_step(
                 family,
@@ -338,6 +353,7 @@ def main(argv=None) -> int:
                 selected_rank=next(iter(ranks.values())),
                 min_points=max(1, config.min_certificate_points),
                 lhs_terms=lhs,
+                rref_cache=cert_rref_cache,
             )
         _log(
             f"combined certificate: {cert['certificate_status']} "

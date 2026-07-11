@@ -174,16 +174,16 @@
           "coordinate_rows": 0.0,
           "tangent_fields": 0.0,
           "tangent_rows": 0.0,
-          "lf_flags": 4.800036549568176e-06,
-          "records_total": 2768.3239332998637,
-          "ranking_once": 19.05495829996653,
-          "assemble_rows_mod_p": 32.462228199699894,
+          "lf_flags": 7.6000578701496124e-06,
+          "records_total": 3004.556324099889,
+          "ranking_once": 19.7564771999605,
+          "assemble_rows_mod_p": 33.70689900033176,
           "ranking": 0.0,
-          "rref_mod_p": 2715.148548799334,
-          "extract_normal_form": 0.0008014016784727573,
-          "reconstruction": 0.37787650036625564,
-          "certificate_total": 776.9182488999795,
-          "certificate_points_total": 776.9181096998509
+          "rref_mod_p": 2949.392760399496,
+          "extract_normal_form": 0.0008333013392984867,
+          "reconstruction": 0.3863820000551641,
+          "certificate_total": 793.5660049000289,
+          "certificate_points_total": 793.5658450997435
         }
       }
     },
@@ -263,16 +263,16 @@
           "coordinate_rows": 0.0,
           "tangent_fields": 0.0,
           "tangent_rows": 0.0,
-          "lf_flags": 1.0799849405884743e-05,
-          "records_total": 2768.3239332998637,
-          "ranking_once": 19.05495829996653,
-          "assemble_rows_mod_p": 32.462228199699894,
+          "lf_flags": 1.1300202459096909e-05,
+          "records_total": 3004.556324099889,
+          "ranking_once": 19.7564771999605,
+          "assemble_rows_mod_p": 33.70689900033176,
           "ranking": 0.0,
-          "rref_mod_p": 2715.148548799334,
-          "extract_normal_form": 0.0008014016784727573,
-          "reconstruction": 0.37787650036625564,
-          "certificate_total": 776.9182488999795,
-          "certificate_points_total": 776.9181096998509
+          "rref_mod_p": 2949.392760399496,
+          "extract_normal_form": 0.0008333013392984867,
+          "reconstruction": 0.3863820000551641,
+          "certificate_total": 793.5660049000289,
+          "certificate_points_total": 793.5658450997435
         }
       }
     }
@@ -341,35 +341,35 @@
   },
   "perf4_timings": {
     "script_stages_seconds": {
-      "combined_certificate": 1293.3053956001531,
-      "combined_symbolic_merge": 0.02026410005055368,
-      "family_label_box": 0.0003149998374283314,
-      "lf_flags_shared": 1.2253268000204116,
-      "multi_target_reduction": 3545.6354431000073,
-      "parse_input": 0.0555869999807328,
-      "row_generation_shared": 56.44112600013614
+      "combined_certificate": 518.6781508000568,
+      "combined_symbolic_merge": 0.02028629998676479,
+      "family_label_box": 0.00037899985909461975,
+      "lf_flags_shared": 1.3009783998131752,
+      "multi_target_reduction": 3798.52243110002,
+      "parse_input": 0.07157109980471432,
+      "row_generation_shared": 58.705453200032935
     },
     "row_generation_breakdown_seconds": {
-      "row_generation_total": 56.43865350005217,
-      "algebraic_rows": 0.5060289001557976,
-      "coordinate_rows": 43.91422490007244,
-      "tangent_fields": 0.5860492999199778,
-      "tangent_rows": 11.430800499860197
+      "row_generation_total": 58.702920499956235,
+      "algebraic_rows": 0.5486956001259387,
+      "coordinate_rows": 45.837384700076655,
+      "tangent_fields": 0.6007585001643747,
+      "tangent_rows": 11.714487000135705
     },
     "multi_pass_stage_seconds": {
       "algebraic_rows": 0.0,
-      "assemble_rows_mod_p": 32.462228199699894,
-      "certificate_points_total": 776.9181096998509,
-      "certificate_total": 776.9182488999795,
+      "assemble_rows_mod_p": 33.70689900033176,
+      "certificate_points_total": 793.5658450997435,
+      "certificate_total": 793.5660049000289,
       "coordinate_rows": 0.0,
-      "extract_normal_form": 0.0008014016784727573,
-      "lf_flags": 4.800036549568176e-06,
+      "extract_normal_form": 0.0008333013392984867,
+      "lf_flags": 7.6000578701496124e-06,
       "ranking": 0.0,
-      "ranking_once": 19.05495829996653,
-      "reconstruction": 0.37787650036625564,
-      "records_total": 2768.3239332998637,
+      "ranking_once": 19.7564771999605,
+      "reconstruction": 0.3863820000551641,
+      "records_total": 3004.556324099889,
       "row_generation_total": 0.0,
-      "rref_mod_p": 2715.148548799334,
+      "rref_mod_p": 2949.392760399496,
       "tangent_fields": 0.0,
       "tangent_rows": 0.0
     },
