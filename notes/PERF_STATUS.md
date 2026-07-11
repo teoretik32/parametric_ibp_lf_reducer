@@ -297,3 +297,28 @@ Expected: path under `B:\soft\math_scratch\src\`.
     `cache=True` persists kernels to `__pycache__`.
 - Caveat: numba becomes an *optional* extra only; identical-results
   equivalence is enforced by tests, not assumed.
+- Merged `--no-ff` into `main` (`81ec173`) and pushed; branch deleted.
+
+## Perf.11 — RREF backend selection surfaced (ReducerConfig/API/CLI, branch `perf/rref-backend-plumbing`)
+
+- `ReducerConfig` gains `rref_backend` (default `"dict"`); the value is
+  threaded through `records.py` (serial path *and* ProcessPool workers
+  via the per-point context), `modular_normal_form.py`, `reducer.py`
+  and `certificate.py`, so ranking, normal-form and certificate RREF
+  calls all honour the selection. Selection only — pivot choice,
+  elimination order and all LF/certificate gates are untouched;
+  results are backend-identical by construction (and enforced by the
+  Perf.10 parity suite).
+- Validation up front: backend names are checked against
+  `sparse_rref.RREF_BACKENDS` (`"dict"`, `"int_sparse_experimental"`,
+  numba opt-in) before any work starts; unknown names fail fast with a
+  clear error.
+- API: the public entry points accept `rref_backend` and pass it into
+  `ReducerConfig` unchanged.
+- CLI: new `--rref-backend` flag (choices = `RREF_BACKENDS`, default
+  `dict`); an unknown value is a usage error (`EXIT_USAGE`).
+- Tests: `tests/test_cli.py` extended — accepted value runs end-to-end
+  and exits 0, unknown value is rejected with a usage error;
+  `tests/test_rref_numba_backend.py` unchanged and green (skips
+  cleanly without numba). Full suite + `ruff check`/`ruff format`
+  clean.

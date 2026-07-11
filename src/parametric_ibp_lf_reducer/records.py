@@ -89,10 +89,11 @@ _POINT_CTX: dict = {}
 
 
 def _init_point_worker(
-    family, rows, target_label, preferred_masters, lf_map, ranking
+    family, rows, target_label, preferred_masters, lf_map, ranking, rref_backend=None
 ) -> None:  # pragma: no cover - runs inside worker processes
     """Executor initializer: stash the shared per-run inputs in this worker process."""
     _POINT_CTX["ctx"] = (family, rows, target_label, preferred_masters, lf_map, ranking)
+    _POINT_CTX["rref_backend"] = rref_backend
 
 
 def _run_point(task: tuple) -> NormalFormRecord:  # pragma: no cover - runs inside workers
@@ -108,6 +109,7 @@ def _run_point(task: tuple) -> NormalFormRecord:  # pragma: no cover - runs insi
         preferred_masters=preferred_masters,
         lf_map=lf_map,
         ranking=ranking,
+        rref_backend=_POINT_CTX.get("rref_backend"),
     )
     return record_from_result(result)
 
@@ -123,8 +125,12 @@ def collect_normal_form_records(
     timings: StageTimings | None = None,
     ranking: RankedLabels | None = None,
     jobs: int = 1,
+    rref_backend: str | None = None,
 ) -> list[NormalFormRecord]:
     """Run :func:`modular_normal_form` over ``samples x primes`` and collect every point.
+
+    ``rref_backend`` (Perf.11) selects the RREF implementation for every point (serial and
+    parallel paths alike); all backends return identical results by construction.
 
     Iterates samples in the outer loop and primes in the inner loop, both in the given order, so
     the returned list is deterministic. Bad/absent-target points are recorded honestly (their
@@ -170,7 +176,7 @@ def collect_normal_form_records(
         with ProcessPoolExecutor(
             max_workers=max_workers,
             initializer=_init_point_worker,
-            initargs=(family, rows, target_label, preferred_masters, lf_map, ranking),
+            initargs=(family, rows, target_label, preferred_masters, lf_map, ranking, rref_backend),
         ) as pool:
             return list(pool.map(_run_point, tasks, chunksize=chunksize))
     records: list[NormalFormRecord] = []
@@ -185,6 +191,7 @@ def collect_normal_form_records(
             lf_map=lf_map,
             timings=timings,
             ranking=ranking,
+            rref_backend=rref_backend,
         )
         records.append(record_from_result(result))
     return records
@@ -204,6 +211,7 @@ def _run_point_multi(task: tuple) -> tuple:  # pragma: no cover - runs inside wo
         preferred_masters=preferred_masters,
         lf_map=lf_map,
         ranking=ranking,
+        rref_backend=_POINT_CTX.get("rref_backend"),
     )
     return tuple(record_from_result(results[tgt]) for tgt in target_labels)
 
@@ -219,8 +227,12 @@ def collect_normal_form_records_multi(
     timings: StageTimings | None = None,
     ranking: RankedLabels | None = None,
     jobs: int = 1,
+    rref_backend: str | None = None,
 ) -> dict[Label, list[NormalFormRecord]]:
     """Perf.5: collect records for *several* targets from ONE RREF per ``(prime, sample)`` point.
+
+    ``rref_backend`` (Perf.11): see :func:`collect_normal_form_records` — backend selection
+    only, identical results by construction.
 
     Same iteration order and per-target record semantics as :func:`collect_normal_form_records`
     (samples outer, primes inner; every point recorded honestly), but the per-point
@@ -268,7 +280,7 @@ def collect_normal_form_records_multi(
         with ProcessPoolExecutor(
             max_workers=max_workers,
             initializer=_init_point_worker,
-            initargs=(family, rows, tuple(targets), preferred_masters, lf_map, ranking),
+            initargs=(family, rows, tuple(targets), preferred_masters, lf_map, ranking, rref_backend),
         ) as pool:
             for point_records in pool.map(_run_point_multi, tasks, chunksize=chunksize):
                 for tgt, rec in zip(targets, point_records):
@@ -285,6 +297,7 @@ def collect_normal_form_records_multi(
             lf_map=lf_map,
             timings=timings,
             ranking=ranking,
+            rref_backend=rref_backend,
         )
         for tgt in targets:
             out[tgt].append(record_from_result(results[tgt]))

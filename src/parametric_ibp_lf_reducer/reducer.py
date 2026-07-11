@@ -83,6 +83,9 @@ class ReducerConfig:
     min_certificate_points: int = 1  # informative (rank-generic) passing points required
     certificate_rank_policy: str = "selected_rank"  # only supported policy (explicit contract)
     jobs: int = 1  # Perf.3: worker processes for (prime, sample) record collection; 1 = serial
+    # Perf.11: sparse_rref backend for records + certificate RREFs (None = default "dict");
+    # backend selection only — every backend returns identical results by construction.
+    rref_backend: str | None = None
 
 
 @dataclass
@@ -246,6 +249,7 @@ def _run_certificate_step(
     lhs_terms: Mapping | None = None,
     timings: StageTimings | None = None,
     rref_cache: MutableMapping | None = None,
+    rref_backend: str | None = None,
 ) -> dict:
     """Certify the reconstructed relation at the given points; never stamps ``Success``.
 
@@ -278,6 +282,7 @@ def _run_certificate_step(
                 prime,
                 lhs_terms=lhs_terms,
                 rref_cache=rref_cache,
+                rref_backend=rref_backend,
             )
         tally.add(cert, selected_rank)
     return tally.payload(points, min_points, selected_rank)
@@ -293,6 +298,7 @@ def _run_certificate_step_multi(
     min_points: int,
     timings: StageTimings | None = None,
     rref_cache: MutableMapping | None = None,
+    rref_backend: str | None = None,
 ) -> dict[Label, dict]:
     """Perf.5: certify *several* reconstructed relations at the same points, sharing the
     assemble + RREF work per point via :func:`certificate.verify_reduction_relations_mod_p`.
@@ -308,7 +314,13 @@ def _run_certificate_step_multi(
         prime = primes[k % len(primes)]
         with t.stage("certificate_points_total"):
             certs = verify_reduction_relations_mod_p(
-                family, rows, relations, dict(point), prime, rref_cache=rref_cache
+                family,
+                rows,
+                relations,
+                dict(point),
+                prime,
+                rref_cache=rref_cache,
+                rref_backend=rref_backend,
             )
         for tgt, tally in tallies.items():
             tally.add(certs[tgt], selected_ranks[tgt])
@@ -498,6 +510,7 @@ def _reduce_core(
     min_certificate_points: int = 1,
     certificate_rank_policy: str = "selected_rank",
     jobs: int = 1,
+    rref_backend: str | None = None,
     timings: StageTimings | None = None,
 ) -> ReductionResult:
     if certificate_rank_policy != "selected_rank":
@@ -521,6 +534,7 @@ def _reduce_core(
             lf_map=lf_map,
             timings=timings,
             jobs=jobs,
+            rref_backend=rref_backend,
         )
     st = _select_and_reconstruct(family, records, min_valid_records, run, timings)
 
@@ -543,6 +557,7 @@ def _reduce_core(
                     selected_rank=st.selected_rank,
                     min_points=min_certificate_points,
                     timings=timings,
+                    rref_backend=rref_backend,
                 )
     return _finalize_target(
         family, target_label, st, lf_map, require_certificate_for_success, timings
@@ -602,6 +617,7 @@ def reduce_family_once(
         min_certificate_points=config.min_certificate_points,
         certificate_rank_policy=config.certificate_rank_policy,
         jobs=config.jobs,
+        rref_backend=config.rref_backend,
         timings=timings,
     )
 
@@ -622,6 +638,7 @@ def reduce_rows_once(
     min_certificate_points: int = 1,
     certificate_rank_policy: str = "selected_rank",
     jobs: int = 1,
+    rref_backend: str | None = None,
 ) -> ReductionResult:
     """Orchestrate a reduction over ready-made ``rows`` (for testing without row generation).
 
@@ -653,6 +670,7 @@ def reduce_rows_once(
         min_certificate_points=min_certificate_points,
         certificate_rank_policy=certificate_rank_policy,
         jobs=jobs,
+        rref_backend=rref_backend,
         timings=timings,
     )
 
@@ -674,6 +692,7 @@ def reduce_rows_multi(
     certificate_rank_policy: str = "selected_rank",
     jobs: int = 1,
     certificate_rref_cache: MutableMapping | None = None,
+    rref_backend: str | None = None,
 ) -> dict[Label, ReductionResult]:
     """Perf.5: reduce *several* targets over the same rows, sharing the per-point RREF work.
 
@@ -729,6 +748,7 @@ def reduce_rows_multi(
             lf_map=lf_map,
             timings=timings,
             jobs=jobs,
+            rref_backend=rref_backend,
         )
 
     states: dict[Label, _TargetState] = {}
@@ -760,6 +780,7 @@ def reduce_rows_multi(
                     min_points=min_certificate_points,
                     timings=timings,
                     rref_cache=certificate_rref_cache,
+                    rref_backend=rref_backend,
                 )
             for tgt, payload in payloads.items():
                 states[tgt].run.certificate = payload

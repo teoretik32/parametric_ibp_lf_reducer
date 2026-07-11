@@ -20,6 +20,7 @@ from pathlib import Path
 
 from .input_parser import ParserError
 from .result import ReductionResult
+from .sparse_rref import RREF_BACKENDS
 from . import api
 
 EXIT_SUCCESS = 0
@@ -108,6 +109,16 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="N",
         help="worker processes for (prime, sample) record collection (default: 1 = serial)",
     )
+    reduce_p.add_argument(
+        "--rref-backend",
+        choices=RREF_BACKENDS,
+        metavar="NAME",
+        help=(
+            "RREF implementation for records + certificate points "
+            f"(one of {', '.join(RREF_BACKENDS)}; default: dict). "
+            "Backend selection only — all backends return identical results."
+        ),
+    )
     return parser
 
 
@@ -125,6 +136,8 @@ def _cmd_reduce(args: argparse.Namespace) -> int:
         overrides["min_valid_records"] = args.min_valid_records
     if args.jobs is not None:
         overrides["jobs"] = args.jobs
+    if args.rref_backend is not None:
+        overrides["rref_backend"] = args.rref_backend
 
     try:
         result = api.reduce_wolfram_style_input(input_text, overrides)
