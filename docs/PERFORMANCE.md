@@ -1,11 +1,11 @@
-# Performance notes (Perf.0–Perf.5, v0.1.2)
+# Performance notes (Perf.0–Perf.6, v0.1.3)
 
 Optimization work targeted the corrected Example 4\* heavy run
 (`scripts/run_example4_star_corrected.py`) without changing any math results:
 coefficients, certificate verdicts, and diagnostics JSON schema are identical
 before/after every step. LF/certificate gates were never weakened.
 
-## Perf.0–Perf.5 summary
+## Perf.0–Perf.6 summary
 
 | Step | What | Outcome |
 |---|---|---|
@@ -15,6 +15,27 @@ before/after every step. LF/certificate gates were never weakened.
 | Perf.3 | Parallel per-`(prime, sample)` normal-form record collection (`jobs=` / `--jobs`, `ProcessPoolExecutor`) | **Honest negative result on Windows/spawn** — kept experimental, `jobs=1` remains the default (see below) |
 | Perf.4 | Ranking hoisted out of the per-record loop: ranking is a pure function of the label set, so it is computed once per family instead of per `(prime, sample)` point | Removes redundant re-ranking; bit-identical records/ranking output |
 | Perf.5 | **Shared-RREF multi-target / linear-LHS normal-form reuse** (commit `e60763b`): when the LHS is a linear combination of targets over one shared row system, all per-target normal forms are extracted from a single RREF instead of re-running the pipeline per target | Corrected Example 4\* wall time ~2h24m → ~1h22m; `rref_mod_p` total ~5631.8s → ~2715.1s; results bit-identical |
+| Perf.6 | **Certificate-point RREF reuse** (commit `88016a7`): the combined certificate reuses RREFs already computed for overlapping certificate points (same `(prime, sample)` row systems) instead of recomputing them per point | `combined_certificate` stage ~1293.3s → ~518.7s (~2.5x); wall ~1h22m → ~1h15m; certificate verdicts identical (**Passed 5/5**) |
+
+## Why certificate-point RREF reuse works (Perf.6)
+
+- Combined-certificate points overlap with RREFs already computed earlier in
+  the run: the reduction and per-target certificate steps eliminate the same
+  `(prime, sample)` row systems, so the elimination result can be cached and
+  reused instead of recomputed per certificate point.
+- It is a pure caching/orchestration change: every certificate point is still
+  verified against the same exact-modular gate with identical verdicts
+  (combined certificate **Passed 5/5**, same rank histogram); no gate was
+  weakened and no math changed.
+
+## Remaining hotspot / why further gains need a faster kernel (post-Perf.6)
+
+- After Perf.6 the single large modular RREF (`rref_mod_p`, ~2900s in the
+  measured run) is ~2/3 of wall time; orchestration-level reuse is exhausted —
+  every remaining RREF is computed exactly once.
+- Further wins therefore require a faster mod-p RREF **kernel** itself
+  (bit-packing / numpy-based elimination), i.e. a new implementation, not
+  reshuffling of when RREFs are computed.
 
 ## Why multiprocessing records was negative (Perf.3, Windows/spawn)
 

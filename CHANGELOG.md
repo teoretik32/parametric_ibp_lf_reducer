@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.1.3 — 2026
+
+### Performance
+- **Certificate-point RREF reuse** (Perf.6, `88016a7`): reuse
+  already-computed RREFs for overlapping certificate points instead of
+  recomputing them in the combined certificate stage.
+- Corrected Example 4\* combined certificate stage improved
+  ~1293.3s → ~518.7s.
+- Wall time improved ~1h22m → ~1h15m in the measured run.
+
+### Unchanged
+- **No mathematical result change**: Status `Success`, `AllLocallyFinite`
+  True, combined certificate **Passed 5/5**, same two coefficients.
+
+### Known hotspots
+- Remaining cost is dominated by the single large modular RREF kernel
+  (`rref_mod_p`); further wins need a faster mod-p RREF kernel
+  (bit-packing / numpy-based elimination), not orchestration changes.
+
 ## v0.1.2 — 2026
 
 ### Performance
