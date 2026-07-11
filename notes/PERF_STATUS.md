@@ -255,3 +255,14 @@ Expected: path under `B:\soft\math_scratch\src\`.
   (Numba/native) — parked under the project's pure-Python constraint.
 - Health: full suite green, `ruff check .` clean, profile script
   `ruff format --check` clean.
+
+## Perf.7 / Perf.8 — CLOSED (2026-07-11)
+
+- Perf.7 (RREF profiling + collect_stats infra) and Perf.8 (backend
+  prototype: int_sparse_experimental opt-in, Candidate B rejected) are
+  **closed**. Merged to `main` via no-ff merge `3a70cef`; HANDOFF note
+  `185f2ea`. No tag, no release; version unchanged.
+- Branch `perf/rref-backend-prototype` **deleted** (local tip was
+  `e93a40f`; no remote copy existed). Only `main` remains.
+- Default RREF backend: `"dict"`. Further RREF work = design only
+  (`docs/RREF_BACKEND_PLAN.md`).
