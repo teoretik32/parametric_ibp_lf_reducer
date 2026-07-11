@@ -302,3 +302,24 @@ Status: **complete, verified**.
 - Next RREF work is DESIGN ONLY: candidate C/D triggers and a Numba/E
   merge-kernel sketch; no implementation under the pure-Python
   constraint.
+
+## Perf.10 — Numba RREF backend prototype (branch `perf/numba-rref-backend`, НЕ merged)
+
+- Pure-Python constraint снят для *опционального* бэкенда: новый модуль
+  `src/parametric_ibp_lf_reducer/sparse_rref_numba.py`, opt-in backend
+  `numba_int_array_experimental` (lazy import — пакет без numba работает
+  как раньше; numba уже объявлен в extras `speed = ["numba>=0.59"]`).
+- Default остаётся `"dict"`; LF/certificate gates НЕ тронуты; математика
+  бит-в-бит повторяет dict pivot loop (тот же выбор пивотов, порядок
+  элиминации, 1 инверсия на пивот; guard `p < 2**31` для int64).
+- Замеры (editable install, эта машина): synthetic fast bench —
+  tiny 10.07x, medium 1000x800 **25.34x** vs dict; реальная ранкинг-матрица
+  512x917 — dict 0.828s → numba **0.083s** (~10x); JSON обновлён в
+  `validation/rref_real_matrix_profile.json`. Подробности:
+  `notes/PERF_STATUS.md` (секция Perf.10).
+- Тесты: `tests/test_rref_numba_backend.py` (skip без numba) — parity vs
+  dict на random/dense/rank-deficient/partial-order/малых простых +
+  граница `2**31 - 1`, reject `>= 2**31`, stats/plain-int, end-to-end
+  `modular_normal_form` parity. Full suite green, ruff clean.
+- Коммит `ab861e1` на ветке `perf/numba-rref-backend`; merge/push — по
+  решению пользователя.
