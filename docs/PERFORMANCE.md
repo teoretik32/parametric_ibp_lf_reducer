@@ -1,11 +1,11 @@
-# Performance notes (Perf.0–Perf.6, v0.1.3)
+# Performance notes (Perf.0–Perf.13, v0.1.4)
 
 Optimization work targeted the corrected Example 4\* heavy run
 (`scripts/run_example4_star_corrected.py`) without changing any math results:
 coefficients, certificate verdicts, and diagnostics JSON schema are identical
 before/after every step. LF/certificate gates were never weakened.
 
-## Perf.0–Perf.6 summary
+## Perf.0–Perf.13 summary
 
 | Step | What | Outcome |
 |---|---|---|
@@ -16,6 +16,11 @@ before/after every step. LF/certificate gates were never weakened.
 | Perf.4 | Ranking hoisted out of the per-record loop: ranking is a pure function of the label set, so it is computed once per family instead of per `(prime, sample)` point | Removes redundant re-ranking; bit-identical records/ranking output |
 | Perf.5 | **Shared-RREF multi-target / linear-LHS normal-form reuse** (commit `e60763b`): when the LHS is a linear combination of targets over one shared row system, all per-target normal forms are extracted from a single RREF instead of re-running the pipeline per target | Corrected Example 4\* wall time ~2h24m → ~1h22m; `rref_mod_p` total ~5631.8s → ~2715.1s; results bit-identical |
 | Perf.6 | **Certificate-point RREF reuse** (commit `88016a7`): the combined certificate reuses RREFs already computed for overlapping certificate points (same `(prime, sample)` row systems) instead of recomputing them per point | `combined_certificate` stage ~1293.3s → ~518.7s (~2.5x); wall ~1h22m → ~1h15m; certificate verdicts identical (**Passed 5/5**) |
+| Perf.7–8 | RREF kernel instrumentation + backend prototyping (`collect_stats`, real-matrix profile extracted from the heavy run) | Confirmed the elimination loop itself dominates `rref_mod_p`; motivated a native kernel |
+| Perf.9–10 | **Opt-in `numba_int_array_experimental` mod-p RREF backend** + parity tests & benchmarks | ~10–25× kernel speedups on synthetic matrices, ~10× on the extracted real profile; results identical to `dict`; `dict` stays default |
+| Perf.11 | Backend selection plumbed through `ReducerConfig` / Python API / CLI (`--rref-backend`) | Explicit unknown/unavailable backend fails fast (`EXIT_USAGE` / clear error); no silent substitution |
+| Perf.12 | **`rref_backend="auto"` heuristic** — per-matrix dict-vs-Numba selection with conservative gates | Numba only when available, `prime < 2^31`, and matrix clears `min_rows=500` / `min_cols=400` / `min_nnz=3000`; silent fallback to `dict` for `auto` only; decision recorded in diagnostics |
+| Perf.13 | **Certified full-box validation** of dict vs explicit Numba vs auto on corrected Example 4\* | Wall **3963.4s → 803.8s → 766.5s (~5.17×)**; `rref_mod_p` 3124.1s → 656.1s (~4.76×); outputs bit-identical, certificate `Passed` |
 
 ## Why certificate-point RREF reuse works (Perf.6)
 
@@ -59,6 +64,25 @@ before/after every step. LF/certificate gates were never weakened.
   (combined certificate **Passed 5/5**).
 - It attacks the dominant cost (`rref_mod_p`) directly, unlike
   parallelization, which only wrapped the same work in process overhead.
+
+## v0.1.4 certified Numba-backend benchmark (Perf.13)
+
+Full corrected Example 4\* box — 972 labels, 12360 rows, selected rank 9924,
+36/36 records valid; identical mathematical outputs for all three backends
+(combined result `Success`, `AllLocallyFinite=True`, certificate `Passed`,
+same two certified coefficients):
+
+| backend | wall | `rref_mod_p` |
+|---|---|---|
+| `dict` (default, reference) | 3963.4s | 3124.1s |
+| `numba_int_array_experimental` (explicit) | 803.8s (**4.93×**) | 689.2s |
+| `auto` → Numba | 766.5s (**5.17×**) | 656.1s |
+
+The default backend remains `dict`; `auto`/Numba are opt-in via the
+`[speed]` extra. Auto thresholds are deliberately conservative and unchanged
+in this release (`min_rows=500`, `min_cols=400`, `min_nnz=3000`); the Numba
+backend requires `prime < 2^31`. QA record:
+[NUMBA_RREF_QA.md](NUMBA_RREF_QA.md).
 
 ## Corrected Example 4\* fingerprint (must reproduce)
 

@@ -29,12 +29,15 @@ the run returns a typed `Failure` with reason `ParserNeedsExplicitFamily`.
 ```bash
 python -m venv .venv
 source .venv/bin/activate            # PowerShell: .venv\Scripts\Activate.ps1
-python -m pip install -e '.[dev,speed]'
+pip install -e .                     # base install (dict RREF backend)
+pip install -e ".[speed]"            # + optional Numba RREF backend
+python -m pip install -e '.[dev,speed]'   # contributors: dev tools + speed
 python -m pytest                     # fast suite
 ruff check .
 ```
 
-Requires Python >= 3.11. `speed` (numba) is optional.
+Requires Python >= 3.11. `speed` (numba) is optional; without it the package
+runs fully on the default `dict` backend.
 
 ## CLI quick start
 
@@ -68,6 +71,29 @@ result = api.reduce_wolfram_style_input(
 print(result.status)              # "Success"
 print(result.wolfram_style_text) # Wolfram-like result document
 ```
+
+## Optional Numba RREF backend (v0.1.4)
+
+The mod-p RREF kernel dominates heavy runs. v0.1.4 adds an optional,
+auto-selectable Numba backend:
+
+```bash
+python -m parametric_ibp_lf_reducer reduce input.wl.txt --rref-backend auto
+python -m parametric_ibp_lf_reducer reduce input.wl.txt --rref-backend numba_int_array_experimental
+```
+
+- **Default is still `dict`** — nothing changes unless you opt in.
+- **`auto` is the recommended opt-in for large systems** when the `[speed]`
+  extra is installed; it picks Numba per matrix only when the system is large
+  enough (thresholds: `min_rows=500`, `min_cols=400`, `min_nnz=3000`) and
+  `prime < 2^31`. Small systems normally stay on `dict`.
+- `auto` **falls back to `dict`** if Numba is unavailable; an *explicit*
+  Numba request instead **fails with a clear error**.
+- Certified benchmark (corrected Example 4\* full box, 972 labels,
+  12360 rows): wall **3963.4s (dict) → 766.5s (auto → Numba), ~5.17×**, with
+  bit-identical mathematical results and certificate `Passed`. See
+  [docs/PERFORMANCE.md](docs/PERFORMANCE.md) and
+  [docs/NUMBA_RREF_QA.md](docs/NUMBA_RREF_QA.md).
 
 ## Statuses
 

@@ -131,6 +131,45 @@ run returned a certified `Success` (certificate `Passed`, `selected_rank`
 `tests/test_example4_star_corrected.py`. Still exploratory (known-value-only,
 not part of the certified baseline).
 
+## RREF backend selection (`--rref-backend`, v0.1.4)
+
+The dominant cost of heavy runs is the modular RREF kernel. v0.1.4 ships an
+optional Numba-accelerated backend:
+
+```bash
+pip install -e .             # base install — dict backend only
+pip install -e ".[speed]"    # adds numba for the accelerated backend
+```
+
+```bash
+python -m parametric_ibp_lf_reducer reduce input.wl.txt --rref-backend auto
+python -m parametric_ibp_lf_reducer reduce input.wl.txt --rref-backend numba_int_array_experimental
+```
+
+Rules:
+
+- **Default is still `dict`** (pure Python, no extra dependencies); omitting
+  `--rref-backend` changes nothing vs previous releases.
+- **`auto` is the recommended opt-in for large systems** when the `[speed]`
+  extra is installed. It resolves per matrix, choosing Numba only when Numba
+  is available, `prime < 2^31` (int64 guard), and the matrix clears all
+  thresholds (currently `min_rows=500`, `min_cols=400`, `min_nnz=3000`).
+  Small systems normally stay on `dict`.
+- `auto` **falls back to `dict`** silently if Numba is unavailable.
+- An **explicit** `numba_int_array_experimental` request is never
+  substituted: it fails with a clear error if Numba is missing or the prime
+  is out of range.
+- Backend choice is observability-only in effect: results are
+  backend-identical; the decision is recorded in diagnostics
+  (`requested_rref_backend`, `selected_rref_backend`,
+  `backend_selection_reason`, `numba_available`, `auto_thresholds_used`).
+- Certified benchmark (Perf.13, corrected Example 4\* full box — 972 labels,
+  12360 rows, rank 9924, 36/36 records): wall 3963.4s (`dict`) → 803.8s
+  (explicit Numba) → 766.5s (`auto`), `rref_mod_p` 3124.1s → 656.1s;
+  outputs identical, `Success`, `AllLocallyFinite=True`, certificate
+  `Passed`, same two certified coefficients. Details:
+  [PERFORMANCE.md](PERFORMANCE.md), [NUMBA_RREF_QA.md](NUMBA_RREF_QA.md).
+
 ## Release sanity check
 
 ```bash

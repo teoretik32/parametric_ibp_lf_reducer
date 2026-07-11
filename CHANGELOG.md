@@ -1,5 +1,39 @@
 # Changelog
 
+## v0.1.4 — 2026
+
+### Added
+- **Optional `numba_int_array_experimental` RREF backend** (Perf.7–Perf.10):
+  int64-array mod-p elimination kernel behind the same pivot/verdict contract
+  as the `dict` reference backend.
+- **`rref_backend="auto"` heuristic selection** (Perf.12): per-matrix choice of
+  dict vs Numba using conservative size/prime gates.
+- **Backend selection via `ReducerConfig` / Python API / CLI** (Perf.11); new
+  `--rref-backend` CLI flag (`dict` / `numba_int_array_experimental` / `auto`).
+- **Backend-selection diagnostics**: `requested_rref_backend`,
+  `selected_rref_backend`, `backend_selection_reason`, `numba_available`,
+  `auto_thresholds_used`.
+- **No-Numba-safe lazy import and fallback**: `auto` silently falls back to
+  `dict` when Numba is missing; an *explicit* Numba request fails fast with a
+  clear error and is never substituted.
+
+### Performance
+- Corrected Example 4\* full-pipeline wall time (full box: 972 labels,
+  12360 rows, selected rank 9924): **3963.4s (`dict`) → 803.8s (explicit
+  Numba) → 766.5s (`auto` → Numba), ~5.17×**.
+- `rref_mod_p` hotspot: **3124.1s → 689.2s → 656.1s (~4.76×)**.
+- Certified full-box validation (Perf.13): 36/36 records valid, combined
+  result `Success`, `AllLocallyFinite=True`, certificate `Passed`, same two
+  certified coefficients — identical across all three backends.
+
+### Correctness / unchanged
+- **Exact equality** of mathematical outputs across `dict`, explicit Numba,
+  and `auto`; certificate and LF gates unchanged.
+- **Default backend remains `dict`** — Numba/auto are strictly opt-in
+  (`pip install -e ".[speed]"`).
+- Numba backend requires `prime < 2^31`; auto thresholds (unchanged this
+  release): `min_rows=500`, `min_cols=400`, `min_nnz=3000`.
+
 ## v0.1.3 — 2026
 
 ### Performance
