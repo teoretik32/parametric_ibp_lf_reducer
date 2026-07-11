@@ -95,3 +95,56 @@ and Python-int modular arithmetic, which A does not change. Verdict:
   the order-of-magnitude headroom lives. The new counters (fill-in ratio,
   row-nnz profiles) should be captured from a real Example 4* run first to
   size D's density threshold.
+
+## Perf.8: real-matrix stats + candidate-B feasibility (this branch)
+
+Real (non-synthetic) profile from the corrected Example 4* row system,
+medium subset (`scripts/profile_rref_real_matrix.py`, output committed at
+`validation/rref_real_matrix_profile.json`; prime `2_147_483_647`, sample
+`ep=15/7`, this machine, 2026-07-11):
+
+| Stat | value |
+|---|---|
+| shape / rank | 512×917, rank 512 (128 algebraic + 384 coordinate-IBP rows) |
+| nnz initial | 2640 (row-nnz max 7, median 5.5) |
+| nnz final | 27762 (row-nnz max 114, median 62) |
+| fill-in ratio | **10.5x** |
+| elimination | dict 0.81s, int_sparse_experimental 0.56s (**0.69x**) |
+
+Notes: the int backend's relative win is larger on the real matrix than on
+the synthetic shapes (0.69x vs 0.90–0.92x) — real label tuples are longer and
+hash-heavier than the synthetic ones. Final pivot-row density is only
+~7–12% of 917 columns: fill-in is real (10.5x) but the rows stay **sparse**,
+so a dense fallback (D) has no obvious trigger at this size; re-measure on
+the full 12360×972 system before revisiting D.
+
+### Candidate B micro-experiment (merge-axpy vs dict-axpy)
+
+Throwaway micro-benchmark (recorded here for the negative result): axpy of
+one sparse row into another at the *measured real* nnz profile, prime
+`2_147_483_647`, 2000 reps over 400 pre-built rows, pure Python. The
+sorted-int-array merge variant allocates fresh `(cols[], vals[])` output
+arrays per axpy (the natural functional form); the dict variant mutates.
+
+| row nnz | dict-axpy | merge-axpy | ratio |
+|---|---|---|---|
+| 6 (initial median) | 0.006s | 0.009s | 1.51x |
+| 62 (final median) | 0.043s | 0.083s | **1.91x** |
+| 114 (final max) | 0.074s | 0.124s | 1.68x |
+
+### Decision (Perf.8)
+
+**Candidate B in pure Python is rejected.** The merge kernel is 1.5–1.9x
+*slower* than dict axpy exactly in the nnz range the real elimination
+inhabits — Python-level list traversal cannot beat the C-implemented dict
+fast path. B's layout only pays off once the merge itself leaves Python
+bytecode (Numba/E or native F/G), so:
+
+- Default stays `"dict"`; `int_sparse_experimental` remains the opt-in flag
+  and is confirmed useful on real matrices (0.69x here).
+- B/C/D are **not** implemented in pure Python. The next credible step is
+  E/F (JIT/native merge kernel over int-array rows), which is out of scope
+  for this codebase's pure-Python constraint — parked unless that constraint
+  is lifted.
+- Kernel work on this branch is complete; remaining RREF headroom is
+  documented, not actionable within current constraints.

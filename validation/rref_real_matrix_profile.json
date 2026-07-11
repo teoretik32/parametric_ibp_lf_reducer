@@ -1,0 +1,90 @@
+{
+  "mode": "medium-real (box shaved by 1 per range)",
+  "input": "examples\\example4_star_corrected_input.wl.txt",
+  "label_box_used": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        -2,
+        -1
+      ],
+      [
+        -2,
+        -1
+      ],
+      [
+        -2,
+        -1
+      ],
+      [
+        -2,
+        -1
+      ]
+    ]
+  ],
+  "n_labels": 32,
+  "rows_by_kind": {
+    "by_kind": {
+      "algebraic": 128,
+      "coordinate_ibp": 384,
+      "tangent_ibp": 0
+    },
+    "rejected": {
+      "surface_not_free": 544
+    }
+  },
+  "row_generation_time_s": 2.098,
+  "ranking_time_s": 0.034,
+  "assemble_time_s": 0.044,
+  "prime": 2147483647,
+  "sample": {
+    "ep": "15/7"
+  },
+  "backends": {
+    "dict": {
+      "backend": "dict",
+      "n_rows": 512,
+      "n_cols": 917,
+      "nnz_initial": 2640,
+      "row_nnz_before_max": 7,
+      "row_nnz_before_median": 5.5,
+      "elimination_time_s": 0.8080476999748498,
+      "rank": 512,
+      "pivot_count": 512,
+      "inversions": 512,
+      "nnz_final": 27762,
+      "row_nnz_after_max": 114,
+      "row_nnz_after_median": 62.0,
+      "fill_in_ratio": 10.51590909090909
+    },
+    "int_sparse_experimental": {
+      "backend": "int_sparse_experimental",
+      "n_rows": 512,
+      "n_cols": 917,
+      "nnz_initial": 2640,
+      "row_nnz_before_max": 7,
+      "row_nnz_before_median": 5.5,
+      "elimination_time_s": 0.5564152000006288,
+      "rank": 512,
+      "pivot_count": 512,
+      "inversions": 512,
+      "nnz_final": 27762,
+      "row_nnz_after_max": 114,
+      "row_nnz_after_median": 62.0,
+      "fill_in_ratio": 10.51590909090909
+    }
+  }
+}
