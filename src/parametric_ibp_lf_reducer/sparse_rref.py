@@ -16,10 +16,20 @@ Perf.7 additions (both optional, defaults preserve the historical behavior exact
   (labels are mapped to ints before the pivot loop and mapped back afterwards), avoiding
   tuple-hashing overhead inside ``_axpy``/``get``. The default backend remains ``"dict"``;
   results are identical by construction (one bijective relabeling of columns).
+
+Perf.10 addition (optional, opt-in only):
+
+- ``backend="numba_int_array_experimental"`` runs the same pivot loop as one ``@njit``
+  kernel over sorted parallel ``int64`` arrays (see :mod:`.sparse_rref_numba`). It reuses
+  the exact int relabeling front-end above, requires ``prime < 2**31`` (int64 product
+  safety) and requires numba (``pip install .[speed]``); importing this package never
+  touches numba. If numba is missing, requesting the backend raises
+  :class:`BackendUnavailable`. The default backend is still ``"dict"``.
 """
 
 from __future__ import annotations
 
+import importlib.util
 import time
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
@@ -29,7 +39,24 @@ Column = object
 Row = dict
 
 DEFAULT_RREF_BACKEND = "dict"
-RREF_BACKENDS = ("dict", "int_sparse_experimental")
+NUMBA_RREF_BACKEND = "numba_int_array_experimental"
+RREF_BACKENDS = ("dict", "int_sparse_experimental", NUMBA_RREF_BACKEND)
+
+#: Primes accepted by the numba backend must satisfy ``prime < 2**31`` (int64 products).
+_NUMBA_MAX_PRIME_EXCLUSIVE = 1 << 31
+
+
+class BackendUnavailable(RuntimeError):
+    """The requested rref backend cannot run in this environment (e.g. numba missing)."""
+
+
+def rref_backend_available(backend: str) -> bool:
+    """True if ``backend`` is registered *and* can actually run here (cheap, import-free)."""
+    if backend not in RREF_BACKENDS:
+        return False
+    if backend == NUMBA_RREF_BACKEND:
+        return importlib.util.find_spec("numba") is not None
+    return True
 
 
 def _axpy(target: dict, source: dict, factor: int, p: int) -> None:
@@ -151,12 +178,31 @@ def rref_mod_p(
         }
         t0 = time.perf_counter()
 
-    if chosen == "int_sparse_experimental":
+    if chosen in ("int_sparse_experimental", NUMBA_RREF_BACKEND):
         # Bijective column relabeling: elimination order becomes 0..k-1, so ordering is
         # preserved exactly; all dict keys inside the pivot loop are small ints.
         col_to_id = {c: i for i, c in enumerate(order)}
         int_active = [{col_to_id[c]: v for c, v in r.items()} for r in active]
-        int_pivots, int_pivot_order, inversions = _eliminate(int_active, range(len(order)), prime)
+        if chosen == NUMBA_RREF_BACKEND:
+            if prime >= _NUMBA_MAX_PRIME_EXCLUSIVE:
+                raise ValueError(
+                    f"backend {chosen!r} requires prime < 2**31 "
+                    f"(int64 products must fit); got {prime}"
+                )
+            try:
+                from . import sparse_rref_numba
+            except ImportError as exc:
+                raise BackendUnavailable(
+                    f"backend {chosen!r} requires numba; install the 'speed' extra "
+                    f"(pip install .[speed]) or pick another backend"
+                ) from exc
+            int_pivots, int_pivot_order, inversions = sparse_rref_numba.eliminate_int_rows(
+                int_active, len(order), prime
+            )
+        else:
+            int_pivots, int_pivot_order, inversions = _eliminate(
+                int_active, range(len(order)), prime
+            )
         id_to_col = order  # id i -> order[i]
         pivots = {
             id_to_col[pc]: {id_to_col[c]: v for c, v in prow.items()}

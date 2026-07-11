@@ -9,11 +9,16 @@ import pytest
 
 from parametric_ibp_lf_reducer.sparse_rref import (
     DEFAULT_RREF_BACKEND,
+    NUMBA_RREF_BACKEND,
     RREF_BACKENDS,
+    rref_backend_available,
     rref_mod_p,
 )
 
 P = 2_147_483_629
+
+# Backends that can actually run here; the numba one drops out cleanly when not installed.
+AVAILABLE_BACKENDS = [b for b in RREF_BACKENDS if rref_backend_available(b)]
 
 
 def _random_rows(rng, n_rows, cols, lo=2, hi=8):
@@ -43,6 +48,9 @@ def _assert_identical(a, b):
 def test_default_backend_is_dict():
     assert DEFAULT_RREF_BACKEND == "dict"
     assert "int_sparse_experimental" in RREF_BACKENDS
+    assert NUMBA_RREF_BACKEND in RREF_BACKENDS
+    assert rref_backend_available("dict") and rref_backend_available("int_sparse_experimental")
+    assert not rref_backend_available("numpy")
 
 
 def test_unknown_backend_rejected():
@@ -99,7 +107,7 @@ def test_pivot_rows_annihilate_original_system():
     rng = random.Random(21)
     cols = _label_cols(30)
     rows = _random_rows(rng, 45, cols)
-    for backend in RREF_BACKENDS:
+    for backend in AVAILABLE_BACKENDS:
         res = rref_mod_p(rows, P, column_order=cols, backend=backend)
         for row in rows:
             r = {c: v % P for c, v in row.items() if v % P}
@@ -133,7 +141,7 @@ def test_matches_fraction_rref_small():
                 f = exact[i][c]
                 exact[i] = [a - f * b for a, b in zip(exact[i], exact[pr])]
         pr += 1
-    for backend in RREF_BACKENDS:
+    for backend in AVAILABLE_BACKENDS:
         res = rref_mod_p(rows, P, column_order=[0, 1, 2, 3], backend=backend)
         assert res.rank == pr
         for i, pc in enumerate(sorted(res.pivot_order)):
@@ -152,7 +160,7 @@ def test_stats_absent_by_default_and_json_safe_when_requested():
     cols = _label_cols(15)
     rows = _random_rows(rng, 20, cols)
     assert rref_mod_p(rows, P).stats is None
-    for backend in RREF_BACKENDS:
+    for backend in AVAILABLE_BACKENDS:
         res = rref_mod_p(rows, P, column_order=cols, backend=backend, collect_stats=True)
         s = res.stats
         assert s is not None and s["backend"] == backend

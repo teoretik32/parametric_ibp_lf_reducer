@@ -46,9 +46,9 @@
       "surface_not_free": 544
     }
   },
-  "row_generation_time_s": 2.098,
+  "row_generation_time_s": 2.102,
   "ranking_time_s": 0.034,
-  "assemble_time_s": 0.044,
+  "assemble_time_s": 0.042,
   "prime": 2147483647,
   "sample": {
     "ep": "15/7"
@@ -61,7 +61,7 @@
       "nnz_initial": 2640,
       "row_nnz_before_max": 7,
       "row_nnz_before_median": 5.5,
-      "elimination_time_s": 0.8080476999748498,
+      "elimination_time_s": 0.8089697000104934,
       "rank": 512,
       "pivot_count": 512,
       "inversions": 512,
@@ -77,7 +77,23 @@
       "nnz_initial": 2640,
       "row_nnz_before_max": 7,
       "row_nnz_before_median": 5.5,
-      "elimination_time_s": 0.5564152000006288,
+      "elimination_time_s": 0.4871930000372231,
+      "rank": 512,
+      "pivot_count": 512,
+      "inversions": 512,
+      "nnz_final": 27762,
+      "row_nnz_after_max": 114,
+      "row_nnz_after_median": 62.0,
+      "fill_in_ratio": 10.51590909090909
+    },
+    "numba_int_array_experimental": {
+      "backend": "numba_int_array_experimental",
+      "n_rows": 512,
+      "n_cols": 917,
+      "nnz_initial": 2640,
+      "row_nnz_before_max": 7,
+      "row_nnz_before_median": 5.5,
+      "elimination_time_s": 0.08205710002221167,
       "rank": 512,
       "pivot_count": 512,
       "inversions": 512,
