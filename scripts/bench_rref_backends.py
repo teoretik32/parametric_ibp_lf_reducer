@@ -13,7 +13,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from parametric_ibp_lf_reducer.sparse_rref import RREF_BACKENDS, rref_mod_p  # noqa: E402
+from parametric_ibp_lf_reducer.sparse_rref import (  # noqa: E402
+    RREF_BACKENDS,
+    rref_backend_available,
+    rref_mod_p,
+)
 
 P = 2_147_483_629
 
@@ -42,13 +46,20 @@ def main() -> int:
     args = ap.parse_args()
     shapes = SHAPES[:-1] if args.fast else SHAPES
 
-    print(f"| Matrix (rows x cols, ~nnz/row) | {' | '.join(RREF_BACKENDS)} | ratio |")
-    print("|---|" + "---|" * (len(RREF_BACKENDS) + 1))
+    backends = [b for b in RREF_BACKENDS if rref_backend_available(b)]
+    # Warm up once per backend so one-time costs (numba JIT compile) are not billed
+    # to the first timed shape.
+    for backend in backends:
+        rref_mod_p([{0: 1, 1: 2}, {1: 3}], P, column_order=[0, 1], backend=backend)
+
+    speedups = [f"{b} speedup" for b in backends[1:]]
+    print(f"| Matrix (rows x cols, ~nnz/row) | {' | '.join(backends + speedups)} |")
+    print("|---|" + "---|" * (len(backends) + len(speedups)))
     for name, n_rows, n_cols, lo, hi in shapes:
         rows, order = build(2026, n_rows, n_cols, lo, hi)
         times = {}
         ref = None
-        for backend in RREF_BACKENDS:
+        for backend in backends:
             t0 = time.perf_counter()
             res = rref_mod_p(rows, P, column_order=order, backend=backend)
             times[backend] = time.perf_counter() - t0
@@ -57,10 +68,12 @@ def main() -> int:
             elif res != ref:
                 print(f"BACKEND MISMATCH on {name}", file=sys.stderr)
                 return 1
-        base = times[RREF_BACKENDS[0]]
-        cells = " | ".join(f"{times[b]:.2f}s" for b in RREF_BACKENDS)
-        ratio = times[RREF_BACKENDS[1]] / base if base else float("nan")
-        print(f"| {name} (rank {ref.rank}) | {cells} | {ratio:.2f}x |")
+        base = times[backends[0]]
+        cells = " | ".join(f"{times[b]:.2f}s" for b in backends)
+        ratios = " | ".join(
+            f"{(base / times[b]):.2f}x" if times[b] else "inf" for b in backends[1:]
+        )
+        print(f"| {name} (rank {ref.rank}) | {cells} | {ratios} |")
     return 0
 
 

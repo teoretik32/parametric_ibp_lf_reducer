@@ -266,3 +266,34 @@ Expected: path under `B:\soft\math_scratch\src\`.
   `e93a40f`; no remote copy existed). Only `main` remains.
 - Default RREF backend: `"dict"`. Further RREF work = design only
   (`docs/RREF_BACKEND_PLAN.md`).
+
+## Perf.10 — Numba int-array RREF backend prototype (branch `perf/numba-rref-backend`)
+
+- New module `src/parametric_ibp_lf_reducer/sparse_rref_numba.py`:
+  opt-in backend `numba_int_array_experimental`, lazily imported by
+  `sparse_rref.rref_mod_p` only when explicitly requested — importing
+  the package never touches numba; if numba is absent the backend
+  reports unavailable with a clear error. **Not** the default; LF and
+  certificate gates untouched; mathematics byte-for-byte the dict
+  pivot algorithm (same pivot choice, same elimination order, one
+  inversion per pivot, `p < 2**31` guard for int64 product safety).
+- Tests: `tests/test_rref_numba_backend.py` (skips cleanly without
+  numba) — 7-seed random-label equivalence, dense high-fill-in,
+  rank-deficient/dup/zero rows, partial column order, small primes +
+  `2**31 - 1` boundary, `>= 2**31` rejection, stats parity + plain-int
+  results, and end-to-end `modular_normal_form` parity via backend
+  swap. Full suite green; `ruff check .` + `ruff format` clean.
+- Measured (editable install, this machine):
+  - Synthetic bench `scripts/bench_rref_backends.py --fast`:
+    tiny 200x150 ~6/row: dict 0.28s → numba 0.03s (**10.07x**);
+    medium 1000x800 ~8/row: dict 51.57s → numba 2.04s (**25.34x**)
+    (int_sparse_experimental: 1.12–1.15x).
+  - Real ranking matrix `scripts/profile_rref_real_matrix.py`
+    (512x917, rank 512, fill-in 10.5x): dict 0.828s →
+    int_sparse 0.503s → **numba 0.083s** (~10x vs dict, ~6x vs
+    int_sparse). JSON refreshed in
+    `validation/rref_real_matrix_profile.json`.
+  - One-time JIT compile on first use in a fresh env (a few seconds);
+    `cache=True` persists kernels to `__pycache__`.
+- Caveat: numba becomes an *optional* extra only; identical-results
+  equivalence is enforced by tests, not assumed.

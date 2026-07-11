@@ -31,7 +31,11 @@ from parametric_ibp_lf_reducer.api import build_reducer_config  # noqa: E402
 from parametric_ibp_lf_reducer.modular_normal_form import assemble_rows_mod_p  # noqa: E402
 from parametric_ibp_lf_reducer.ranking import rank_labels  # noqa: E402
 from parametric_ibp_lf_reducer.reducer import _enumerate_labels, _generate_rows  # noqa: E402
-from parametric_ibp_lf_reducer.sparse_rref import RREF_BACKENDS, rref_mod_p  # noqa: E402
+from parametric_ibp_lf_reducer.sparse_rref import (  # noqa: E402
+    RREF_BACKENDS,
+    rref_backend_available,
+    rref_mod_p,
+)
 
 INPUT_PATH = REPO_ROOT / "examples" / "example4_star_corrected_input.wl.txt"
 
@@ -49,8 +53,8 @@ def main() -> int:
     ap.add_argument("--full", action="store_true", help="use the untouched label box (slow)")
     ap.add_argument(
         "--backends",
-        default=",".join(RREF_BACKENDS),
-        help="comma-separated backend list (default: all registered)",
+        default=",".join(b for b in RREF_BACKENDS if rref_backend_available(b)),
+        help="comma-separated backend list (default: all available here)",
     )
     ap.add_argument("--out", default=None, help="also write the JSON to this path")
     args = ap.parse_args()
@@ -85,6 +89,8 @@ def main() -> int:
     per_backend: dict = {}
     ref = None
     for backend in backends:
+        # Warm-up: one-time costs (numba JIT compile) must not pollute elimination_time_s.
+        rref_mod_p([{0: 1, 1: 2}, {1: 3}], prime, column_order=[0, 1], backend=backend)
         res = rref_mod_p(
             [dict(r) for r in matrix],  # fresh copies: backends must not share row dicts
             prime,
