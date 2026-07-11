@@ -364,3 +364,14 @@ Status: **complete, verified**.
   размера/prime, fallback без numba, явный запрос не подменяется,
   end-to-end) + `tests/test_cli.py` для `auto`. Full suite green,
   ruff clean.
+
+## Perf.13 — полная валидация auto/Numba RREF-бэкенда на полном боксе
+
+- `scripts/validate_rref_backend_full.py`, полный бокс 972 лейбла
+  (12360 строк), оба таргета, бэкенды dict / numba / auto.
+- Итог: dict 3963с → numba 804с (4.93×) → auto 766с (5.17×, auto
+  выбирает numba по порогам). `identical_across_backends: true`,
+  mismatches пусто; сертификат Passed 3/3, rank 9924, 36/36 записей,
+  коэффициенты побитово совпадают с сертифицированным Example 4★.
+- Вывод: auto безопасен на реальной нагрузке, ~5× ускорение
+  end-to-end; пороги оставлены консервативными. Perf.13 закрыт.

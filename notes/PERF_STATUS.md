@@ -350,3 +350,28 @@ Expected: path under `B:\soft\math_scratch\src\`.
   large without numba → dict fallback, threshold/prime gates, explicit
   request never silently substituted, end-to-end run; `tests/test_cli.py`
   extended for `auto`. Full suite + ruff clean.
+
+## Perf.13 — full-pipeline validation of auto/Numba backend (full label box)
+
+- Run: `scripts/validate_rref_backend_full.py` on the full 972-label
+  box (12360 rows, `nnz≈63651` after clears), targets ×2, backends
+  `dict` / `numba_int_array_experimental` / `auto`. Background task
+  completed exit 0.
+- Wall: dict 3963.45s → numba 803.75s (**4.93×**) → auto 766.49s
+  (**5.17×**, selects numba on first point:
+  `12360x12910, nnz=63651 clears thresholds {min_rows: 500, min_cols:
+  400, min_nnz: 3000}`).
+- `rref_mod_p`: 3124.1s → 689.2s / 656.1s — the hotspot dominates the
+  win exactly as predicted by Perf.6/Perf.9 profiling.
+- Correctness: `identical_across_backends: true`, `mismatches: []`.
+  Both targets Success, certificate Passed 3/3 (rank 9924, points
+  ep=631/91, 837/119, 947/133), 36/36 records valid,
+  `n_valid_records_before_rank_filter` identical. Reference
+  coefficients byte-identical to the certified Example 4★ values
+  (`-(3703*ep^3 - 521*ep^2 - 57*ep - 1)/(5500*ep^3)`,
+  `-(ep + 1)*(17*ep + 1)*(48*ep + 1)/(5500*ep^3)`, and the
+  `/(7920*ep^3)` pair on the second target).
+- Conclusion: `--rref-backend auto` is safe on real workloads —
+  certified result preserved bit-for-bit, ~5× end-to-end speedup.
+  Numba backend + auto heuristic validated at full scale; thresholds
+  kept as-is (conservative) until contrary evidence.
