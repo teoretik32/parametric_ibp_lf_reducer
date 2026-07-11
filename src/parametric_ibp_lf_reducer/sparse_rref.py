@@ -41,22 +41,93 @@ Row = dict
 DEFAULT_RREF_BACKEND = "dict"
 NUMBA_RREF_BACKEND = "numba_int_array_experimental"
 RREF_BACKENDS = ("dict", "int_sparse_experimental", NUMBA_RREF_BACKEND)
+#: Perf.12: heuristic dict-vs-numba selection (experimental). Not a concrete backend —
+#: it resolves to one of :data:`RREF_BACKENDS` per matrix via :func:`select_rref_backend`.
+AUTO_RREF_BACKEND = "auto"
+#: Names accepted by config/API/CLI: every concrete backend plus ``"auto"``.
+RREF_BACKEND_CHOICES = (*RREF_BACKENDS, AUTO_RREF_BACKEND)
 
 #: Primes accepted by the numba backend must satisfy ``prime < 2**31`` (int64 products).
 _NUMBA_MAX_PRIME_EXCLUSIVE = 1 << 31
+
+#: Perf.12: conservative size gates for ``"auto"`` (subject to change). The numba kernel
+#: only pays off on large eliminations, and a fresh environment pays a one-time JIT
+#: compile, so small/medium systems stay on the historical dict backend.
+AUTO_RREF_THRESHOLDS = {"min_rows": 500, "min_cols": 400, "min_nnz": 3000}
+
+_numba_available_cache: bool | None = None
 
 
 class BackendUnavailable(RuntimeError):
     """The requested rref backend cannot run in this environment (e.g. numba missing)."""
 
 
+def _numba_available() -> bool:
+    """Cheap, import-free numba availability probe (memoized per process)."""
+    global _numba_available_cache
+    if _numba_available_cache is None:
+        try:
+            _numba_available_cache = importlib.util.find_spec("numba") is not None
+        except (ImportError, ValueError):  # e.g. numba blocked via sys.modules[...] = None
+            _numba_available_cache = False
+    return _numba_available_cache
+
+
 def rref_backend_available(backend: str) -> bool:
-    """True if ``backend`` is registered *and* can actually run here (cheap, import-free)."""
-    if backend not in RREF_BACKENDS:
+    """True if ``backend`` is registered *and* can actually run here (cheap, import-free).
+
+    ``"auto"`` is always available: it falls back to ``"dict"`` when numba cannot run.
+    """
+    if backend not in RREF_BACKEND_CHOICES:
         return False
     if backend == NUMBA_RREF_BACKEND:
-        return importlib.util.find_spec("numba") is not None
+        return _numba_available()
     return True
+
+
+def select_rref_backend(
+    requested_backend: str | None,
+    *,
+    n_rows: int,
+    n_cols: int,
+    initial_nnz: int,
+    prime: int,
+    numba_available: bool,
+) -> tuple[str, str]:
+    """Resolve ``requested_backend`` to a concrete backend plus a human-readable reason.
+
+    Perf.12 rules (selection only — every backend returns identical results, enforced by
+    the equivalence suite; LF/certificate gates are untouched):
+
+    - ``"dict"`` / ``"int_sparse_experimental"``: returned as requested.
+    - explicit ``"numba_int_array_experimental"``: requires numba — raises
+      :class:`BackendUnavailable` otherwise (never a silent substitution); the
+      ``prime < 2**31`` int64 guard is enforced downstream exactly as before.
+    - ``"auto"``: numba only when it is available, ``prime < 2**31`` *and* the matrix
+      clears every :data:`AUTO_RREF_THRESHOLDS` gate; otherwise ``"dict"``. A missing
+      numba is a documented fallback here, never an error.
+    """
+    requested = DEFAULT_RREF_BACKEND if requested_backend is None else requested_backend
+    if requested not in RREF_BACKEND_CHOICES:
+        raise ValueError(
+            f"unknown rref_backend {requested!r}; expected one of {RREF_BACKEND_CHOICES}"
+        )
+    if requested != AUTO_RREF_BACKEND:
+        if requested == NUMBA_RREF_BACKEND and not numba_available:
+            raise BackendUnavailable(
+                f"backend {requested!r} requires numba; install the 'speed' extra "
+                f"(pip install .[speed]) or pick another backend"
+            )
+        return requested, "explicit request"
+    th = AUTO_RREF_THRESHOLDS
+    size = f"{n_rows}x{n_cols}, nnz={initial_nnz}"
+    if not numba_available:
+        return DEFAULT_RREF_BACKEND, "auto: numba unavailable -> dict"
+    if prime >= _NUMBA_MAX_PRIME_EXCLUSIVE:
+        return DEFAULT_RREF_BACKEND, f"auto: prime {prime} >= 2**31 (int64 guard) -> dict"
+    if n_rows >= th["min_rows"] and n_cols >= th["min_cols"] and initial_nnz >= th["min_nnz"]:
+        return NUMBA_RREF_BACKEND, f"auto: {size} clears thresholds {th} -> numba"
+    return DEFAULT_RREF_BACKEND, f"auto: {size} below thresholds {th} -> dict"
 
 
 def _axpy(target: dict, source: dict, factor: int, p: int) -> None:
@@ -149,9 +220,11 @@ def rref_mod_p(
     ``collect_stats`` (Perf.7) attaches a JSON-safe counters dict as ``result.stats``;
     it never affects the result and prints nothing.
     """
-    chosen = DEFAULT_RREF_BACKEND if backend is None else backend
-    if chosen not in RREF_BACKENDS:
-        raise ValueError(f"unknown rref_backend {chosen!r}; expected one of {RREF_BACKENDS}")
+    requested = DEFAULT_RREF_BACKEND if backend is None else backend
+    if requested not in RREF_BACKEND_CHOICES:
+        raise ValueError(
+            f"unknown rref_backend {requested!r}; expected one of {RREF_BACKEND_CHOICES}"
+        )
 
     active = [r for r in (_normalize_row(row, prime) for row in rows) if r]
     all_cols = sorted({c for r in active for c in r})
@@ -165,11 +238,30 @@ def rref_mod_p(
         if c not in seen:
             order.append(c)
 
+    # Perf.12: resolve "auto" (and validate explicit requests) per matrix, up front.
+    initial_nnz = sum(len(r) for r in active)
+    numba_ok = rref_backend_available(NUMBA_RREF_BACKEND)
+    chosen, selection_reason = select_rref_backend(
+        requested,
+        n_rows=len(active),
+        n_cols=len(all_cols),
+        initial_nnz=initial_nnz,
+        prime=prime,
+        numba_available=numba_ok,
+    )
+
     stats: dict | None = None
     if collect_stats:
         nnz0, max0, med0 = _row_nnz_stats(active)
         stats = {
             "backend": chosen,
+            "requested_rref_backend": requested,  # Perf.12: selection diagnostics
+            "selected_rref_backend": chosen,
+            "backend_selection_reason": selection_reason,
+            "numba_available": numba_ok,
+            "auto_thresholds_used": (
+                dict(AUTO_RREF_THRESHOLDS) if requested == AUTO_RREF_BACKEND else None
+            ),
             "n_rows": len(active),
             "n_cols": len(all_cols),
             "nnz_initial": nnz0,

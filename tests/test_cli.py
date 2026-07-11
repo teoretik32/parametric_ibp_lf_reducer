@@ -111,6 +111,39 @@ def test_reduce_accepts_rref_backend_flag(tiny_input, tmp_path):
     assert '"Status" -> "Success"' in out.read_text(encoding="utf-8")
 
 
+def test_reduce_accepts_rref_backend_auto(tiny_input, tmp_path):
+    # Perf.12: "auto" is selection-only plumbing — the tiny input resolves to the
+    # dict backend, so the Wolfram-style output is byte-identical to an explicit
+    # dict run and the certificate gate still passes.
+    out_dict = tmp_path / "result_dict.m"
+    out_auto = tmp_path / "result_auto.m"
+    diag = tmp_path / "diagnostics_auto.json"
+
+    rc = main(["reduce", str(tiny_input), "--out", str(out_dict), "--rref-backend", "dict"])
+    assert rc == EXIT_SUCCESS
+    rc = main(
+        [
+            "reduce",
+            str(tiny_input),
+            "--out",
+            str(out_auto),
+            "--rref-backend",
+            "auto",
+            "--diagnostics-json",
+            str(diag),
+        ]
+    )
+    assert rc == EXIT_SUCCESS
+
+    auto_text = out_auto.read_text(encoding="utf-8")
+    assert '"Status" -> "Success"' in auto_text
+    assert auto_text == out_dict.read_text(encoding="utf-8")
+
+    payload = json.loads(diag.read_text(encoding="utf-8"))
+    assert payload["status"] == STATUS_SUCCESS
+    assert payload["certificate_status"] == "Passed"
+
+
 def test_reduce_rejects_unknown_rref_backend(tiny_input, capsys):
     with pytest.raises(SystemExit) as exc:
         main(["reduce", str(tiny_input), "--rref-backend", "nonsense"])

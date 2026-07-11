@@ -341,3 +341,26 @@ Status: **complete, verified**.
 - Тесты: `tests/test_cli.py` (+2: accepted/rejected значение), numba
   parity suite без изменений. Full suite green, ruff clean.
 - Ветка слита `--no-ff` в `main`, запушена в origin, ветка удалена.
+
+## Perf.12 — `rref_backend="auto"`: эвристический выбор dict vs numba (ветка `perf/rref-auto-backend`)
+
+- Новое имя `"auto"` (`AUTO_RREF_BACKEND`); валидация теперь по
+  `RREF_BACKEND_CHOICES = (*RREF_BACKENDS, "auto")`. Default остаётся
+  `"dict"` — auto строго opt-in.
+- `select_rref_backend()` резолвит `"auto"` per-matrix, до начала
+  работы (serial и worker-процессы ведут себя одинаково): numba только
+  если доступна, `prime < 2**31` и матрица проходит все гейты
+  `AUTO_RREF_THRESHOLDS` (`min_rows: 500`, `min_cols: 400`,
+  `min_nnz: 3000`; консервативно, может меняться); иначе `"dict"`.
+  Отсутствие numba — тихий fallback ТОЛЬКО для `"auto"`; явный запрос
+  бэкенда по-прежнему падает быстро и явно.
+- Результаты backend-идентичны (parity Perf.10); в stats пишется
+  решение: `requested_rref_backend`, `selected_rref_backend`,
+  `backend_selection_reason`, `numba_available`,
+  `auto_thresholds_used`.
+- CLI: `--rref-backend auto` принимается (в help помечен
+  experimental, Perf.12).
+- Тесты: новый `tests/test_rref_backend_auto.py` (гейты
+  размера/prime, fallback без numba, явный запрос не подменяется,
+  end-to-end) + `tests/test_cli.py` для `auto`. Full suite green,
+  ruff clean.
