@@ -116,8 +116,13 @@ def modular_normal_form(
     lf_map: dict | None = None,
     timings: StageTimings | None = None,
     ranking: RankedLabels | None = None,
+    rref_backend: str | None = None,
 ) -> NormalFormResult:
     """Extract the target's normal form at one ``(prime, sample)`` point.
+
+    ``rref_backend`` (Perf.11) selects the :func:`sparse_rref.rref_mod_p` implementation
+    (``None`` means the default ``"dict"`` backend); every backend returns identical
+    RREF results by construction, so this never affects the mathematical outcome.
 
     ``timings`` (Perf.0) optionally accumulates per-stage wall-clock seconds; it never
     affects the result.
@@ -166,7 +171,7 @@ def modular_normal_form(
                 lf_map=lf_map,
             )
     with t.stage("rref_mod_p"):
-        res = rref_mod_p(matrix, prime, column_order=ranked.ordered)
+        res = rref_mod_p(matrix, prime, column_order=ranked.ordered, backend=rref_backend)
 
     if target_label not in res.pivots:
         return NormalFormResult(
@@ -205,8 +210,12 @@ def modular_normal_forms_multi(
     lf_map: dict | None = None,
     timings: StageTimings | None = None,
     ranking: RankedLabels | None = None,
+    rref_backend: str | None = None,
 ) -> dict[Label, NormalFormResult]:
     """Perf.5: extract *several* targets' normal forms from ONE shared RREF at one point.
+
+    ``rref_backend`` (Perf.11): see :func:`modular_normal_form` — backend selection only,
+    identical results by construction.
 
     The expensive per-point work (``assemble_rows_mod_p`` + ``rref_mod_p``) does not depend on
     the target, so it is done once; every requested target is then read off the same reduced
@@ -271,7 +280,7 @@ def modular_normal_forms_multi(
                 lf_map=lf_map,
             )
     with t.stage("rref_mod_p"):
-        res = rref_mod_p(matrix, prime, column_order=ranked.ordered)
+        res = rref_mod_p(matrix, prime, column_order=ranked.ordered, backend=rref_backend)
 
     out: dict[Label, NormalFormResult] = {}
     for tgt in targets:

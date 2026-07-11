@@ -103,6 +103,21 @@ def test_reduce_accepts_option_overrides(tiny_input, tmp_path):
     assert '"Status" -> "Success"' in out.read_text(encoding="utf-8")
 
 
+def test_reduce_accepts_rref_backend_flag(tiny_input, tmp_path):
+    # Perf.11: backend selection only — identical results, so Success either way.
+    out = tmp_path / "result.m"
+    rc = main(["reduce", str(tiny_input), "--out", str(out), "--rref-backend", "dict"])
+    assert rc == EXIT_SUCCESS
+    assert '"Status" -> "Success"' in out.read_text(encoding="utf-8")
+
+
+def test_reduce_rejects_unknown_rref_backend(tiny_input, capsys):
+    with pytest.raises(SystemExit) as exc:
+        main(["reduce", str(tiny_input), "--rref-backend", "nonsense"])
+    assert exc.value.code == EXIT_USAGE
+    assert "invalid choice" in capsys.readouterr().err
+
+
 # --- failure paths ---------------------------------------------------------------------------
 def test_reduce_typed_failure_exits_one_with_reason(tmp_path, capsys):
     inp = tmp_path / "needs_family.m"

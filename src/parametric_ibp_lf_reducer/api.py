@@ -34,6 +34,7 @@ from .input_parser import (
 )
 from .labels import Label, zero_label
 from .reducer import ReducerConfig, reduce_family_once
+from .sparse_rref import RREF_BACKENDS
 from .result import (
     FAILURE_PARSER_NEEDS_EXPLICIT_FAMILY,
     ReductionDiagnostics,
@@ -165,7 +166,16 @@ _OPTION_KEYS = {
     "Samples": "samples",
     "CertificatePoints": "certificate_points",
     "MinValidRecords": "min_valid_records",
+    "RREFBackend": "rref_backend",  # Perf.11: opt-in RREF implementation selector
 }
+
+
+def _as_rref_backend(value) -> str:
+    """Validate an RREF backend name against :data:`sparse_rref.RREF_BACKENDS` (Perf.11)."""
+    name = str(value).strip().strip('"')
+    if name not in RREF_BACKENDS:
+        raise ValueError(f"unknown RREF backend {name!r}; expected one of {RREF_BACKENDS}")
+    return name
 
 # Canonical setting -> coercer. Everything here (minus ``target_label``) is a ReducerConfig field.
 _COERCERS = {
@@ -184,6 +194,7 @@ _COERCERS = {
     "require_certificate_for_success": _as_bool,  # explicit opt-out only; default stays ON
     "eps_direction": str,
     "jobs": _as_int,  # Perf.3: worker processes for record collection (1 = serial)
+    "rref_backend": _as_rref_backend,  # Perf.11: backend selection only, identical results
 }
 
 # Python-side override aliases (CLAUDE.md's preferred API spells ``tangent_degrees``).

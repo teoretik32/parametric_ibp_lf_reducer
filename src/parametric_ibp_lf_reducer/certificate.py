@@ -147,6 +147,7 @@ def verify_reduction_relations_mod_p(
     column_order: Sequence[Label] | None = None,
     lhs_terms_map: Mapping[Label, Mapping[Label, object]] | None = None,
     rref_cache: MutableMapping | None = None,
+    rref_backend: str | None = None,
 ) -> dict[Label, CertificateResult]:
     """Perf.5: certify *several* claimed relations at ONE ``(sample, prime)`` point, sharing the
     assemble + RREF work.
@@ -188,7 +189,7 @@ def verify_reduction_relations_mod_p(
             return _all(STATUS_BAD_SPECIALIZATION)
         if not matrix:
             return _all(STATUS_EMPTY_SYSTEM)
-        res = rref_mod_p(matrix, prime, column_order=column_order)
+        res = rref_mod_p(matrix, prime, column_order=column_order, backend=rref_backend)
         nrows = len(matrix)
         if rref_cache is not None:
             rref_cache[rref_cache_key(sample, prime)] = (res, nrows)
@@ -228,6 +229,7 @@ def verify_reduction_relation_mod_p(
     column_order: Sequence[Label] | None = None,
     lhs_terms: Mapping[Label, object] | None = None,
     rref_cache: MutableMapping | None = None,
+    rref_backend: str | None = None,
 ) -> CertificateResult:
     """Certify (mod ``prime``, at ``sample``) that ``J[target] = sum terms[label]*J[label]``
     is in the span of ``rows``.
@@ -273,7 +275,7 @@ def verify_reduction_relation_mod_p(
     if cached is not None:
         res, nrows = cached  # Perf.6: identical (rows, column_order) contract — see rref_cache_key
     else:
-        res = rref_mod_p(matrix, prime, column_order=column_order)
+        res = rref_mod_p(matrix, prime, column_order=column_order, backend=rref_backend)
         nrows = len(matrix)
         if rref_cache is not None:
             rref_cache[rref_cache_key(sample, prime)] = (res, nrows)

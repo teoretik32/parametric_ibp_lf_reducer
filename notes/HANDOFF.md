@@ -321,5 +321,23 @@ Status: **complete, verified**.
   dict на random/dense/rank-deficient/partial-order/малых простых +
   граница `2**31 - 1`, reject `>= 2**31`, stats/plain-int, end-to-end
   `modular_normal_form` parity. Full suite green, ruff clean.
-- Коммит `ab861e1` на ветке `perf/numba-rref-backend`; merge/push — по
-  решению пользователя.
+- Коммит `ab861e1`; ветка слита `--no-ff` в `main` (`81ec173`),
+  запушена в origin, ветка удалена.
+
+## Perf.11 — выбор RREF-бэкенда через ReducerConfig/API/CLI (ветка `perf/rref-backend-plumbing`)
+
+- `ReducerConfig.rref_backend` (default `"dict"`) прокинут через
+  `records.py` (serial-путь и worker-процессы через per-point
+  context), `modular_normal_form.py`, `reducer.py` и `certificate.py`
+  — ranking, normal-form и certificate RREF уважают выбор. Только
+  селекция бэкенда: выбор пивотов, порядок элиминации и LF/certificate
+  gates НЕ тронуты; результаты идентичны по построению (parity-тесты
+  Perf.10 это дополнительно фиксируют).
+- Имя бэкенда валидируется по `sparse_rref.RREF_BACKENDS` до начала
+  работы; неизвестное имя — быстрая понятная ошибка.
+- API принимает `rref_backend` и передаёт в `ReducerConfig` как есть.
+- CLI: флаг `--rref-backend` (choices = `RREF_BACKENDS`, default
+  `dict`); неизвестное значение — usage error (`EXIT_USAGE`).
+- Тесты: `tests/test_cli.py` (+2: accepted/rejected значение), numba
+  parity suite без изменений. Full suite green, ruff clean.
+- Ветка слита `--no-ff` в `main`, запушена в origin, ветка удалена.
