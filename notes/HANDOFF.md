@@ -286,3 +286,19 @@ Status: **complete, verified**.
   на всех 5 точках, certificate Passed 5/5). Тесты: certificate-gate +
   perf-сьюты + full suite + ruff — clean. Остаточный hotspot: сам shared
   `rref_mod_p` (~2900 s, ~2/3 wall) — дальше только быстрый mod-p RREF kernel.
+
+## Perf.7/Perf.8 merged to main (2026-07-11, merge 3a70cef, no tag)
+
+- Branch `perf/rref-backend-prototype` merged --no-ff into `main`; pushed.
+- NO release: no tag, no v0.1.4, version stays as-is.
+- RREF backend default is still `"dict"` (`DEFAULT_RREF_BACKEND` in
+  `sparse_rref.py`); `int_sparse_experimental` is opt-in only (0.69x on
+  the real medium matrix, ~0.90x synthetic). Dict backend NOT removed.
+- `collect_stats=True` counters + `scripts/bench_rref_backends.py` +
+  `scripts/profile_rref_real_matrix.py` now on main; real profile at
+  `validation/rref_real_matrix_profile.json` (fill-in 10.5x, rows stay
+  sparse). Candidate B (pure-Python int-array rows) measured 1.5-1.9x
+  SLOWER and rejected — see `docs/RREF_BACKEND_PLAN.md`.
+- Next RREF work is DESIGN ONLY: candidate C/D triggers and a Numba/E
+  merge-kernel sketch; no implementation under the pure-Python
+  constraint.
