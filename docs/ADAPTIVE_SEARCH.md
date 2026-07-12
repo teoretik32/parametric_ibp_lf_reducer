@@ -58,7 +58,15 @@ package default `((0, 0), (-1, 0))`):
 | 1 | `expand-1` | every m-range deepened by 1 | 2 | `((1, 1),)` | — |
 | 2 | `deep` | every m-range deepened by 2 | 2 | `((1, 1), (2, 2))` | +4 samples, +2 primes; optional `rref_backend` (recommended `"auto"`) |
 
-n-ranges never change. An explicit `labels` list cannot be grown deterministically —
+By default n-ranges never change. Opt-in `expand_n` (a per-n-axis 0/1 mask argument of
+`default_search_levels`) widens masked n-axes symmetrically by the level delta (`(lo-k, hi+k)`
+at level *k*). Because n-expansion multiplies the box volume, `expand_n` **requires**
+`max_labels` — a build-time guard: every planned level's label count must stay within it
+(`ValueError` otherwise). This guard is distinct from the runtime pre-flight
+`AdaptiveSearchConfig.max_labels`, which *skips* oversized levels instead of refusing to build
+the schedule.
+
+An explicit `labels` list cannot be grown deterministically —
 supply explicit `SearchLevel`s instead (`ValueError` otherwise).
 
 ## Result and history
@@ -72,7 +80,9 @@ The returned object is an ordinary `ReductionResult`:
   level (tie-break).
 
 The full history is attached at `result.diagnostics.extra["adaptive"]` (and in the CLI
-`--diagnostics-json` payload under `"adaptive"`): per-level status, failure reason,
+`--diagnostics-json` payload under `"adaptive"`): per-level status, failure reason, a short
+deterministic `error` detail (the attempt's diagnostic messages, truncated to 500 chars,
+`None` on success — full failed results are deliberately not retained),
 certificate status, row/label/record counters, a failure-specific **recommendation**
 (e.g. `TargetNotReducible` → expand box/degree/tangent; `InterpolationFailed` → more
 samples/primes; `VerificationFailed` → add independent points, **never** accept the current
@@ -86,6 +96,10 @@ coefficients), and observability-only wall-clock times.
 | `max_labels` | **pre-flight**: an oversized level is *not* run; if nothing ran at all, the result is a typed `ResourceLimitReached` failure |
 | `max_rows` | checked **after** a level completes; stops further escalation (the completed level still counts) |
 | `timeout_sec` | checked **between** levels only; a running level is never aborted |
+
+**No limit is hard-preemptive**: `max_labels` skips an oversized level *before* it starts,
+`max_rows` is observed only *after* the offending level has already run to completion, and a
+long level always runs to completion (levels are atomic).
 
 Every limit hit is reported exactly (`kind`, `limit`, `observed`, `level`) in
 `extra["adaptive"]["resource_limit"]`. `timeout_sec` is the only wall-clock knob, is disabled

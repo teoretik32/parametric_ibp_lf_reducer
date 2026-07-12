@@ -15,6 +15,13 @@
   `max_rows` post-level, `timeout_sec` between levels) surface as typed
   `ResourceLimitReached` data — never as fabricated success. Docs:
   `docs/ADAPTIVE_SEARCH.md` / `docs/ADAPTIVE_SEARCH.ru.md`.
+- **Adaptive.1a hardening**: opt-in `expand_n` mask for `default_search_levels`
+  (masked n-axes widen symmetrically per level; **requires** a build-time
+  `max_labels` guard — every planned level must fit, `ValueError` otherwise,
+  distinct from the runtime pre-flight skip); per-level reports gain a bounded
+  deterministic `error` detail (attempt's diagnostic messages, ≤500 chars,
+  `None` on success; full failed results are deliberately not retained); docs
+  spell out that no resource limit is hard-preemptive (levels are atomic).
 
 ### Unchanged
 - Without `--adaptive` the CLI/API path is the previous single fixed pass;

@@ -16,9 +16,12 @@ Honesty contract:
   deterministic order (see ``_partial_key``), with the full per-level history attached at
   ``result.diagnostics.extra["adaptive"]``;
 * resource limits (``max_levels`` / ``max_labels`` / ``max_rows`` / ``timeout_sec``) produce an
-  honest typed failure or an honest early stop — never a silent downgrade. ``timeout_sec`` is
-  the only wall-clock knob: it is checked **between** levels only (levels are atomic), is
-  disabled by default, and never changes the mathematical content of any completed level.
+  honest typed failure or an honest early stop — never a silent downgrade. **No limit is
+  hard-preemptive**: ``max_labels`` skips an oversized level *before* it starts, ``max_rows``
+  is observed only *after* the offending level has already run to completion, and
+  ``timeout_sec`` is checked **between** levels only (levels are atomic — a long level always
+  runs to completion). ``timeout_sec`` is the only wall-clock knob, is disabled by default,
+  and never changes the mathematical content of any completed level.
 """
 
 from __future__ import annotations
@@ -127,6 +130,7 @@ class AdaptiveLevelReport:
     skipped_reason: str | None
     status: str | None
     failure_reason: str | None
+    error: str | None  # short deterministic failure detail; None on success / not-ran
     certificate_status: str | None
     n_labels: int
     n_rows: int
@@ -171,9 +175,21 @@ def _normalized_box(box, family: ParametricFamily):
     return n_pairs, m_pairs
 
 
-def _expand_m(box, family: ParametricFamily, delta: int):
-    """Deepen every m-range by ``delta`` on the low side; n-ranges unchanged."""
+def _expand_box(box, family: ParametricFamily, delta: int, n_mask: tuple[int, ...] | None = None):
+    """Deepen every m-range by ``delta`` on the low side; masked n-axes widen symmetrically.
+
+    ``n_mask`` (one 0/1 flag per n-axis) selects n-axes to widen to ``(lo-delta, hi+delta)``.
+    Labels are unconstrained integer shift tuples (:func:`labels.enumerate_box` only requires
+    ``lo <= hi``), so widening both directions is structurally valid; the caller bounds the
+    multiplicative blow-up via the ``max_labels`` guard in :func:`default_search_levels`.
+    ``n_mask=None`` keeps every n-range unchanged (the MVP default).
+    """
     n_pairs, m_pairs = _normalized_box(box, family)
+    if n_mask is not None and delta > 0:
+        n_pairs = tuple(
+            (lo - delta, hi + delta) if flag else (lo, hi)
+            for (lo, hi), flag in zip(n_pairs, n_mask)
+        )
     return (n_pairs, tuple((lo - delta, hi) for lo, hi in m_pairs))
 
 
@@ -186,7 +202,12 @@ def _count_box_labels(box, family: ParametricFamily) -> int:
 
 
 def default_search_levels(
-    family: ParametricFamily, config: ReducerConfig, *, rref_backend: str | None = None
+    family: ParametricFamily,
+    config: ReducerConfig,
+    *,
+    rref_backend: str | None = None,
+    expand_n: Sequence[int] | None = None,
+    max_labels: int | None = None,
 ) -> tuple[SearchLevel, ...]:
     """The deterministic 3-level MVP schedule, derived only from the base config.
 
@@ -198,6 +219,13 @@ def default_search_levels(
       (recommended ``"auto"`` when the ``speed`` extra is installed; default inherits the
       base config, i.e. the package default ``dict`` backend).
 
+    ``expand_n`` (opt-in) is a per-n-axis 0/1 mask: masked axes widen symmetrically by the
+    level delta (``(lo-k, hi+k)`` at level *k*), unmasked axes stay frozen. Because n-expansion
+    multiplies the box volume, ``expand_n`` **requires** ``max_labels`` — a build-time guard:
+    every planned level's label count must stay within it (``ValueError`` otherwise). This
+    guard is distinct from the runtime pre-flight gate ``AdaptiveSearchConfig.max_labels``
+    (which *skips* oversized levels instead of refusing to build the schedule).
+
     An explicit ``config.labels`` list cannot be grown deterministically — provide explicit
     ``SearchLevel``s instead (``ValueError``).
     """
@@ -206,8 +234,24 @@ def default_search_levels(
             "default_search_levels cannot grow an explicit `labels` list; "
             "pass AdaptiveSearchConfig(levels=...) with your own SearchLevels"
         )
+    mask: tuple[int, ...] | None = None
+    if expand_n is not None:
+        mask = tuple(1 if bool(x) else 0 for x in expand_n)
+        if len(mask) != family.nvars:
+            raise ValueError(
+                f"expand_n mask has {len(mask)} entries, family has {family.nvars} n-axes"
+            )
+        if not any(mask):
+            raise ValueError(
+                "expand_n selects no n-axes; omit expand_n instead of passing all zeros"
+            )
+        if max_labels is None:
+            raise ValueError(
+                "expand_n widens the label box multiplicatively; "
+                "pass max_labels=... to bound the planned schedule"
+            )
     base_box = config.label_box if config.label_box is not None else _DEFAULT_LABEL_BOX
-    return (
+    levels = (
         SearchLevel(
             name="base",
             label_box=_normalized_box(base_box, family),
@@ -216,13 +260,13 @@ def default_search_levels(
         ),
         SearchLevel(
             name="expand-1",
-            label_box=_expand_m(base_box, family, 1),
+            label_box=_expand_box(base_box, family, 1, mask),
             max_ibp_degree=2,
             tangent_degree_blocks=((1, 1),),
         ),
         SearchLevel(
             name="deep",
-            label_box=_expand_m(base_box, family, 2),
+            label_box=_expand_box(base_box, family, 2, mask),
             max_ibp_degree=2,
             tangent_degree_blocks=((1, 1), (2, 2)),
             extra_samples=4,
@@ -230,6 +274,16 @@ def default_search_levels(
             rref_backend=rref_backend,
         ),
     )
+    if max_labels is not None:
+        for lvl in levels:
+            planned = _count_box_labels(lvl.label_box, family)
+            if planned > max_labels:
+                raise ValueError(
+                    f"default_search_levels: level {lvl.name!r} plans {planned} labels "
+                    f"> max_labels {max_labels}; shrink the base box or the expand_n mask, "
+                    f"or raise max_labels"
+                )
+    return levels
 
 
 # --- per-level config construction ---------------------------------------------------------------
@@ -345,6 +399,21 @@ def _partial_key(result: ReductionResult, level_index: int) -> tuple:
 
 
 # --- per-level report -----------------------------------------------------------------------------
+def _error_text(result: ReductionResult | None) -> str | None:
+    """Short deterministic failure detail for the per-level report (``None`` on success).
+
+    Full failed ``ReductionResult``s are deliberately not retained (the adaptive payload stays
+    small and JSON-safe), so this preserves the human-readable detail — the attempt's
+    diagnostic messages, falling back to the typed failure reason. Messages are deterministic
+    text (never timings), truncated to keep the payload bounded.
+    """
+    if result is None or result.success:
+        return None
+    msgs = [m for m in result.diagnostics.messages if m]
+    text = "; ".join(msgs) if msgs else (result.failure_reason or result.status)
+    return text[:500] if text else None
+
+
 def _report_for(
     level_index: int,
     lvl: SearchLevel,
@@ -376,6 +445,7 @@ def _report_for(
         failure_reason=(
             result.failure_reason if result is not None and not result.success else None
         ),
+        error=_error_text(result),
         certificate_status=cert.get("certificate_status"),
         n_labels=int(extra.get("n_labels", 0)),
         n_rows=int(extra.get("n_rows", 0)),

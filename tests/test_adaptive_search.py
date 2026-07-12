@@ -408,3 +408,87 @@ def test_cli_fixed_path_unchanged_without_adaptive_flag(tiny_input, tmp_path):
     assert rc == EXIT_SUCCESS
     payload = json.loads(diag.read_text(encoding="utf-8"))
     assert "adaptive" not in payload
+
+
+# --- Adaptive.1a: default-schedule fail->success, n-expansion, per-level error ------------------
+
+# m anchored at +1: the base level fails, `expand-1` (m deepened by 1) reaches the good box.
+M_ANCHORED_BOX = ((0, 0), (1, 1))
+# m already good; n anchored off target: only growing the (default-frozen) n-axes can help.
+OFF_N_BOX = ((1, 1), (-1, 0))
+
+
+def test_default_schedule_m_expansion_turns_failure_into_success(tiny):
+    family, target, config = tiny
+    cfg = replace(config, label_box=M_ANCHORED_BOX, labels=None)
+    res = reduce_family_adaptive(family, target, cfg)
+    ad = res.diagnostics.extra["adaptive"]
+    assert res.success and res.status == STATUS_SUCCESS
+    assert ad["stop_reason"] == "success" and ad["best_level"] == 1
+    lvl0, lvl1 = ad["levels"][0], ad["levels"][1]
+    assert lvl0["status"] == FAILURE_TARGET_NOT_REDUCIBLE
+    assert lvl1["status"] == STATUS_SUCCESS and lvl1["certificate_status"] == "Passed"
+
+
+def test_default_schedule_never_grows_n_so_off_n_box_exhausts(tiny):
+    family, target, config = tiny
+    cfg = replace(config, label_box=OFF_N_BOX, labels=None)
+    res = reduce_family_adaptive(family, target, cfg)
+    ad = res.diagnostics.extra["adaptive"]
+    assert not res.success and ad["stop_reason"] == "levels_exhausted"
+    assert [lv["status"] for lv in ad["levels"]] == [FAILURE_TARGET_NOT_REDUCIBLE] * 3
+    for lv in ad["levels"]:  # every level kept the n-ranges frozen at (1, 1)
+        assert all(tuple(pair) == (1, 1) for pair in lv["label_box"][0])
+
+
+def test_expand_n_mask_turns_failure_into_success(tiny):
+    family, target, config = tiny
+    cfg = replace(config, label_box=OFF_N_BOX, labels=None)
+    levels = default_search_levels(family, cfg, expand_n=(1, 1), max_labels=2000)
+    # masked n-axes widen symmetrically by the level delta; m deepens as in the MVP schedule
+    assert levels[1].label_box == (((0, 2), (0, 2)), ((-2, 0), (-2, 0)))
+    assert levels[2].label_box == (((-1, 3), (-1, 3)), ((-3, 0), (-3, 0)))
+    res = reduce_family_adaptive(family, target, cfg, AdaptiveSearchConfig(levels=levels))
+    ad = res.diagnostics.extra["adaptive"]
+    assert res.success and res.status == STATUS_SUCCESS
+    assert ad["stop_reason"] == "success" and ad["best_level"] == 1
+    assert ad["levels"][0]["status"] == FAILURE_TARGET_NOT_REDUCIBLE
+    assert ad["levels"][1]["certificate_status"] == "Passed"  # strict gate, as always
+
+
+def test_expand_n_masked_axes_only_and_deterministic(tiny):
+    family, _target, config = tiny
+    levels = default_search_levels(family, config, expand_n=(0, 1), max_labels=10_000)
+    base_n = levels[0].label_box[0]
+    n1 = levels[1].label_box[0]
+    assert n1[0] == base_n[0]  # unmasked axis frozen
+    assert n1[1] == (base_n[1][0] - 1, base_n[1][1] + 1)  # masked axis: symmetric +/-1
+    assert levels == default_search_levels(family, config, expand_n=(0, 1), max_labels=10_000)
+
+
+def test_expand_n_validation_and_max_labels_guard(tiny):
+    family, _target, config = tiny
+    with pytest.raises(ValueError, match="expand_n mask has 1 entries"):
+        default_search_levels(family, config, expand_n=(1,), max_labels=100)
+    with pytest.raises(ValueError, match="selects no n-axes"):
+        default_search_levels(family, config, expand_n=(0, 0), max_labels=100)
+    with pytest.raises(ValueError, match="pass max_labels"):
+        default_search_levels(family, config, expand_n=(1, 1))  # guard is mandatory
+    with pytest.raises(ValueError, match="exceeds|> max_labels"):
+        default_search_levels(family, config, expand_n=(1, 1), max_labels=10)
+    # the build-time guard also applies without expand_n
+    with pytest.raises(ValueError, match="> max_labels"):
+        default_search_levels(family, config, max_labels=1)
+
+
+def test_per_level_error_field_deterministic_and_null_on_success(tiny):
+    family, target, config = tiny
+    search = AdaptiveSearchConfig(levels=(_level("off", OFF_BOX), _level("good", GOOD_BOX)))
+    res1 = reduce_family_adaptive(family, target, config, search)
+    res2 = reduce_family_adaptive(family, target, config, search)
+    ad1 = res1.diagnostics.extra["adaptive"]
+    ad2 = res2.diagnostics.extra["adaptive"]
+    lvl_fail, lvl_ok = ad1["levels"]
+    assert isinstance(lvl_fail["error"], str) and lvl_fail["error"]  # typed detail retained
+    assert lvl_fail["error"] == ad2["levels"][0]["error"]  # deterministic
+    assert lvl_ok["error"] is None  # success carries no error
