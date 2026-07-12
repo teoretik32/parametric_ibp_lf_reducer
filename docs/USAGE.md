@@ -93,8 +93,11 @@ RUN_D4_FULL=1 python -m pytest tests/test_d4_vertical.py tests/test_d4_cli_e2e.p
 
 - **Explicit-family input only.** A document carrying just a whole `Integrand` returns a
   typed `Failure/ParserNeedsExplicitFamily` — integrand auto-factorization is not guessed.
-- **No adaptive search.** One fixed pass per invocation: the label box / degrees /
-  samples come from the document `Options` (or defaults); nothing enlarges them on failure.
+- **Adaptive search is opt-in and bounded (v0.2.0).** By default one fixed pass
+  per invocation: the label box / degrees / samples come from the document
+  `Options` (or defaults). `--adaptive` runs a deterministic escalation schedule
+  ([ADAPTIVE_SEARCH.md](ADAPTIVE_SEARCH.md)); exhausting it proves nothing
+  about non-reducibility.
 - **No Mathematica runtime dependency** — and therefore no symbolic cross-check against
   Wolfram; verification is modular row-span certification at rational points.
 - **Dense multivariate interpolation limits.** Coefficient reconstruction uses dense
@@ -170,6 +173,37 @@ Rules:
   `Passed`, same two certified coefficients. Details:
   [PERFORMANCE.md](PERFORMANCE.md), [NUMBA_RREF_QA.md](NUMBA_RREF_QA.md).
 
+## Adaptive search (`--adaptive`, v0.2.0)
+
+Opt-in bounded escalation of ordinary certified fixed passes; without
+`--adaptive` behavior is unchanged (single fixed pass, byte-for-byte):
+
+```bash
+python -m parametric_ibp_lf_reducer reduce input.wl.txt \
+    --adaptive --adaptive-max-levels 3 --rref-backend auto \
+    --out result.m --diagnostics-json diagnostics.json
+```
+
+- Levels escalate label-box m-deepening / IBP degree / tangent blocks / extra
+  samples & primes; the loop stops at the first *certified* `Success`.
+- Every level runs the full fixed pipeline with the same LF + certificate
+  gates; per-level history, failure-specific recommendations and resource
+  diagnostics land under `diagnostics.extra["adaptive"]` in the diagnostics
+  JSON.
+- Resource limits surface as typed `ResourceLimitReached` data, never as
+  fabricated success; `timeout_sec` is checked *between* atomic levels.
+- Python API: `api.reduce_wolfram_style_input_adaptive(text)` (document level)
+  and `reduce_family_adaptive(...)` (family level, `AdaptiveSearchConfig`).
+- Real-family validation (Adaptive.2): Example 2 five-term family, deliberately
+  shallow base box → level 0 honest `NormalFormNotLocallyFinite` (certificate
+  `Passed`) → level 1 certified `Success` (72 labels / 1116 rows), notebook
+  coefficients reproduced exactly. The fast API case runs in the normal suite;
+  the CLI e2e medium case is gated behind `RUN_ADAPTIVE_MEDIUM=1`
+  (`tests/test_adaptive_real_family.py`).
+
+Details: [ADAPTIVE_SEARCH.md](ADAPTIVE_SEARCH.md); QA record:
+[ADAPTIVE_SEARCH_QA.md](ADAPTIVE_SEARCH_QA.md).
+
 ## Release sanity check
 
 ```bash
@@ -177,6 +211,8 @@ python -m pytest
 ruff check .
 # optional heavy acceptance (~25-30 min total):
 RUN_D4_FULL=1 python -m pytest tests/test_d4_vertical.py tests/test_d4_cli_e2e.py
+# optional adaptive CLI e2e medium case (~1-2 min):
+RUN_ADAPTIVE_MEDIUM=1 python -m pytest tests/test_adaptive_real_family.py
 ```
 
 or `scripts/final_check.ps1` / `scripts/final_check.sh` (pass `-Heavy` / `--heavy` to

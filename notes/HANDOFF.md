@@ -5,6 +5,11 @@
 
 ## Текущий статус (2026-07-12)
 
+- **Релиз v0.2.0 — controlled adaptive search over certified fixed-pass reductions**
+  (tag `v0.2.0`): версия 0.1.4 → 0.2.0; CHANGELOG v0.2.0 (Adaptive.1/.1a/.2); adaptive
+  quick start в README(.ru) и docs/USAGE(.ru); QA-запись — `docs/ADAPTIVE_SEARCH_QA.md`.
+  Политика adaptive, математика и перфоманс не менялись; тяжёлые certified baselines
+  (D4, corrected Example 4\*) сознательно не перегонялись.
 - **Последний завершённый pass: Adaptive.2 — валидация adaptive search на реальной семье**
   (`main`): дефолтное расписание, стартуя с намеренно мелкого базового бокса на реальной
   явной 5-членной семье Example 2 (`I3exampl2`), эскалирует ровно один раз: уровень 0 —

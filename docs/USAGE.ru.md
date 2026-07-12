@@ -97,9 +97,11 @@ RUN_D4_FULL=1 python -m pytest tests/test_d4_vertical.py tests/test_d4_cli_e2e.p
 - **Только explicit-family вход.** Документ с одним лишь `Integrand` возвращает
   типизированный `Failure/ParserNeedsExplicitFamily` — авто-факторизация integrand
   не угадывается.
-- **Нет adaptive search.** Один фиксированный проход на вызов: label box / степени /
-  сэмплы берутся из `Options` документа (или дефолтов); при отказе ничего не
-  расширяется автоматически.
+- **Adaptive search — opt-in и ограничен (v0.2.0).** По умолчанию один
+  фиксированный проход на вызов: label box / степени / сэмплы берутся из
+  `Options` документа (или дефолтов). `--adaptive` запускает детерминированное
+  расписание эскалации ([ADAPTIVE_SEARCH.ru.md](ADAPTIVE_SEARCH.ru.md)); его
+  исчерпание ничего не доказывает о нередуцируемости.
 - **Нет зависимости от Mathematica runtime** — а значит, нет и символьного кросс-чека
   через Wolfram; верификация — модулярная row-span сертификация в рациональных точках.
 - **Пределы плотной многомерной интерполяции.** Реконструкция коэффициентов — плотный
@@ -174,6 +176,40 @@ python -m parametric_ibp_lf_reducer reduce input.wl.txt --rref-backend numba_int
   те же два сертифицированных коэффициента. Детали:
   [PERFORMANCE.md](PERFORMANCE.md), [NUMBA_RREF_QA.md](NUMBA_RREF_QA.md).
 
+## Adaptive search (`--adaptive`, v0.2.0)
+
+Opt-in ограниченная эскалация обычных сертифицированных фиксированных проходов;
+без `--adaptive` поведение не меняется (один фиксированный проход, байт-в-байт):
+
+```bash
+python -m parametric_ibp_lf_reducer reduce input.wl.txt \
+    --adaptive --adaptive-max-levels 3 --rref-backend auto \
+    --out result.m --diagnostics-json diagnostics.json
+```
+
+- Уровни эскалируют углубление label box / степень IBP / tangent-блоки /
+  дополнительные сэмплы и простые числа; цикл останавливается на первом
+  *сертифицированном* `Success`.
+- Каждый уровень гоняет полный фиксированный конвейер с теми же LF- и
+  certificate-гейтами; по-уровневая история, рекомендации по типу отказа и
+  ресурсная диагностика — в `diagnostics.extra["adaptive"]` diagnostics JSON.
+- Лимиты ресурсов выражаются как типизированные данные `ResourceLimitReached`,
+  никогда — как сфабрикованный успех; `timeout_sec` проверяется *между*
+  атомарными уровнями.
+- Python API: `api.reduce_wolfram_style_input_adaptive(text)` (уровень
+  документа) и `reduce_family_adaptive(...)` (уровень семьи,
+  `AdaptiveSearchConfig`).
+- Валидация на реальной семье (Adaptive.2): 5-членная семья Example 2,
+  намеренно мелкий базовый бокс → уровень 0 — честный
+  `NormalFormNotLocallyFinite` (сертификат `Passed`) → уровень 1 —
+  сертифицированный `Success` (72 лейбла / 1116 строк), ноутбучные
+  коэффициенты воспроизведены точно. Быстрый API-кейс — в обычном прогоне;
+  CLI e2e medium-кейс — за гейтом `RUN_ADAPTIVE_MEDIUM=1`
+  (`tests/test_adaptive_real_family.py`).
+
+Детали: [ADAPTIVE_SEARCH.ru.md](ADAPTIVE_SEARCH.ru.md); QA:
+[ADAPTIVE_SEARCH_QA.md](ADAPTIVE_SEARCH_QA.md).
+
 ## Релизная sanity-проверка
 
 ```bash
@@ -181,6 +217,8 @@ python -m pytest
 ruff check .
 # опциональный тяжёлый acceptance (~25–30 мин суммарно):
 RUN_D4_FULL=1 python -m pytest tests/test_d4_vertical.py tests/test_d4_cli_e2e.py
+# опциональный adaptive CLI e2e medium-кейс (~1–2 мин):
+RUN_ADAPTIVE_MEDIUM=1 python -m pytest tests/test_adaptive_real_family.py
 ```
 
 или `scripts/final_check.ps1` / `scripts/final_check.sh` (флаг `-Heavy` / `--heavy`

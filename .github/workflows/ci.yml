@@ -30,9 +30,12 @@ jobs:
           assert importlib.util.find_spec('numba') is None, 'base job must not have numba'"
 
       - name: Run fast test suite
-        # Covers default dict backend and auto->dict fallback without numba
-        # (tests/test_rref_backend_auto.py). Heavy D4 acceptance
-        # (RUN_D4_FULL=1, ~25-30 min) is deliberately NOT run in CI.
+        # Covers default dict backend, auto->dict fallback without numba
+        # (tests/test_rref_backend_auto.py), and the adaptive-search suites
+        # incl. the fast real-family case (tests/test_adaptive_*.py).
+        # Heavy D4 acceptance (RUN_D4_FULL=1, ~25-30 min) and the adaptive
+        # CLI e2e medium case (RUN_ADAPTIVE_MEDIUM=1) are deliberately
+        # NOT run in CI.
         run: python -m pytest
 
       - name: Lint

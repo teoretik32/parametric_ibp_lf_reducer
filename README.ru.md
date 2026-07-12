@@ -97,6 +97,37 @@ python -m parametric_ibp_lf_reducer reduce input.wl.txt --rref-backend numba_int
   [docs/PERFORMANCE.md](docs/PERFORMANCE.md) и
   [docs/NUMBA_RREF_QA.md](docs/NUMBA_RREF_QA.md).
 
+## Adaptive search (v0.2.0, opt-in)
+
+Opt-in `--adaptive` запускает ограниченную детерминированную эскалацию обычных
+сертифицированных фиксированных проходов (углубление label box / степень IBP /
+tangent-блоки / дополнительные сэмплы и простые числа), останавливаясь на
+первом *сертифицированном* `Success`. **Без `--adaptive` ничего не меняется** —
+один фиксированный проход на вызов, байт-в-байт прежнее поведение.
+
+```bash
+python -m parametric_ibp_lf_reducer reduce input.wl.txt \
+    --adaptive --adaptive-max-levels 3 --rref-backend auto \
+    --out result.m --diagnostics-json diagnostics.json
+```
+
+```python
+from parametric_ibp_lf_reducer import api
+
+result = api.reduce_wolfram_style_input_adaptive(
+    open("input.wl.txt").read()
+)
+print(result.status)   # сертифицированный "Success" или честный типизированный отказ
+```
+
+Каждый уровень проходит те же LF- и certificate-гейты; полная по-уровневая
+история и рекомендации экспортируются в `diagnostics.extra["adaptive"]`.
+Провалидировано на реальной 5-членной семье Example 2 (уровень 0 — честный
+отказ с пройденным сертификатом → уровень 1 — сертифицированный `Success`,
+72 лейбла / 1116 строк). Детали:
+[docs/ADAPTIVE_SEARCH.ru.md](docs/ADAPTIVE_SEARCH.ru.md); QA:
+[docs/ADAPTIVE_SEARCH_QA.md](docs/ADAPTIVE_SEARCH_QA.md).
+
 ## Статусы
 
 | статус | смысл |
@@ -129,6 +160,9 @@ Exit-коды: `0` = Success, `1` = типизированный отказ (res
 
 - [docs/USAGE.ru.md](docs/USAGE.ru.md) — полный пользовательский путь (рус.);
   [docs/USAGE.md](docs/USAGE.md) — in English.
+- [docs/ADAPTIVE_SEARCH.ru.md](docs/ADAPTIVE_SEARCH.ru.md) — adaptive search:
+  дизайн и транскрипты на реальной семье ([EN](docs/ADAPTIVE_SEARCH.md)); QA:
+  [docs/ADAPTIVE_SEARCH_QA.md](docs/ADAPTIVE_SEARCH_QA.md).
 - [docs/FINAL_QA.md](docs/FINAL_QA.md) — релизный QA; [CHANGELOG.md](CHANGELOG.md).
 - `docs/0*_ru.md` — исходная спецификация / метод / валидационные заметки.
 

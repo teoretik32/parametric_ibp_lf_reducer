@@ -109,8 +109,9 @@ by default, and never changes the mathematical content of any completed level.
 
 ```
 python -m parametric_ibp_lf_reducer reduce input.m --adaptive
-python -m parametric_ibp_lf_reducer reduce input.m --adaptive --adaptive-max-levels 2 \
-    --diagnostics-json diag.json
+python -m parametric_ibp_lf_reducer reduce input.wl.txt \
+    --adaptive --adaptive-max-levels 3 --rref-backend auto \
+    --out result.m --diagnostics-json diagnostics.json
 ```
 
 `--adaptive-max-levels` requires `--adaptive`; without `--adaptive` the CLI path is byte-for-

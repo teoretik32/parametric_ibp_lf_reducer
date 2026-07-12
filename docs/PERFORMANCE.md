@@ -99,3 +99,14 @@ backend requires `prime < 2^31`. QA record:
   (~2070s combined) dominate; further wins require a faster RREF kernel
   (bit-packing / numpy-based elimination) or certificate-point reuse,
   not further orchestration reshuffling.
+
+## Adaptive search cost note (v0.2.0)
+
+Adaptive search (`--adaptive`) is an orchestration feature only: each level is
+a complete ordinary fixed pass, so the worst-case cost is roughly the sum of
+the levels' fixed-pass costs (deeper levels are strictly larger). v0.2.0
+changes no kernels and no defaults. For reproducible research runs a fixed
+explicit configuration remains the recommendation; adaptive mode is for
+exploration. Resource limits (`max_labels` pre-flight, `max_rows` post-level,
+`timeout_sec` between atomic levels) bound the loop but never hard-preempt a
+running level.

@@ -95,6 +95,37 @@ python -m parametric_ibp_lf_reducer reduce input.wl.txt --rref-backend numba_int
   [docs/PERFORMANCE.md](docs/PERFORMANCE.md) and
   [docs/NUMBA_RREF_QA.md](docs/NUMBA_RREF_QA.md).
 
+## Adaptive search (v0.2.0, opt-in)
+
+Opt-in `--adaptive` runs a bounded deterministic escalation of ordinary
+certified fixed passes (label box m-deepening / IBP degree / tangent blocks /
+extra samples & primes), stopping at the first *certified* `Success`.
+**Without `--adaptive` nothing changes** — one fixed pass per invocation,
+byte-for-byte the previous behavior.
+
+```bash
+python -m parametric_ibp_lf_reducer reduce input.wl.txt \
+    --adaptive --adaptive-max-levels 3 --rref-backend auto \
+    --out result.m --diagnostics-json diagnostics.json
+```
+
+```python
+from parametric_ibp_lf_reducer import api
+
+result = api.reduce_wolfram_style_input_adaptive(
+    open("input.wl.txt").read()
+)
+print(result.status)   # certified "Success" or an honest typed failure
+```
+
+Every level passes the same LF + certificate gates; the full per-level history
+and failure-specific recommendations are exported under
+`diagnostics.extra["adaptive"]`. Validated on the real Example 2 five-term
+family (level 0: honest failure with a passed certificate → level 1: certified
+`Success`, 72 labels / 1116 rows). Details:
+[docs/ADAPTIVE_SEARCH.md](docs/ADAPTIVE_SEARCH.md); QA record:
+[docs/ADAPTIVE_SEARCH_QA.md](docs/ADAPTIVE_SEARCH_QA.md).
+
 ## Statuses
 
 | status | meaning |
@@ -127,6 +158,9 @@ Exit codes: `0` = Success, `1` = typed failure (result + JSON still written),
 ## Documentation
 
 - [docs/USAGE.md](docs/USAGE.md) — full user path (English); [docs/USAGE.ru.md](docs/USAGE.ru.md) — по-русски.
+- [docs/ADAPTIVE_SEARCH.md](docs/ADAPTIVE_SEARCH.md) — adaptive search design
+  & real-family transcripts ([RU](docs/ADAPTIVE_SEARCH.ru.md)); QA:
+  [docs/ADAPTIVE_SEARCH_QA.md](docs/ADAPTIVE_SEARCH_QA.md).
 - [docs/FINAL_QA.md](docs/FINAL_QA.md) — release QA record; [CHANGELOG.md](CHANGELOG.md).
 - `docs/0*_ru.md` — original specification / method / validation notes (Russian).
 

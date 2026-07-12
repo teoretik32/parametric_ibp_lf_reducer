@@ -111,8 +111,9 @@ scattered-точки и список простых.
 
 ```
 python -m parametric_ibp_lf_reducer reduce input.m --adaptive
-python -m parametric_ibp_lf_reducer reduce input.m --adaptive --adaptive-max-levels 2 \
-    --diagnostics-json diag.json
+python -m parametric_ibp_lf_reducer reduce input.wl.txt \
+    --adaptive --adaptive-max-levels 3 --rref-backend auto \
+    --out result.m --diagnostics-json diagnostics.json
 ```
 
 `--adaptive-max-levels` требует `--adaptive`; без `--adaptive` путь CLI байт-в-байт совпадает

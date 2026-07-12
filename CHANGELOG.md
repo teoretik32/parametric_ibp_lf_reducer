@@ -1,11 +1,17 @@
 # Changelog
 
-## Unreleased
+## v0.2.0 — 2026
+
+Release theme: **controlled adaptive search over certified fixed-pass
+reductions** (Adaptive.1 / Adaptive.1a / Adaptive.2). No new math or
+performance features; no adaptive-policy changes; heavy certified baselines
+(D4, corrected Example 4\*) were deliberately not rerun.
 
 ### Added
 - **Opt-in adaptive search (Pass Adaptive.1)**: `reduce_family_adaptive` /
   `reduce_wolfram_style_input_adaptive` / `AdaptiveSearchConfig` / `SearchLevel`
-  / `default_search_levels` plus CLI flags `--adaptive` and
+  / `AdaptiveLevelReport` / `AdaptiveSearchDiagnostics` /
+  `default_search_levels` plus CLI flags `--adaptive` and
   `--adaptive-max-levels`. Runs a deterministic escalation schedule of ordinary
   fixed passes (expand label box m-ranges / IBP degree / tangent blocks /
   samples / primes), stops at the first *certified* `Success`, otherwise
@@ -22,7 +28,8 @@
   deterministic `error` detail (attempt's diagnostic messages, ≤500 chars,
   `None` on success; full failed results are deliberately not retained); docs
   spell out that no resource limit is hard-preemptive (levels are atomic).
-- **Adaptive.2 — real-family adaptive validation**: the default schedule, started
+### Real-family validation (Adaptive.2)
+- The default schedule, started
   from a deliberately shallow base box on the real Example 2 five-term explicit
   family, escalates once (level 0 honest `NormalFormNotLocallyFinite` with a
   passed certificate + "expand the label box" recommendation → level 1 certified
@@ -32,11 +39,22 @@
   document `Options`). Docs transcripts in `docs/ADAPTIVE_SEARCH.md` / `.ru.md`.
   No adaptive policy changes were needed.
 
-### Unchanged
-- Without `--adaptive` the CLI/API path is the previous single fixed pass;
-  every adaptive level goes through the same certificate gate, reconstruction
-  verification and `AllLocallyFinite` check; exhausting the schedule proves
-  nothing about non-reducibility (bounded schedule, not a prover).
+### Correctness / unchanged
+- Without `--adaptive` the CLI/API path is the previous single fixed pass,
+  byte-for-byte; every adaptive level calls the existing fixed certified
+  reducer (no new reduction path) and goes through the same certificate gate,
+  reconstruction verification and `AllLocallyFinite` check.
+- A certificate `Passed` never overrides a failed LF gate (layered gates — see
+  the level-0 transcript in `docs/ADAPTIVE_SEARCH.md`); exhausting the
+  schedule proves nothing about non-reducibility (bounded schedule, not a
+  prover).
+
+### Limitations
+- `timeout_sec` is checked **between** atomic levels; `max_labels` is a
+  pre-flight skip and `max_rows` a post-level limit — no resource limit
+  hard-preempts a running level.
+- Fixed explicit configurations remain the recommendation for reproducible
+  research runs; adaptive search is an exploration tool.
 
 ## v0.1.4 — 2026
 
