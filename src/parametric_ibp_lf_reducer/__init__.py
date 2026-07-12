@@ -11,10 +11,19 @@ in :mod:`result`; the row-span certificate gate is default-on.
 
 from __future__ import annotations
 
+from .adaptive import (
+    AdaptiveLevelReport,
+    AdaptiveSearchConfig,
+    AdaptiveSearchDiagnostics,
+    SearchLevel,
+    default_search_levels,
+    reduce_family_adaptive,
+)
 from .api import (
     build_reducer_config,
     default_scattered_samples,
     reduce_wolfram_style_input,
+    reduce_wolfram_style_input_adaptive,
     reduce_wolfram_style_input_to_text,
 )
 from .certificate import (
@@ -254,4 +263,12 @@ __all__ = [
     "reduce_wolfram_style_input_to_text",
     "build_reducer_config",
     "default_scattered_samples",
+    # opt-in adaptive search (Pass Adaptive.1)
+    "SearchLevel",
+    "AdaptiveSearchConfig",
+    "AdaptiveLevelReport",
+    "AdaptiveSearchDiagnostics",
+    "default_search_levels",
+    "reduce_family_adaptive",
+    "reduce_wolfram_style_input_adaptive",
 ]
