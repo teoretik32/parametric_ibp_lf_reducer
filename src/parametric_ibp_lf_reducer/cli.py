@@ -18,6 +18,7 @@ import json
 import sys
 from pathlib import Path
 
+from .adaptive import AdaptiveSearchConfig
 from .input_parser import ParserError
 from .result import ReductionResult
 from .sparse_rref import RREF_BACKEND_CHOICES
@@ -32,7 +33,7 @@ def _diagnostics_payload(result: ReductionResult) -> dict:
     """JSON-safe snapshot of the result; labels become lists, tribools stay as-is."""
     d = result.diagnostics
     cert = d.extra.get("certificate") or {}
-    return {
+    payload = {
         "status": result.status,
         "exported_status": result.exported_status,
         "success": result.success,
@@ -67,6 +68,10 @@ def _diagnostics_payload(result: ReductionResult) -> dict:
             "timings": {k: float(v) for k, v in (d.extra.get("timings") or {}).items()},
         },
     }
+    # Adaptive.1: per-level search history (present only when --adaptive was used).
+    if "adaptive" in d.extra:
+        payload["adaptive"] = d.extra["adaptive"]
+    return payload
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -121,10 +126,32 @@ def build_parser() -> argparse.ArgumentParser:
             "Backend selection only — all backends return identical results."
         ),
     )
+    reduce_p.add_argument(
+        "--adaptive",
+        action="store_true",
+        help=(
+            "opt-in adaptive search (Adaptive.1): run a deterministic escalation schedule of "
+            "fixed passes instead of one pass; Success gates are identical. "
+            "Without this flag the CLI behaves exactly as before."
+        ),
+    )
+    reduce_p.add_argument(
+        "--adaptive-max-levels",
+        type=int,
+        metavar="N",
+        help="cap the adaptive schedule length (default: 3); requires --adaptive",
+    )
     return parser
 
 
 def _cmd_reduce(args: argparse.Namespace) -> int:
+    if args.adaptive_max_levels is not None and not args.adaptive:
+        print("error: --adaptive-max-levels requires --adaptive", file=sys.stderr)
+        return EXIT_USAGE
+    if args.adaptive_max_levels is not None and args.adaptive_max_levels < 1:
+        print("error: --adaptive-max-levels must be >= 1", file=sys.stderr)
+        return EXIT_USAGE
+
     try:
         input_text = Path(args.input).read_text(encoding="utf-8")
     except OSError as exc:
@@ -142,7 +169,16 @@ def _cmd_reduce(args: argparse.Namespace) -> int:
         overrides["rref_backend"] = args.rref_backend
 
     try:
-        result = api.reduce_wolfram_style_input(input_text, overrides)
+        if args.adaptive:
+            # Adaptive.1: opt-in escalation schedule; the fixed path below stays untouched.
+            search = (
+                AdaptiveSearchConfig(max_levels=args.adaptive_max_levels)
+                if args.adaptive_max_levels is not None
+                else None
+            )
+            result = api.reduce_wolfram_style_input_adaptive(input_text, overrides, search=search)
+        else:
+            result = api.reduce_wolfram_style_input(input_text, overrides)
     except ParserError as exc:
         # Malformed document: nothing was reduced, so this is a usage error, not a
         # reduction failure. (ParserNeedsExplicitFamily is NOT raised here — the API

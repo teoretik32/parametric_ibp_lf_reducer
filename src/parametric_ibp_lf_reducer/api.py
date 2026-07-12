@@ -18,7 +18,9 @@ Honesty contract:
 * unknown Python override keys are rejected (``ValueError``); unknown ``"Options"`` keys in the
   input document are ignored (the document may carry hints for other consumers).
 
-This is still the non-adaptive MVP: one pass, no label-box search, no CLI success path.
+The default entry point stays the non-adaptive single pass. Opt-in adaptive search (a
+deterministic schedule of fixed passes, same gates) lives in :mod:`adaptive` and is exposed
+here as :func:`reduce_wolfram_style_input_adaptive`.
 """
 
 from __future__ import annotations
@@ -26,6 +28,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from fractions import Fraction
 
+from .adaptive import AdaptiveSearchConfig, reduce_family_adaptive
 from .family import ParametricFamily
 from .input_parser import (
     ParserNeedsExplicitFamily,
@@ -291,3 +294,31 @@ def reduce_wolfram_style_input_to_text(
     """Text-in/text-out convenience: the Wolfram-like rendering of the reduction result."""
     result = reduce_wolfram_style_input(input_text, overrides, **keyword_overrides)
     return result.wolfram_style_text
+
+
+def reduce_wolfram_style_input_adaptive(
+    input_text: str,
+    overrides: Mapping | None = None,
+    *,
+    search: AdaptiveSearchConfig | None = None,
+    **keyword_overrides,
+) -> ReductionResult:
+    """Opt-in adaptive variant of :func:`reduce_wolfram_style_input` (Pass Adaptive.1).
+
+    Same parsing, same config merge, same strict Success gates — but instead of one fixed pass
+    it runs the deterministic :func:`adaptive.reduce_family_adaptive` schedule (default:
+    :func:`adaptive.default_search_levels` derived from the document/override config).
+    ``search`` customizes the schedule and the resource limits. The per-level history is
+    attached at ``result.diagnostics.extra["adaptive"]``.
+    """
+    merged = dict(overrides or {})
+    merged.update(keyword_overrides)
+
+    raw = parse_mathematica_association(input_text)
+    try:
+        family = parse_explicit_family(raw)
+    except ParserNeedsExplicitFamily as exc:
+        return _parser_needs_explicit_family_result(str(exc))
+
+    target, config = build_reducer_config(family, merged)
+    return reduce_family_adaptive(family, target, config, search=search)

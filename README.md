@@ -111,8 +111,11 @@ Exit codes: `0` = Success, `1` = typed failure (result + JSON still written),
 ## Limitations (Release.1)
 
 - **Explicit-family input only** — no integrand auto-factorization.
-- **No adaptive search** — one fixed pass per invocation; nothing enlarges the
-  label box / degrees / samples on failure.
+- **Adaptive search is a bounded schedule, not a prover** — opt-in `--adaptive`
+  runs a deterministic escalation of fixed passes
+  ([docs/ADAPTIVE_SEARCH.md](docs/ADAPTIVE_SEARCH.md)); exhausting it never
+  proves that no reduction exists. Without the flag: one fixed pass per
+  invocation, unchanged.
 - **Dense multivariate reconstruction limits** — high coefficient degree or many
   parameters needs more scattered samples than the defaults.
 - **D4 reduces to a 3-term LF basis** {M1, M2, M3}, equivalent to (and certified

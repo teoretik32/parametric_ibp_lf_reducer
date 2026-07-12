@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- **Opt-in adaptive search (Pass Adaptive.1)**: `reduce_family_adaptive` /
+  `reduce_wolfram_style_input_adaptive` / `AdaptiveSearchConfig` / `SearchLevel`
+  / `default_search_levels` plus CLI flags `--adaptive` and
+  `--adaptive-max-levels`. Runs a deterministic escalation schedule of ordinary
+  fixed passes (expand label box m-ranges / IBP degree / tangent blocks /
+  samples / primes), stops at the first *certified* `Success`, otherwise
+  returns the deterministically best partial failure with a full per-level
+  history and failure-specific recommendations under
+  `diagnostics.extra["adaptive"]`. Resource limits (`max_labels` pre-flight,
+  `max_rows` post-level, `timeout_sec` between levels) surface as typed
+  `ResourceLimitReached` data — never as fabricated success. Docs:
+  `docs/ADAPTIVE_SEARCH.md` / `docs/ADAPTIVE_SEARCH.ru.md`.
+
+### Unchanged
+- Without `--adaptive` the CLI/API path is the previous single fixed pass;
+  every adaptive level goes through the same certificate gate, reconstruction
+  verification and `AllLocallyFinite` check; exhausting the schedule proves
+  nothing about non-reducibility (bounded schedule, not a prover).
+
 ## v0.1.4 — 2026
 
 ### Added

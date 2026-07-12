@@ -3,9 +3,24 @@
 Живой handoff-документ фактического состояния (обновляется в конце каждого pass). Полный
 инженерный контекст — в `notes/assumptions.md` (A1–A26). План — `notes/implementation_plan.md`.
 
-## Текущий статус (2026-07-07)
+## Текущий статус (2026-07-11)
 
-- **Последний завершённый pass:** **Pass Verify.1 (= D4.5) — certificate gate в редьюсере**
+- **Последний завершённый pass: Adaptive.1 — opt-in adaptive search** (ветка
+  `feature/adaptive-search-mvp`): `adaptive.py` — детерминированное расписание эскалации
+  обычных fixed-проходов (`SearchLevel`: label box m-deepening / `max_ibp_degree` /
+  tangent blocks / `extra_samples` / `extra_primes`), стоп на первом *сертифицированном*
+  `Success`, иначе — детерминированный best-partial отказ + полная история и
+  рекомендации в `diagnostics.extra["adaptive"]`. Лимиты: `max_labels` (pre-flight),
+  `max_rows` (post-level), `timeout_sec` (только между уровнями) → типизированный
+  `ResourceLimitReached`, никогда не фабрикуют успех. API:
+  `reduce_family_adaptive` / `reduce_wolfram_style_input_adaptive` /
+  `AdaptiveSearchConfig` / `default_search_levels`; CLI: `--adaptive`,
+  `--adaptive-max-levels` (без флага путь байт-в-байт прежний). Каждый уровень идёт
+  через прежний строгий gate (certificate + reconstruction verification + LF);
+  исчерпание расписания ≠ доказательство нередуцируемости. Тесты —
+  `tests/test_adaptive_search.py` (loop-policy на стабах, math-тесты на tiny-семье
+  без моков); docs — `docs/ADAPTIVE_SEARCH.md` / `.ru.md`.
+- **Предыдущий pass:** **Pass Verify.1 (= D4.5) — certificate gate в редьюсере**
   (поверх D4.4; см. `notes/D4_STATUS.md` §D4.5, assumptions **A29–A31**). `Success` теперь по
   умолчанию требует row-span сертификации реконструированного соотношения в независимых
   off-sample точках (`require_certificate_for_success=True`); провал/неинформативность →
