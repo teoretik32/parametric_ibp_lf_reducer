@@ -22,6 +22,15 @@
   deterministic `error` detail (attempt's diagnostic messages, ≤500 chars,
   `None` on success; full failed results are deliberately not retained); docs
   spell out that no resource limit is hard-preemptive (levels are atomic).
+- **Adaptive.2 — real-family adaptive validation**: the default schedule, started
+  from a deliberately shallow base box on the real Example 2 five-term explicit
+  family, escalates once (level 0 honest `NormalFormNotLocallyFinite` with a
+  passed certificate + "expand the label box" recommendation → level 1 certified
+  `Success`) and reproduces exactly the notebook basis and coefficients. Tests:
+  `tests/test_adaptive_real_family.py` (fast API case in the normal suite;
+  CLI e2e medium case gated behind `RUN_ADAPTIVE_MEDIUM=1`, config carried via
+  document `Options`). Docs transcripts in `docs/ADAPTIVE_SEARCH.md` / `.ru.md`.
+  No adaptive policy changes were needed.
 
 ### Unchanged
 - Without `--adaptive` the CLI/API path is the previous single fixed pass;

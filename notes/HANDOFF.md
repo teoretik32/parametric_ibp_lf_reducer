@@ -3,10 +3,22 @@
 Живой handoff-документ фактического состояния (обновляется в конце каждого pass). Полный
 инженерный контекст — в `notes/assumptions.md` (A1–A26). План — `notes/implementation_plan.md`.
 
-## Текущий статус (2026-07-11)
+## Текущий статус (2026-07-12)
 
-- **Последний завершённый pass: Adaptive.1 — opt-in adaptive search** (ветка
-  `feature/adaptive-search-mvp`): `adaptive.py` — детерминированное расписание эскалации
+- **Последний завершённый pass: Adaptive.2 — валидация adaptive search на реальной семье**
+  (`main`): дефолтное расписание, стартуя с намеренно мелкого базового бокса на реальной
+  явной 5-членной семье Example 2 (`I3exampl2`), эскалирует ровно один раз: уровень 0 —
+  честный `NormalFormNotLocallyFinite` с *пройденным* сертификатом и рекомендацией
+  «расширить label box» → уровень 1 (`expand-1`, 72 labels / 1116 строк) —
+  сертифицированный `Success`, воспроизводящий в точности ноутбучный базис и коэффициенты
+  (например `C[(0,1,0,0,-2,-2,0)] = -2 + 2/ep^2`). **Политика adaptive не менялась** —
+  валидация дефектов не выявила. Тесты: `tests/test_adaptive_real_family.py` — быстрый
+  API-кейс в обычном прогоне (~25 с) + CLI e2e medium-кейс за гейтом
+  `RUN_ADAPTIVE_MEDIUM=1` (конфигурация целиком через `Options` документа: `LabelBox`,
+  `PreferredMasters`, `Samples`, `RREFBackend`). Транскрипты —
+  `docs/ADAPTIVE_SEARCH.md` / `.ru.md` (раздел «Real-family validation (Adaptive.2)»).
+- **Предыдущий pass: Adaptive.1 — opt-in adaptive search** (ветка
+  `feature/adaptive-search-mvp`, влита в `main`): `adaptive.py` — детерминированное расписание эскалации
   обычных fixed-проходов (`SearchLevel`: label box m-deepening / `max_ibp_degree` /
   tangent blocks / `extra_samples` / `extra_primes`), стоп на первом *сертифицированном*
   `Success`, иначе — детерминированный best-partial отказ + полная история и
@@ -37,7 +49,8 @@
   certificate-точке = жёсткий провал** (`n_certificate_rank_exceeded`: selected rank был не
   generic). Regression product-grid false-success + corrupt-coefficient + rank-exceeded +
   mixed-points — в `tests/test_certificate_gate.py`.
-- **Tests:** **203 passed, 3 skipped** (default; skipped = heavy `RUN_D4_FULL`-трио),
+- **Tests:** **339 passed, 8 skipped** (default, 2026-07-12; skipped = opt-in gated heavy:
+  `RUN_D4_FULL`-трио, `RUN_EXAMPLE4_STAR`, `RUN_ADAPTIVE_MEDIUM` и др.),
   `ruff check .` — clean. Heavy opt-in при `RUN_D4_FULL=1`: **13 passed** (~16 мин, один общий
   full-config прогон через module fixture; D4-Success теперь certified by construction —
   explicit rank-generic `certificate_points` в конфиге фикстуры).

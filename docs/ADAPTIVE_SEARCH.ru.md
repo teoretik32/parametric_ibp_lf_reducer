@@ -118,3 +118,42 @@ python -m parametric_ibp_lf_reducer reduce input.m --adaptive --adaptive-max-lev
 `--adaptive-max-levels` требует `--adaptive`; без `--adaptive` путь CLI байт-в-байт совпадает
 с прежним одиночным проходом. Коды выхода не изменились: `0` только для сертифицированного
 `Success` (какого-либо уровня), `1` — честный отказ, `2` — ошибка использования.
+
+## Валидация на реальной семье (Adaptive.2)
+
+Расписание провалидировано на реальной явной семье — Example 2 (`I3exampl2`,
+`Examples_for_IBP_parametric.nb`): `examples/notebook_example2_n3_five_term_explicit_family.wl.txt`
+с известным результатом — 5-членным базисом из
+`validation/notebook_example2_n3_five_term_expected.json`.
+
+Стартуя с намеренно мелкого базового бокса (`n = ((0,0),(0,1),(0,0))`,
+`m = ((0,0),(-1,0),(-1,0),(0,0))`), 16 scattered-сэмплов, простые по умолчанию,
+`PreferredMasters` = известный базис, `rref_backend="auto"`, **дефолтное расписание**
+эскалирует и сертифицирует без каких-либо рукописных уровней (~25 с суммарно, Windows,
+auto-backend):
+
+| уровень | конфигурация | размер | исход |
+|---|---|---|---|
+| 0 `base` | степень 1, без tangent-строк | 8 labels / 64 строки | `NormalFormNotLocallyFinite`, сертификат `Passed`, рекомендация «расширить label box …» |
+| 1 `expand-1` | m-диапазоны −1, степень 2, tangent `((1,1),)` | 72 labels / 1116 строк | **сертифицированный `Success`** |
+
+Уровень 1 воспроизводит ровно пять ожидаемых мастеров с коэффициентами из ноутбука
+(например, `C[(0,1,0,0,-2,-2,0)] = -2 + 2/ep^2`). Обратите внимание на честный отчёт
+уровня 0: сертификат может *пройти* (коэффициенты согласованы в независимой точке),
+а результат всё равно не проходит gate `AllLocallyFinite` — и приложенная рекомендация
+(«расширить label box») ровно то, что делает следующий уровень расписания.
+
+Тесты (`tests/test_adaptive_real_family.py`):
+
+* `test_default_schedule_certifies_real_five_term_family` — API, обычный прогон (~25 с);
+* `test_cli_adaptive_certifies_real_family_medium` — тот же запуск через CLI, вся
+  конфигурация — в `Options` документа (`LabelBox`, `PreferredMasters`, `Samples`,
+  `RREFBackend`); gated: запускается при `RUN_ADAPTIVE_MEDIUM=1`.
+
+```
+python -m parametric_ibp_lf_reducer reduce ex2_adaptive.m --adaptive \
+    --adaptive-max-levels 2 --diagnostics-json diag.json
+```
+
+Исчерпание расписания на слишком малом боксе остаётся честным отказом: полная история
+уровней и рекомендации попадают в `diag.json["adaptive"]` (см. honesty-контракт выше).

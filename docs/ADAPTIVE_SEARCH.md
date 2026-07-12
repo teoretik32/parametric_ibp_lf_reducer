@@ -116,3 +116,41 @@ python -m parametric_ibp_lf_reducer reduce input.m --adaptive --adaptive-max-lev
 `--adaptive-max-levels` requires `--adaptive`; without `--adaptive` the CLI path is byte-for-
 byte the previous fixed single pass. Exit codes are unchanged: `0` only for a certified
 `Success` (of some level), `1` for an honest failure, `2` for usage errors.
+
+## Real-family validation (Adaptive.2)
+
+The schedule is validated on a real explicit family — Example 2 (`I3exampl2`,
+`Examples_for_IBP_parametric.nb`): `examples/notebook_example2_n3_five_term_explicit_family.wl.txt`,
+whose known result is the 5-term basis in
+`validation/notebook_example2_n3_five_term_expected.json`.
+
+Starting from a deliberately shallow base box (`n = ((0,0),(0,1),(0,0))`,
+`m = ((0,0),(-1,0),(-1,0),(0,0))`), 16 scattered samples, the default primes,
+`PreferredMasters` set to the known basis and `rref_backend="auto"`, the **default schedule**
+escalates and certifies with no hand-crafted levels (~25 s total, Windows, auto backend):
+
+| level | config | size | outcome |
+|---|---|---|---|
+| 0 `base` | degree 1, no tangent rows | 8 labels / 64 rows | `NormalFormNotLocallyFinite`, certificate `Passed`, recommendation "expand the label box …" |
+| 1 `expand-1` | m-ranges −1, degree 2, tangent `((1,1),)` | 72 labels / 1116 rows | **certified `Success`** |
+
+Level 1 reproduces exactly the five expected masters with the notebook coefficients (e.g.
+`C[(0,1,0,0,-2,-2,0)] = -2 + 2/ep^2`). Note the honest level-0 report: the certificate can
+*pass* (the coefficients are consistent at an independent point) while the result still fails
+the `AllLocallyFinite` gate — and the attached recommendation ("expand the label box") is
+precisely what the next scheduled level does.
+
+Tests (`tests/test_adaptive_real_family.py`):
+
+* `test_default_schedule_certifies_real_five_term_family` — API, normal suite (~25 s);
+* `test_cli_adaptive_certifies_real_family_medium` — the same run through the CLI, with the
+  whole configuration carried in the document `Options` (`LabelBox`, `PreferredMasters`,
+  `Samples`, `RREFBackend`); gated: set `RUN_ADAPTIVE_MEDIUM=1` to run.
+
+```
+python -m parametric_ibp_lf_reducer reduce ex2_adaptive.m --adaptive \
+    --adaptive-max-levels 2 --diagnostics-json diag.json
+```
+
+Exhausting the schedule on a too-small box remains an honest failure: the full per-level
+history and recommendations land in `diag.json["adaptive"]` (see the honesty contract above).
