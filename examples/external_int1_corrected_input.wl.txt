@@ -1,0 +1,18 @@
+IBPInput = <|
+  "Description" -> "External Int1 (corrected): pure family only; the external prefactor and the 1/(s*t^2) kinematic factor are applied OUTSIDE the reducer by scripts/run_external_int1_corrected.py. The reducer sees ONLY F1 = (1+x2)^ep*(1+x6)^ep*(1+x2+x6)^(-1+ep) over the positive orthant. Label order: (n2, n6, m0, m1, m2).",
+  "Variables" -> {x2, x6},
+  "Parameters" -> {ep},
+  "Regulators" -> {ep},
+  "Domain" -> "PositiveOrthant",
+  "Polynomials" -> <| "G0" -> 1 + x2, "G1" -> 1 + x6, "G2" -> 1 + x2 + x6 |>,
+  "MonomialExponents" -> <| x2 -> 0, x6 -> 0 |>,
+  "PolynomialExponents" -> <| "G0" -> ep, "G1" -> ep, "G2" -> -1 + ep |>,
+  "TargetMultiplier" -> 1,
+  "Options" -> <|
+    "TargetLabel" -> {0, 0, 0, 0, 0},
+    "LabelBox" -> {{{0, 1}, {0, 1}}, {{-2, 0}, {-2, 0}, {-2, 0}}},
+    "MaxIBPDegree" -> 2,
+    "TangentDegrees" -> {{1, 1}, {2, 2}},
+    "RREFBackend" -> "auto"
+  |>
+|>;
