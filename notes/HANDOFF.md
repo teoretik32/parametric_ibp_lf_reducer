@@ -3,8 +3,23 @@
 Живой handoff-документ фактического состояния (обновляется в конце каждого pass). Полный
 инженерный контекст — в `notes/assumptions.md` (A1–A26). План — `notes/implementation_plan.md`.
 
-## Текущий статус (2026-07-12)
+## Текущий статус (2026-07-16)
 
+- **Последний завершённый блок: External Int1 — certified LF reduction + Laurent audit**
+  (`main`, ядро редьюсера не менялось): автономный пример вне пакета. Certified LF
+  reduction: `examples/external_int1_corrected_input.wl.txt` →
+  `scripts/run_external_int1_corrected.py` →
+  `validation/external_int1_corrected_reduction.m` / `_full_formula.m` /
+  `_diagnostics.json`; численная сверка original-vs-RHS: rel_diff ≈ 1.38e-35; тесты —
+  `tests/test_external_int1_corrected.py`. Laurent-аудит структуры
+  (`scripts/audit_external_int1_laurent.py`, standalone, редьюсер не импортирует):
+  **PASSED** по всем порядкам до `ep^0` включительно
+  (цель `1/ep^4 − (π²/12)/ep² − (43·ζ3/6)/ep − π⁴/180`); Cauchy-circle Taylor + PSLQ
+  в весовом базисе, `mp.dps = 45`, max PSLQ residual ≈ 2.6e-41; отчёт —
+  `notes/EXTERNAL_INT1_LAURENT_AUDIT.md`, JSON —
+  `validation/external_int1_laurent_audit.json`. Статус аудита: high-precision
+  numeric validation, **не** формальное символьное доказательство. Следующий шаг —
+  External Int2 (ветка `feature/external-int2`); Int1+Int2 собрать в один релиз.
 - **Релиз v0.2.0 — controlled adaptive search over certified fixed-pass reductions**
   (tag `v0.2.0`): версия 0.1.4 → 0.2.0; CHANGELOG v0.2.0 (Adaptive.1/.1a/.2); adaptive
   quick start в README(.ru) и docs/USAGE(.ru); QA-запись — `docs/ADAPTIVE_SEARCH_QA.md`.

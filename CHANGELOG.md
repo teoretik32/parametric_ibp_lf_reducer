@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- **External Int1 (standalone example): certified LF reduction.** Input
+  `examples/external_int1_corrected_input.wl.txt`, runner
+  `scripts/run_external_int1_corrected.py`, artifacts
+  `validation/external_int1_corrected_reduction.m` /
+  `validation/external_int1_corrected_full_formula.m` /
+  `validation/external_int1_corrected_diagnostics.json`, tests
+  `tests/test_external_int1_corrected.py`. Numeric original-vs-RHS check:
+  rel_diff ≈ 1.38e-35. Reducer core unchanged.
+- **External Int1 Laurent-structure audit — PASSED through `ep^0`.** Standalone
+  high-precision script `scripts/audit_external_int1_laurent.py` (`mp.dps = 45`,
+  Cauchy-circle Taylor extraction + PSLQ identification in a weight-graded
+  basis, max PSLQ residual ≈ 2.6e-41); per-order match with the target
+  `1/ep^4 − (π²/12)/ep² − (43·ζ3/6)/ep − π⁴/180`. Report:
+  `notes/EXTERNAL_INT1_LAURENT_AUDIT.md`; machine-readable:
+  `validation/external_int1_laurent_audit.json`. The audit is a high-precision
+  numeric validation, **not** a formal symbolic proof. Reducer core unchanged.
+
 ## v0.2.0 — 2026
 
 Release theme: **controlled adaptive search over certified fixed-pass
