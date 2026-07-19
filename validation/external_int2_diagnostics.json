@@ -1,0 +1,258 @@
+{
+  "adaptive": {
+    "best_level": 0,
+    "enabled": true,
+    "levels": [
+      {
+        "certificate_status": "Passed",
+        "error": "rank filter: kept 531/540 reduced records at rank 22361 (histogram {19722: 9, 22361: 531}); certificate: Passed (passed 3/3, rank-filtered 0, rank-exceeded 0, bad 0)",
+        "failure_reason": "NormalFormNotLocallyFinite",
+        "label_box": [
+          [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          [
+            [
+              -3,
+              0
+            ],
+            [
+              -3,
+              0
+            ],
+            [
+              -3,
+              0
+            ],
+            [
+              -3,
+              0
+            ]
+          ]
+        ],
+        "level": 0,
+        "max_ibp_degree": 2,
+        "n_explicit_labels": null,
+        "n_labels": 2048,
+        "n_non_lf_terms": 2,
+        "n_primes": 9,
+        "n_reduced_records": 540,
+        "n_rows": 30851,
+        "n_samples": 60,
+        "n_unknown_lf_terms": 0,
+        "name": "base+boost-s48-p6-x1",
+        "ran": true,
+        "recommendation": "expand the label box around the remaining non-LF/Unknown labels [(0, 0, 0, 0, -1, 0, 0), (0, 0, 0, 0, 0, -1, 0)] \u2014 a different reduction path may avoid them",
+        "reconstruction_verified": true,
+        "rref_backend": "auto",
+        "selected_rank": 22361,
+        "skipped_reason": null,
+        "status": "NormalFormNotLocallyFinite",
+        "tangent_degree_blocks": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "wall_seconds": 60030.607409
+      }
+    ],
+    "n_levels_planned": 1,
+    "n_levels_run": 1,
+    "resource_limit": null,
+    "stop_reason": "levels_exhausted"
+  },
+  "all_locally_finite": false,
+  "certificate": {
+    "certificate_status": "Passed",
+    "first_nonzero_residual": null,
+    "n_certificate_bad_points": 0,
+    "n_certificate_points": 3,
+    "n_certificate_points_failed": 0,
+    "n_certificate_points_passed": 3,
+    "n_certificate_rank_exceeded": 0,
+    "n_certificate_rank_filtered": 0,
+    "selected_rank": 22361
+  },
+  "certificate_status": "Passed",
+  "diagnostics": {
+    "formal_success": true,
+    "independent_validation_passed": true,
+    "messages": [
+      "rank filter: kept 531/540 reduced records at rank 22361 (histogram {19722: 9, 22361: 531})",
+      "certificate: Passed (passed 3/3, rank-filtered 0, rank-exceeded 0, bad 0)",
+      "adaptive search: 1/1 levels run, stop_reason=levels_exhausted, best_level=0"
+    ],
+    "n_records": 540,
+    "n_skipped_records": 0,
+    "n_terms": 6,
+    "non_lf_terms": [
+      [
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0
+      ]
+    ],
+    "reconstruction_verified": true,
+    "timings": {
+      "algebraic_rows": 0.8857343000127003,
+      "assemble_rows_mod_p": 1380.887879699876,
+      "certificate_points_total": 465.67251730005955,
+      "certificate_total": 465.67267850000644,
+      "coordinate_rows": 78.71769449999556,
+      "extract_normal_form": 0.01551699941046536,
+      "lf_flags": 4.461343700008001,
+      "ranking": 0.0,
+      "ranking_once": 44.09714199998416,
+      "reconstruction": 15.030521199980285,
+      "records_total": 59429.781497499964,
+      "row_generation_total": 115.57847340003354,
+      "rref_mod_p": 57971.22911309975,
+      "tangent_fields": 3.0197245000163093,
+      "tangent_rows": 32.952308400010224
+    },
+    "unknown_lf_terms": [],
+    "zero_reduction": false
+  },
+  "dimensionless_rewrite": "r = s/t; the t^(-3-ep) scaling lives in P2 only",
+  "elapsed_sec": 60030.613,
+  "error": "normal form contains non-locally-finite terms: ['{0,0,0,0,-1,0,0}', '{0,0,0,0,0,-1,0}']",
+  "example": "ExternalInt2Dimensionless",
+  "exported_status": "Failure",
+  "external_prefactor": "t^(-3-ep)*Gamma[1-ep]*Gamma[-ep]^3*Gamma[ep]/(Gamma[-1-3*ep]*Gamma[-2*ep])",
+  "numeric_check": {
+    "ran": false,
+    "reason": "no certified Success to check"
+  },
+  "reference_value": {
+    "available": false,
+    "compared_numerically": false,
+    "name": "AnsvInt2",
+    "note": "no source reference bundled; not invented; GPL G[...] values are metadata only and are never reducer coefficients"
+  },
+  "status": "NormalFormNotLocallyFinite",
+  "success": false,
+  "target_label": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "terms": [
+    {
+      "coefficient": "(ep - 1)/(6*ep*r)",
+      "integrand": "1/(x2*G0*G1)",
+      "label": [
+        -1,
+        0,
+        0,
+        -1,
+        -1,
+        0,
+        0
+      ],
+      "locally_finite": true
+    },
+    {
+      "coefficient": "-(ep - 1)^2*(r + 1)/(6*ep^2*r)",
+      "integrand": "1/(x2*G1*G3)",
+      "label": [
+        -1,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        -1
+      ],
+      "locally_finite": true
+    },
+    {
+      "coefficient": "(ep - 1)*(2*ep^2*r + ep^2 - 1)/(6*ep^3*r)",
+      "integrand": "1/(G0*G3)",
+      "label": [
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1
+      ],
+      "locally_finite": true
+    },
+    {
+      "coefficient": "1",
+      "integrand": "1/G1",
+      "label": [
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0
+      ],
+      "locally_finite": false
+    },
+    {
+      "coefficient": "-(ep + 1)/ep",
+      "integrand": "1/G2",
+      "label": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0
+      ],
+      "locally_finite": false
+    },
+    {
+      "coefficient": "(ep - 1)*(ep + 1)*(2*ep - 1)/(6*ep^3*r)",
+      "integrand": "x7/(G0*G3)",
+      "label": [
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        -1
+      ],
+      "locally_finite": true
+    }
+  ]
+}
