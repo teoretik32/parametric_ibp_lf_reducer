@@ -57,6 +57,12 @@ from .labels import (
     split_label,
     zero_label,
 )
+from .lf_feasibility import (
+    LFFeasibilityResult,
+    feasibility_to_payload,
+    lf_reduction_coefficients_mod_p,
+    lf_reduction_feasible_mod_p,
+)
 from .modular_normal_form import (
     BadSpecialization,
     NormalFormResult,
@@ -132,10 +138,15 @@ from .surface import (
 )
 from .tangent_fields import TangentField, generate_tangent_fields, verify_tangent
 from .valuations import (
+    LocalFinitenessReport,
     Ray,
+    RayVerdict,
+    ShiftRecommendation,
     base_score,
     compute_candidate_rays,
+    explain_local_finiteness,
     is_locally_finite,
+    report_to_payload,
     valuation_poly,
 )
 from .wolfram_text_export import (
@@ -177,6 +188,12 @@ __all__ = [
     "valuation_poly",
     "base_score",
     "is_locally_finite",
+    # Method.1 directional LF audit (External Int2)
+    "RayVerdict",
+    "ShiftRecommendation",
+    "LocalFinitenessReport",
+    "explain_local_finiteness",
+    "report_to_payload",
     "coordinate_primitive_surface_free",
     "vector_field_surface_free",
     "regulated_sign",
@@ -208,6 +225,11 @@ __all__ = [
     "modular_normal_form",
     "NormalFormResult",
     "BadSpecialization",
+    # LF-constrained feasibility (Method.1, External Int2)
+    "LFFeasibilityResult",
+    "lf_reduction_feasible_mod_p",
+    "lf_reduction_coefficients_mod_p",
+    "feasibility_to_payload",
     # multi-sample record collector (Pass 2G.1)
     "NormalFormRecord",
     "collect_normal_form_records",

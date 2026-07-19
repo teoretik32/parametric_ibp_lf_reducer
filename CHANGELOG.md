@@ -19,6 +19,36 @@
   `notes/EXTERNAL_INT1_LAURENT_AUDIT.md`; machine-readable:
   `validation/external_int1_laurent_audit.json`. The audit is a high-precision
   numeric validation, **not** a formal symbolic proof. Reducer core unchanged.
+- **External Int2 (dimensionless): certified partial reduction — stable
+  negative LF result.** New example
+  `examples/external_int2_dimensionless_input.wl.txt`
+  (`ExternalInt2Dimensionless`, vars `x2,x5,x7`, polys `G0..G3`), gated runner
+  `scripts/run_external_int2.py` (`RUN_EXTERNAL_INT2=1`), fast tests
+  `tests/test_external_int2.py`. Heavy run #4 (`base+boost-s48-p6-x1`,
+  60030.6 s): certificate **Passed 3/3** (rank filter 531/540 at rank 22361,
+  histogram `{19722: 9, 22361: 531}`), reconstruction verified, independent
+  validation passed. Outcome: `NormalFormNotLocallyFinite` — 6-term
+  decomposition with two genuinely non-locally-finite residual terms (`1/G1`,
+  `-(ep+1)/ep * 1/G2`), reproduced identically across boosted configurations
+  and a deepened label box. Audit: `notes/EXTERNAL_INT2_AUDIT.md`; artifacts:
+  `validation/external_int2_result.m` /
+  `validation/external_int2_full_formula.m` /
+  `validation/external_int2_diagnostics.json`. Reducer core unchanged.
+- **Method.1 for External Int2: directional LF audit + LF-constrained
+  feasibility mod p (diagnostic-only).** New module
+  `src/parametric_ibp_lf_reducer/lf_feasibility.py` plus
+  `explain_local_finiteness` in `valuations.py`, gated runner
+  `scripts/run_external_int2_method1.py` (`RUN_EXTERNAL_INT2_M1=1`), tests
+  `tests/test_lf_feasibility.py`, `tests/test_valuations_explain.py`,
+  `tests/test_external_int2_method1.py`. Runs: Level A (base box, 648 labels,
+  ~117 s) and Level B (expand-1, 2048 labels, ~2197 s); target LF verdict
+  **False** at both levels (23/30 failing rays, 0 unknown). Phase B:
+  Obstructed 0/6 (A) vs Mixed 2/6 (B) — both feasible points sit at the
+  non-generic sample `ep=3` with a rank drop (18422 vs 20963), treated as a
+  special-locus artifact; generic samples stay Obstructed at both primes.
+  Artifacts: `validation/external_int2_method1_levelA.json` / `_levelB.json`;
+  audit section in `notes/EXTERNAL_INT2_AUDIT.md`. Certificate and LF gates
+  untouched; reducer core unchanged.
 
 ## v0.2.0 — 2026
 
