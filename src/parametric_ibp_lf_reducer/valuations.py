@@ -345,3 +345,220 @@ def _is_locally_finite_impl(
     if not _bulk_safe_cached(family, f0, cache):
         return "Unknown"
     return True
+
+
+# --- Method.1 (External Int2): explainable local-finiteness audit ------------------------------
+# Append-only diagnostics layer. Everything below REUSES the primitives above (candidate rays,
+# ``_classify_at_direction``, ``score_from_exponents``, per-family caches) and never mutates
+# reducer state: the per-family cache is only read/extended through the same memoized helpers.
+# The verdict is DELEGATED to :func:`is_locally_finite`; the per-ray table is recomputed with
+# the same primitives (no short-circuit) and cross-checked, so the report can never silently
+# disagree with the decision procedure actually used by the reducer.
+
+
+@dataclass(frozen=True)
+class RayVerdict:
+    """Sign of ``base_score`` along one boundary ray, with the score itself for the report."""
+
+    ray: Ray
+    score: object  # sp.Expr | None (None when exponents are singular at epsilon=0)
+    classification: str  # "pos" | "nonpos" | "unknown"
+    detail: str = ""
+
+
+@dataclass(frozen=True)
+class ShiftRecommendation:
+    """Effect of one unit label shift on ``base_score`` along every failing ray."""
+
+    shift: tuple[int, ...]  # length nvars+npolys, exactly one entry is +1 or -1
+    deltas_on_failing: tuple[int, ...]  # base_score delta per failing ray (same order)
+    improves_all: bool  # strictly positive delta on EVERY failing ray (and some ray fails)
+
+
+@dataclass(frozen=True)
+class LocalFinitenessReport:
+    """Explainable local-finiteness verdict for one label (Method.1 directional audit)."""
+
+    label: Label
+    verdict: object  # True | False | "Unknown" — always equals is_locally_finite(...)
+    rays: tuple[RayVerdict, ...]
+    failing_rays: tuple[RayVerdict, ...]  # every "nonpos" ray (no short-circuit)
+    unknown_rays: tuple[RayVerdict, ...]
+    shift_deltas: tuple[ShiftRecommendation, ...]  # all 2*(nvars+npolys) unit shifts
+    recommended_shifts: tuple[ShiftRecommendation, ...]  # improves_all, best total delta first
+    bulk_safe: bool | None  # None when exponents are singular at epsilon=0
+    notes: tuple[str, ...]
+
+
+def _unit_shift_records(
+    family: ParametricFamily, cache: dict, failing: tuple[RayVerdict, ...]
+) -> tuple[tuple[ShiftRecommendation, ...], tuple[ShiftRecommendation, ...]]:
+    """All unit-shift deltas over the failing rays + the strictly-improving subset.
+
+    A shift of ``n_i`` by ``d`` changes ``base_score`` along ray ``rho`` by ``d * rho_i``; a
+    shift of ``m_l`` by ``d`` changes it by ``d * val_rho(G_l)`` (both integers). Deterministic
+    order: axes in label order with ``+1`` before ``-1``; recommendations sorted by total delta
+    (descending) with the enumeration order as tie-break (stable sort).
+    """
+    nvars, npolys = family.nvars, len(family.poly_names)
+    records: list[ShiftRecommendation] = []
+    for k in range(nvars + npolys):
+        for d in (1, -1):
+            shift = tuple(d if i == k else 0 for i in range(nvars + npolys))
+            deltas = []
+            for rv in failing:
+                direction = rv.ray.direction
+                if k < nvars:
+                    delta = d * direction[k]
+                else:
+                    delta = d * _poly_valuations(family, cache, direction)[k - nvars]
+                deltas.append(int(delta))
+            improves = bool(failing) and all(x > 0 for x in deltas)
+            records.append(ShiftRecommendation(shift, tuple(deltas), improves))
+    recommended = tuple(
+        sorted(
+            (s for s in records if s.improves_all),
+            key=lambda s: -sum(s.deltas_on_failing),
+        )
+    )
+    return tuple(records), recommended
+
+
+def explain_local_finiteness(
+    family: ParametricFamily,
+    label: Label,
+    random_trials: int = 64,
+    seed: int = 20260706,
+) -> LocalFinitenessReport:
+    """Explain the strict local-finiteness verdict for ``label`` ray by ray.
+
+    The verdict itself is delegated to :func:`is_locally_finite` (same memo, same decision);
+    this function additionally reports the score and sign of every candidate ray, every failing
+    random safety-net ray, and the unit label shifts that would strictly improve the score on
+    all failing rays. A mismatch between the reconstructed verdict and the delegated one raises
+    ``RuntimeError`` (it would indicate a bug, not a data condition).
+    """
+    verdict = is_locally_finite(family, label, random_trials, seed)
+    cache = _family_cache(family)
+    positive_symbols = cache["positive_symbols"]
+    notes: list[str] = []
+
+    try:
+        e0, f0 = exponents_at_eps0(family, label)
+    except ValueError:
+        notes.append("exponents are singular at epsilon=0; every ray is undecidable")
+        rays = tuple(
+            RayVerdict(ray, None, "unknown", "exponent singular at epsilon=0")
+            for ray in cache["rays"]
+        )
+        if verdict != "Unknown":  # pragma: no cover - impl returns "Unknown" on ValueError
+            raise RuntimeError(
+                f"explain_local_finiteness disagrees with is_locally_finite for {label!r}: "
+                f"'Unknown' != {verdict!r}"
+            )
+        return LocalFinitenessReport(
+            label, verdict, rays, (), rays, (), (), None, tuple(notes)
+        )
+
+    numeric = all(not v.free_symbols for v in (*e0, *f0))
+    e_frac = _as_fractions(e0)
+    f_frac = _as_fractions(f0) if e_frac is not None else None
+    if f_frac is None:
+        e_frac = None
+
+    ray_verdicts: list[RayVerdict] = []
+    saw_unknown = False
+    for ray in cache["rays"]:
+        score = sp.simplify(score_from_exponents(e0, f0, family, ray.direction))
+        cls = _classify_at_direction(
+            e0, f0, e_frac, f_frac, family, cache, ray.direction, positive_symbols
+        )
+        detail = ""
+        if cls == "nonpos" and score == 0:
+            detail = "score == 0 (STRICT RULE: not locally finite)"
+        if cls == "unknown":
+            saw_unknown = True
+        ray_verdicts.append(RayVerdict(ray, score, cls, detail))
+
+    # Random safety net under exactly the same gating as ``_is_locally_finite_impl``; only
+    # failing random rays are added to the report (the net is a witness generator, not a table).
+    if numeric and not saw_unknown:
+        for direction in _random_directions(family.nvars, random_trials, seed):
+            cls = _classify_at_direction(
+                e0, f0, e_frac, f_frac, family, cache, direction, positive_symbols
+            )
+            if cls == "nonpos":
+                score = sp.simplify(score_from_exponents(e0, f0, family, direction))
+                ray_verdicts.append(
+                    RayVerdict(Ray(direction, "random"), score, cls, "random safety-net ray")
+                )
+
+    failing = tuple(rv for rv in ray_verdicts if rv.classification == "nonpos")
+    unknown = tuple(rv for rv in ray_verdicts if rv.classification == "unknown")
+    bulk = _bulk_safe_cached(family, f0, cache)
+
+    if failing:
+        explain_verdict: object = False
+    elif unknown:
+        explain_verdict = "Unknown"
+        notes.append("no failing ray, but at least one ray sign is undecidable")
+    elif not bulk:
+        explain_verdict = "Unknown"
+        notes.append(
+            "all rays positive, but a denominator polynomial is not provably positive "
+            "(possible bulk singularity)"
+        )
+    else:
+        explain_verdict = True
+    if explain_verdict != verdict:
+        raise RuntimeError(
+            f"explain_local_finiteness disagrees with is_locally_finite for {label!r}: "
+            f"{explain_verdict!r} != {verdict!r}"
+        )
+    if failing and all(rv.ray.kind == "random" for rv in failing):
+        notes.append("failure witnessed only by the random safety net (no candidate ray fails)")
+
+    shift_deltas, recommended = _unit_shift_records(family, cache, failing)
+    return LocalFinitenessReport(
+        label,
+        verdict,
+        tuple(ray_verdicts),
+        failing,
+        unknown,
+        shift_deltas,
+        recommended,
+        bulk,
+        tuple(notes),
+    )
+
+
+def report_to_payload(report: LocalFinitenessReport) -> dict:
+    """JSON-safe dict for a report (deterministic; SymPy scores rendered as strings)."""
+
+    def ray_payload(rv: RayVerdict) -> dict:
+        return {
+            "direction": list(rv.ray.direction),
+            "kind": rv.ray.kind,
+            "score": None if rv.score is None else str(rv.score),
+            "classification": rv.classification,
+            "detail": rv.detail,
+        }
+
+    def shift_payload(s: ShiftRecommendation) -> dict:
+        return {
+            "shift": list(s.shift),
+            "deltas_on_failing": list(s.deltas_on_failing),
+            "improves_all": s.improves_all,
+        }
+
+    return {
+        "label": list(report.label),
+        "verdict": report.verdict if isinstance(report.verdict, bool) else str(report.verdict),
+        "rays": [ray_payload(rv) for rv in report.rays],
+        "failing_rays": [ray_payload(rv) for rv in report.failing_rays],
+        "unknown_rays": [ray_payload(rv) for rv in report.unknown_rays],
+        "shift_deltas": [shift_payload(s) for s in report.shift_deltas],
+        "recommended_shifts": [shift_payload(s) for s in report.recommended_shifts],
+        "bulk_safe": report.bulk_safe,
+        "notes": list(report.notes),
+    }

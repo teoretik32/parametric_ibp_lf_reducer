@@ -3,9 +3,37 @@
 Живой handoff-документ фактического состояния (обновляется в конце каждого pass). Полный
 инженерный контекст — в `notes/assumptions.md` (A1–A26). План — `notes/implementation_plan.md`.
 
-## Текущий статус (2026-07-16)
+## Текущий статус (2026-07-20)
 
-- **Последний завершённый блок: External Int1 — certified LF reduction + Laurent audit**
+- **Последний завершённый блок: Method.1 — directional LF audit + LF-constrained
+  feasibility mod p поверх External Int2** (ветка `feature/external-int2`, ядро
+  редьюсера не менялось; модуль диагностический, certificate/LF-гейты не тронуты):
+  `src/parametric_ibp_lf_reducer/lf_feasibility.py`, `explain_local_finiteness`
+  в `valuations.py`, скрипт `scripts/run_external_int2_method1.py`
+  (гейт `RUN_EXTERNAL_INT2_M1=1`), тесты `tests/test_lf_feasibility.py` /
+  `tests/test_valuations_explain.py` / `tests/test_external_int2_method1.py`.
+  Прогоны: Level A (base, 648 labels, ~117 с) и Level B (expand-1, 2048 labels,
+  ~2197 с). Вердикт LF цели `[0,0,0,0,0,0,0]` — **False** на обоих уровнях
+  (23/30 failing rays, 0 unknown), согласуется с сертифицированным не-LF итогом
+  Int2. Phase B: A — Obstructed 0/6; B — Mixed 2/6, причём обе feasible-точки —
+  не-generic сэмпл `ep=3` с падением ранга (18422 vs 20963): трактуем как
+  артефакт специального локуса, generic-сэмплы Obstructed при обоих простых.
+  JSON — `validation/external_int2_method1_levelA.json` / `_levelB.json`;
+  аудит — секция Method.1 в `notes/EXTERNAL_INT2_AUDIT.md`. Гейт: full fast
+  suite **384 passed**, `ruff check .` clean.
+- **Предыдущий блок: External Int2 (dimensionless) — certified partial
+  reduction, стабильный отрицательный LF-итог** (ветка `feature/external-int2`,
+  ядро редьюсера не менялось): `examples/external_int2_dimensionless_input.wl.txt` →
+  `scripts/run_external_int2.py` (гейт `RUN_EXTERNAL_INT2=1`) →
+  `validation/external_int2_result.m` / `_full_formula.m` / `_diagnostics.json`.
+  4 тяжёлых прогона; финальный #4 (углублённый label box + буст samples/primes,
+  60030.6 с): `NormalFormNotLocallyFinite`, сертификат **Passed 3/3**,
+  реконструкция и независимая валидация пройдены; два стабильно не-LF остатка —
+  `1/G1` и `-(ep+1)/ep * 1/G2` (препятствие математическое, не численное).
+  Аудит — `notes/EXTERNAL_INT2_AUDIT.md`; детали — раздел
+  «External Int2 (dimensionless) — итог» ниже. Гейт: full fast suite
+  **361 passed**, `ruff check .` clean.
+- **External Int1 — certified LF reduction + Laurent audit**
   (`main`, ядро редьюсера не менялось): автономный пример вне пакета. Certified LF
   reduction: `examples/external_int1_corrected_input.wl.txt` →
   `scripts/run_external_int1_corrected.py` →
@@ -431,3 +459,20 @@ Status: **complete, verified**.
   коэффициенты побитово совпадают с сертифицированным Example 4★.
 - Вывод: auto безопасен на реальной нагрузке, ~5× ускорение
   end-to-end; пороги оставлены консервативными. Perf.13 закрыт.
+
+## External Int2 (dimensionless) — итог
+
+- Вход: `examples/external_int2_dimensionless_input.wl.txt`
+  (`ExternalInt2Dimensionless`), раннер `scripts/run_external_int2.py`
+  (гейт `RUN_EXTERNAL_INT2=1`), быстрые тесты `tests/test_external_int2.py`.
+- 4 тяжёлых прогона; ранние конфигурации падали с `InterpolationFailed`,
+  буст samples/primes убрал численные сбои. Прогоны #3 и #4 (углублённый
+  бокс, 60030.6 с) дают идентичный результат.
+- Итог: `NormalFormNotLocallyFinite` — стабильный отрицательный результат;
+  6 членов, из них два не-LF: `1/G1` (коэфф. `1`) и `1/G2`
+  (коэфф. `-(ep+1)/ep`). Сертификат Passed 3/3, реконструкция и независимая
+  валидация пройдены — препятствие математическое, не численное.
+- Аудит: `notes/EXTERNAL_INT2_AUDIT.md`. Дальше имеет смысл менять метод
+  (другой базис/ordering, сектора, аналитика для остатка), а не крутить
+  ручки поиска.
+- Финальный гейт: полный fast-suite 361 тест зелёный, `ruff check .` чистый.

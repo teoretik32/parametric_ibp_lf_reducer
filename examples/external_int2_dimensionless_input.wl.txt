@@ -1,0 +1,19 @@
+IBPInput = <|
+  "Description" -> "External Int2 (dimensionless): pure family only; the external prefactor P2 and the overall t-scaling (see EXTERNAL_PREFACTOR_TEXT in the script) are applied OUTSIDE the reducer by scripts/run_external_int2.py. Dimensionless rewrite: r = s/t is the only kinematic parameter inside the family. The reducer sees ONLY F2 = x2^(1+ep)*(1+x2)^ep*(1+x5)^ep*(1+x7)^(-1-ep)*(1+x7+x2*x7+r*x2*x5)^(-1+ep) over the positive orthant. Label order: (n2, n5, n7, m0, m1, m2, m3).",
+  "Variables" -> {x2, x5, x7},
+  "Parameters" -> {ep, r},
+  "Regulators" -> {ep},
+  "Assumptions" -> {r > 0},
+  "Domain" -> "PositiveOrthant",
+  "Polynomials" -> <| "G0" -> 1 + x2, "G1" -> 1 + x5, "G2" -> 1 + x7, "G3" -> 1 + x7 + x2*x7 + r*x2*x5 |>,
+  "MonomialExponents" -> <| x2 -> 1 + ep, x5 -> 0, x7 -> 0 |>,
+  "PolynomialExponents" -> <| "G0" -> ep, "G1" -> ep, "G2" -> -1 - ep, "G3" -> -1 + ep |>,
+  "TargetMultiplier" -> 1,
+  "Options" -> <|
+    "TargetLabel" -> {0, 0, 0, 0, 0, 0, 0},
+    "LabelBox" -> {{{0, 1}, {0, 1}, {0, 1}}, {{-2, 0}, {-2, 0}, {-2, 0}, {-2, 0}}},
+    "MaxIBPDegree" -> 2,
+    "TangentDegrees" -> {{1, 1}, {2, 2}},
+    "RREFBackend" -> "auto"
+  |>
+|>;
