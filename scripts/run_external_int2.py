@@ -4,7 +4,9 @@ The full integral is ``P2 * Integral[F2, x2>0, x5>0, x7>0]`` with
 
     F2 = x2^(1+ep)*(1+x2)^ep*(1+x5)^ep*(1+x7)^(-1-ep)*(1+x7+x2*x7+r*x2*x5)^(-1+ep)
 
-and ``P2 = t^(-3-ep)*Gamma[1-ep]*Gamma[-ep]^3*Gamma[ep]/(Gamma[-1-3*ep]*Gamma[-2*ep])``.
+and ``P2 = Exp[2*ep*EulerGamma]*t^(-3-ep)*Gamma[1-ep]*Gamma[-ep]^3*Gamma[ep]
+/(Gamma[-1-3*ep]*Gamma[-2*ep])`` (the ``Exp[2*ep*EulerGamma]`` normalisation was added
+by the Method.2 leading-pole audit; it makes the Laurent data EulerGamma-free).
 Dimensionless rewrite: ``r = s/t`` is the only kinematic parameter inside the family; the
 overall ``t^(-3-ep)`` scaling lives exclusively in ``P2``. The reducer works ONLY with the
 pure family ``F2`` (``TargetMultiplier = 1``, parameters ``ep, r``, assumption ``r > 0``);
@@ -31,9 +33,10 @@ Pipeline (public API only, no low-level internals):
    ``..._diagnostics.json`` (+ adaptive history + numeric_check block) and
    ``..._full_formula.m`` (prefactor strictly outside).
 
-Reference value: ``AnsvInt2`` is NOT available in this repository and is NOT invented
-here. If a source reference (e.g. a GPL ``G[...]`` expression) is added later it must be
-preserved as metadata only — GPL values are never reducer coefficients.
+Reference value: ``AnsvInt2`` is NOT used by the reducer and is NOT invented here. Its
+GPL ``G[...]`` source expression is stored verbatim, as metadata only, in
+``examples/external_int2_source_reference.wl.txt`` — GPL values are never reducer
+coefficients.
 
 Exit codes: 0 = certified Success + numeric check passed, 1 = honest failure (artifacts
 still written), 2 = usage/input problem.
@@ -71,18 +74,26 @@ DEFAULT_FULL = REPO_ROOT / "validation" / "external_int2_full_formula.m"
 
 # The Gamma prefactor and the t-scaling live ONLY here and in the wrapper artifact; they
 # are never multiplied into anything the reducer sees (family, rows, coefficients).
+# Method.2 leading-pole audit correction: the wrapper previously missed the
+# Exp[2*ep*EulerGamma] normalisation (the net gamma_E count of the Gamma ratio is
+# exactly -2*ep, so this factor makes the Laurent data EulerGamma-free). Pure reduction
+# coefficients are unaffected -- wrapper/reference metadata only. See
+# scripts/audit_external_int2_leading_pole.py and notes/EXTERNAL_INT2_LEADING_POLE_AUDIT.md.
 EXTERNAL_PREFACTOR_TEXT = (
-    "t^(-3-ep)*Gamma[1-ep]*Gamma[-ep]^3*Gamma[ep]/(Gamma[-1-3*ep]*Gamma[-2*ep])"
+    "Exp[2*ep*EulerGamma]*t^(-3-ep)*Gamma[1-ep]*Gamma[-ep]^3*Gamma[ep]"
+    "/(Gamma[-1-3*ep]*Gamma[-2*ep])"
 )
-# AnsvInt2 is not available in this repository; it is deliberately NOT invented. A GPL
-# G[...] source expression, if ever added, is metadata only — never a reducer coefficient.
+# AnsvInt2 is deliberately NOT invented and never enters the reducer. Its GPL G[...]
+# source expression is stored verbatim, as metadata only, in
+# examples/external_int2_source_reference.wl.txt — never a reducer coefficient.
 REFERENCE_METADATA = {
     "name": "AnsvInt2",
     "available": False,
     "compared_numerically": False,
     "note": (
-        "no source reference bundled; not invented; GPL G[...] values are metadata only "
-        "and are never reducer coefficients"
+        "verbatim source copy stored as metadata only in "
+        "examples/external_int2_source_reference.wl.txt; never loaded by the pipeline "
+        "and not invented; GPL G[...] values are never reducer coefficients"
     ),
 }
 
@@ -195,8 +206,9 @@ def build_full_formula_text(result: ReductionResult) -> str:
         rendered.append(f"({term.coefficient_text})*Int[{integrand}, {ranges}]")
     pure = " +\n    ".join(rendered) if rendered else "0"
     lines = [
-        "(* External Int2 (dimensionless, r = s/t). The prefactor P2 (Gamma ratio and the",
-        "   t^(-3-ep) scaling) is applied OUTSIDE the reducer: PureReduction contains ONLY",
+        "(* External Int2 (dimensionless, r = s/t). The prefactor P2 (Exp[2*ep*EulerGamma]",
+        "   normalisation, Gamma ratio and the t^(-3-ep) scaling) is applied OUTSIDE the",
+        "   reducer: PureReduction contains ONLY",
         "   the certified pure-family reduction of Int[F2, x2>0, x5>0, x7>0] with",
         "   F2 = x2^(1+ep)*(1+x2)^ep*(1+x5)^ep*(1+x7)^(-1-ep)*(1+x7+x2*x7+r*x2*x5)^(-1+ep). *)",
         f"ExternalPrefactor2 = {EXTERNAL_PREFACTOR_TEXT};",
@@ -205,9 +217,23 @@ def build_full_formula_text(result: ReductionResult) -> str:
         "",
         "FullIntegralReduction = ExternalPrefactor2*PureReduction;",
         "",
-        "(* Reference value: AnsvInt2 is not available in this repository and is NOT",
-        "   invented here. If a source reference (GPL G[...] expression) is added later it",
-        "   must stay metadata only -- GPL values are never reducer coefficients. *)",
+    ]
+    if result.status == STATUS_SUCCESS and result.all_locally_finite is True:
+        lines += [f'ReductionStatus = "{result.status}";', ""]
+    else:
+        lines += [
+            f'(* CertifiedPartialReduction: ReductionStatus = "{result.status}".',
+            "   WARNING: the right-hand side masters are NOT a locally finite (LF) basis;",
+            "   every coefficient is certificate-checked, but this is a partial reduction,",
+            "   not an LF-basis decomposition. *)",
+            f'ReductionStatus = "{result.status}";',
+            "",
+        ]
+    lines += [
+        "(* Reference value: AnsvInt2 is NOT used by the reducer and is NOT invented",
+        "   here. Its GPL source expression is stored verbatim, as metadata only, in",
+        "   examples/external_int2_source_reference.wl.txt -- GPL values are never",
+        "   reducer coefficients. *)",
         "",
     ]
     return "\n".join(lines)
@@ -259,11 +285,12 @@ def numeric_check(result: ReductionResult) -> dict:
         ep = mp.mpf(NUMERIC_EP.p) / mp.mpf(NUMERIC_EP.q)
         r = mp.mpf(int(NUMERIC_R))
         prefactor = (
-            mp.gamma(1 - ep)
+            mp.exp(2 * ep * mp.euler)
+            * mp.gamma(1 - ep)
             * mp.gamma(-ep) ** 3
             * mp.gamma(ep)
             / (mp.gamma(-1 - 3 * ep) * mp.gamma(-2 * ep))
-        )  # t = 1 -> t^(-3-ep) = 1
+        )  # t = 1 -> t^(-3-ep) = 1; Exp[2*ep*EulerGamma] scales both sides equally
 
         # Runtime self-check of the 2F1 kernel against direct 1-D quadratures (k = 0, 1).
         kernel_check = mp.mpf(0)

@@ -1,0 +1,14 @@
+(* Source reference for External Int2 -- METADATA ONLY.
+   Copied mechanically (box-form -> InputForm) from the notebook
+   "ParametricInt examples 4 ChatGPT v2.nb" (cells 7e7186ac-046b-4f0b-b9d3-8ea50871f476
+   and 1de48265-a751-4312-88a7-3d32e5a4679d), with \[Epsilon] -> ep and \[Pi] -> Pi.
+
+   Int2 is the source integrand (external prefactor included); AnsvInt2 is the
+   source GPL answer. Neither is used by the reducer: AnsvInt2 values are NEVER
+   reducer coefficients. The only quantity consumed elsewhere is the leading
+   pole -4/(s*t^2*ep^4), which the opt-in audit (RUN_INT2_POLE_AUDIT=1) checks
+   against the certified reduction; see notes/EXTERNAL_INT2_LEADING_POLE_AUDIT.md. *)
+
+Int2=(t^(-2-2*ep)*x2^(1+ep)*(1+x2)^ep*(1+x5)^ep*(1+x7)^(-1-ep)*(t+s*x2*x5+t*x7+t*x2*x7)^(-1+ep)*Gamma[1-ep]*(Gamma[-ep])^3*Gamma[ep])/(Gamma[-1-3*ep]*Gamma[-2*ep])*Exp[+2*ep*EulerGamma];
+
+AnsvInt2=-4/(s*t^2*ep^4)+(5*G[0,s]-2*G[0,t]-2*Log[s]+3*Log[t])/(s*t^2*ep^3)+(10*Pi^2-48*G[0,s]*G[0,t]+18*G[0,0,s]+60*G[0,0,t]-12*(Log[s])^2+36*Log[s]*Log[t]-27*(Log[t])^2)/(6*s*t^2*ep^2)+1/(6*s*t^2*ep)*(8-6*Pi^2*G[0,s]-8*Pi^2*G[0,t]+6*Pi^2*G[-t,s]-48*G[0,t]*G[0,0,s]+96*G[0,s]*G[0,0,t]+12*G[-t,s]*G[0,0,t]-12*G[0,t]*G[-t,0,s]+30*G[0,0,0,s]-156*G[0,0,0,t]+12*G[-t,0,0,s]-8*Pi^2*Log[s]-8*(Log[s])^3+12*Pi^2*Log[t]+36*(Log[s])^2*Log[t]-54*Log[s]*(Log[t])^2+27*(Log[t])^3-28*PolyGamma[2,1]-4*PolyGamma[2,2]+60*Zeta[3])+1/(360*s*t^2)*(184*Pi^4-600*G[0,s]+240*G[0,t]-1920*Pi^2*G[0,s]*G[0,t]+120*Pi^2*G[0,t]*G[-t,s]+2280*Pi^2*G[0,0,s]+2400*Pi^2*G[0,0,t]+14400*G[0,0,s]*G[0,0,t]-1440*Pi^2*G[0,-t,s]-2880*G[0,0,t]*G[0,-t,s]-480*Pi^2*G[-t,0,s]-720*G[0,0,t]*G[-t,0,s]+360*Pi^2*G[-t,-t,s]+720*G[0,0,t]*G[-t,-t,s]-11520*G[0,t]*G[0,0,0,s]-20160*G[0,s]*G[0,0,0,t]+2880*G[0,t]*G[0,-t,0,s]+1440*G[0,t]*G[-t,0,0,s]-720*G[0,t]*G[-t,-t,0,s]+9720*G[0,0,0,0,s]+29520*G[0,0,0,0,t]-2880*G[0,-t,0,0,s]-2160*G[-t,0,0,0,s]+720*G[-t,-t,0,0,s]+240*Log[s]-480*Pi^2*(Log[s])^2-240*(Log[s])^4-360*Log[t]+1440*Pi^2*Log[s]*Log[t]+1440*(Log[s])^3*Log[t]-1080*Pi^2*(Log[t])^2-3240*(Log[s])^2*(Log[t])^2+3240*Log[s]*(Log[t])^3-1215*(Log[t])^4+2100*G[0,s]*PolyGamma[2,1]-840*G[0,t]*PolyGamma[2,1]-840*Log[s]*PolyGamma[2,1]+1260*Log[t]*PolyGamma[2,1]+300*G[0,s]*PolyGamma[2,2]-120*G[0,t]*PolyGamma[2,2]-120*Log[s]*PolyGamma[2,2]+180*Log[t]*PolyGamma[2,2]-3600*G[0,s]*Zeta[3]+720*G[-t,s]*Zeta[3]);

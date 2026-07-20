@@ -2,7 +2,8 @@
 
 Fast tests pin the contract of the validation case: the input document is the pure family
 ``F2`` only (dimensionless rewrite ``r = s/t``; no Gamma/``t``-scaling anywhere the reducer
-looks), the external prefactor text matches the task's Gamma-ratio ``P2`` exactly, the
+looks), the external prefactor text matches the corrected ``P2``
+(``Exp[2*ep*EulerGamma]`` times the Gamma ratio; Method.2 leading-pole audit) exactly, the
 wrapper artifact keeps the prefactor strictly OUTSIDE the certified reduction, the 2F1
 kernel of the numeric check matches direct quadrature, no reference value is invented,
 and the certificate/LF gates are mandatory. The end-to-end adaptive reduction + numeric
@@ -112,12 +113,22 @@ def test_family_is_pure_no_prefactor_in_core(input_text, family):
 
 
 def test_prefactor_text_matches_p2(script):
-    """The wrapper prefactor matches P2 = t^(-3-ep)*Gamma-ratio from the task metadata."""
+    """The wrapper prefactor is the corrected P2: Exp[2*ep*EulerGamma]*Gamma-ratio."""
     text = script.EXTERNAL_PREFACTOR_TEXT
-    py = text.replace("^", "**").replace("Gamma[", "gamma(").replace("]", ")")
-    expr = sp.sympify(py, locals={"gamma": sp.gamma, "ep": EP, "t": T})
+    py = (
+        text.replace("^", "**")
+        .replace("Exp[", "exp(")
+        .replace("EulerGamma", "_eg")
+        .replace("Gamma[", "gamma(")
+        .replace("]", ")")
+    )
+    expr = sp.sympify(
+        py,
+        locals={"gamma": sp.gamma, "exp": sp.exp, "_eg": sp.EulerGamma, "ep": EP, "t": T},
+    )
     expected = (
-        T ** (-3 - EP)
+        sp.exp(2 * EP * sp.EulerGamma)
+        * T ** (-3 - EP)
         * sp.gamma(1 - EP)
         * sp.gamma(-EP) ** 3
         * sp.gamma(EP)

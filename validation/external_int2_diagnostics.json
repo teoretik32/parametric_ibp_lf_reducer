@@ -147,7 +147,7 @@
   "error": "normal form contains non-locally-finite terms: ['{0,0,0,0,-1,0,0}', '{0,0,0,0,0,-1,0}']",
   "example": "ExternalInt2Dimensionless",
   "exported_status": "Failure",
-  "external_prefactor": "t^(-3-ep)*Gamma[1-ep]*Gamma[-ep]^3*Gamma[ep]/(Gamma[-1-3*ep]*Gamma[-2*ep])",
+  "external_prefactor": "Exp[2*ep*EulerGamma]*t^(-3-ep)*Gamma[1-ep]*Gamma[-ep]^3*Gamma[ep]/(Gamma[-1-3*ep]*Gamma[-2*ep])",
   "numeric_check": {
     "ran": false,
     "reason": "no certified Success to check"

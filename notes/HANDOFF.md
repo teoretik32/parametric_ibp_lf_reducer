@@ -5,7 +5,26 @@
 
 ## Текущий статус (2026-07-20)
 
-- **Последний завершённый блок: Method.1 — directional LF audit + LF-constrained
+- **Последний завершённый блок: Method.2 — leading-pole audit на уровне wrapper +
+  исправление префактора для External Int2** (ветка `feature/external-int2`, ядро
+  редьюсера не менялось; certified-редукция Int2 не тронута — всё на уровне
+  wrapper/reference metadata): точная x7-преинтеграция
+  `(B^ep - A^ep)/(ep*(B - A))` → 1-D форма; кроссоверные полюса сокращаются точно
+  (`K1 == C_B`), чистый ведущий полюс `J2(ep,r) = -2/(3*r*ep^2) + O(1/ep)`
+  (наивный `-1/(2*r*ep^2)` исключён числовым Laurent-фитом); исправленный внешний
+  префактор — `EXTERNAL_PREFACTOR_TEXT` теперь несёт `Exp[2*ep*EulerGamma]`
+  (зеркально в `validation/external_int2_full_formula.m` / `_diagnostics.json`,
+  закреплено тестом `test_prefactor_text_matches_p2`); полный ведущий полюс при
+  `r = s/t`: `P2*J2 = -4/(s*t^2*ep^4) + O(1/ep^3)` — совпадает с ведущим полюсом
+  `AnsvInt2` из источника (`examples/external_int2_source_reference.wl.txt`,
+  metadata only, никогда не коэффициент редьюсера). Скрипт
+  `scripts/audit_external_int2_leading_pole.py` — 8/8 checks passed (full
+  precision), opt-in rerun `RUN_INT2_POLE_AUDIT=1`; отчёт —
+  `notes/EXTERNAL_INT2_LEADING_POLE_AUDIT.md`, JSON —
+  `validation/external_int2_leading_pole_audit.json`, тесты —
+  `tests/test_external_int2_leading_pole.py`. Гейт: full fast suite
+  **380 passed, 11 skipped**, `ruff check .` clean.
+- **Предыдущий блок: Method.1 — directional LF audit + LF-constrained
   feasibility mod p поверх External Int2** (ветка `feature/external-int2`, ядро
   редьюсера не менялось; модуль диагностический, certificate/LF-гейты не тронуты):
   `src/parametric_ibp_lf_reducer/lf_feasibility.py`, `explain_local_finiteness`
@@ -21,7 +40,7 @@
   JSON — `validation/external_int2_method1_levelA.json` / `_levelB.json`;
   аудит — секция Method.1 в `notes/EXTERNAL_INT2_AUDIT.md`. Гейт: full fast
   suite **384 passed**, `ruff check .` clean.
-- **Предыдущий блок: External Int2 (dimensionless) — certified partial
+- **External Int2 (dimensionless) — certified partial
   reduction, стабильный отрицательный LF-итог** (ветка `feature/external-int2`,
   ядро редьюсера не менялось): `examples/external_int2_dimensionless_input.wl.txt` →
   `scripts/run_external_int2.py` (гейт `RUN_EXTERNAL_INT2=1`) →

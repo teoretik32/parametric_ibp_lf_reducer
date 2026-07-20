@@ -49,6 +49,24 @@
   Artifacts: `validation/external_int2_method1_levelA.json` / `_levelB.json`;
   audit section in `notes/EXTERNAL_INT2_AUDIT.md`. Certificate and LF gates
   untouched; reducer core unchanged.
+- **Method.2 for External Int2: wrapper-level leading-pole audit + prefactor
+  fix (all 8 checks passed at full precision).** Standalone script
+  `scripts/audit_external_int2_leading_pole.py` (no reducer import; heavy rerun
+  opt-in via `RUN_INT2_POLE_AUDIT=1`). Exact `x7` preintegration
+  `(B^ep - A^ep)/(ep*(B - A))` reduces Int2 to a 1-D form; crossover boundary
+  poles cancel exactly (`K1 == C_B`), giving the pure leading pole
+  `J2(ep,r) = -2/(3*r*ep^2) + O(1/ep)` (a naive `-1/(2*r*ep^2)` is excluded by
+  the numeric Laurent fit). Corrected external prefactor:
+  `EXTERNAL_PREFACTOR_TEXT` now carries `Exp[2*ep*EulerGamma]` (mirrored in
+  `validation/external_int2_full_formula.m` /
+  `validation/external_int2_diagnostics.json`; pinned by
+  `test_prefactor_text_matches_p2`). Full object: with `r = s/t`,
+  `P2*J2 = -4/(s*t^2*ep^4) + O(1/ep^3)`, matching the source `AnsvInt2` leading
+  pole; `AnsvInt2` stays metadata only
+  (`examples/external_int2_source_reference.wl.txt`), never a reducer
+  coefficient. Report: `notes/EXTERNAL_INT2_LEADING_POLE_AUDIT.md`; JSON:
+  `validation/external_int2_leading_pole_audit.json`; tests:
+  `tests/test_external_int2_leading_pole.py`. Reducer core unchanged.
 
 ## v0.2.0 — 2026
 
