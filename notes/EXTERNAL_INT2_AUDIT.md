@@ -98,3 +98,38 @@ Script: `scripts/run_external_int2_method1.py`; outputs
   untouched.
 - Final gate after the runs: full pytest suite green, `ruff check .` clean.
 - Level A elapsed ~117 s; Level B elapsed ~2197 s (fork run in background).
+
+## Method.3: composite locally-finite master feasibility
+
+Module: `src/parametric_ibp_lf_reducer/composite_masters.py`; runner:
+`scripts/run_external_int2_method3.py`; output:
+`validation/external_int2_composite_feasibility.json`; tests:
+`tests/test_composite_masters.py` (heavy integration gated by
+`RUN_EXTERNAL_INT2=1`).
+
+Question: instead of demanding that every *individual* master be locally
+finite (Method.1 says that fails), do integer linear combinations
+`M = sum_i c_i * J(label_i)` exist whose bad Laurent layers cancel
+identically? Answer: **yes — `FeasibleCompositeBasis`**.
+
+- Pool: 225 candidates from the 6 non-LF terms of the certified normal form
+  (shifts along `n_x2`, `m_G0`, `m_G3` at depths −1/−2 plus `x5`/`x7`
+  numerator insertions up to degree 2).
+- On the primary ray `(-1,0,0)` (`x2 -> oo`): 48 participants,
+  primary cancellation kernel dimension 21.
+- After verification on all 69 checked rays (candidate rays + deterministic
+  random safety net, 27 witness rays) the kernel refines to a
+  **13-dimensional fully-LF composite basis** — every basis vector is locally
+  finite on every checked ray, with exact symbolic layer cancellation.
+- Interpretable examples: `J(1/(x2*G1)) - J(1/(G0*G1))` (2 terms) and
+  `J((1+x5)/G1) - J((1+x7)/G2)` (4 terms) — the certified non-LF residuals
+  `1/G1`, `1/G2` *do* combine into fully LF composites once numerator
+  insertions are allowed.
+- Scope guard: statements are about this pool and checked-ray set only;
+  coefficients live in rational functions of `r` with a fixed-sample rank
+  cross-check (`BadSpecialization` guard); reducer core, certificates and LF
+  gates are untouched.
+- Follow-up: rerun the reduction in a basis where the non-LF residuals are
+  replaced by these composites (basis change at the normal-form level), aiming
+  at `AllLocallyFinite -> True` for Int2.
+- Elapsed ~31 s (pool build + feasibility, foreground).
