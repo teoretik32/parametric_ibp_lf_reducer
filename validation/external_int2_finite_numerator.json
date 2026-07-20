@@ -1,0 +1,1321 @@
+{
+  "method": "finite-numerator LF basis search (single-integrand semantics)",
+  "degrees": [
+    0,
+    1,
+    2
+  ],
+  "n_sectors": 7,
+  "reports": [
+    {
+      "sector": [
+        -1,
+        0,
+        0,
+        -1,
+        -1,
+        0,
+        0
+      ],
+      "degree": 0,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 1,
+      "kernel_dim": 1,
+      "n_conditions": 0,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            -1,
+            0,
+            0,
+            -1,
+            -1,
+            0,
+            0
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(1/(x2*G0*G1))",
+          "defining_expansion": [
+            {
+              "label": [
+                -1,
+                0,
+                0,
+                -1,
+                -1,
+                0,
+                0
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "1/(x2*G0*G1)"
+    },
+    {
+      "sector": [
+        -1,
+        0,
+        0,
+        -1,
+        -1,
+        0,
+        0
+      ],
+      "degree": 1,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 4,
+      "kernel_dim": 1,
+      "n_conditions": 3,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            -1,
+            0,
+            0,
+            -1,
+            -1,
+            0,
+            0
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(1/(x2*G0*G1))",
+          "defining_expansion": [
+            {
+              "label": [
+                -1,
+                0,
+                0,
+                -1,
+                -1,
+                0,
+                0
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "1/(x2*G0*G1)"
+    },
+    {
+      "sector": [
+        -1,
+        0,
+        0,
+        -1,
+        -1,
+        0,
+        0
+      ],
+      "degree": 2,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 10,
+      "kernel_dim": 1,
+      "n_conditions": 34,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            -1,
+            0,
+            0,
+            -1,
+            -1,
+            0,
+            0
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(1/(x2*G0*G1))",
+          "defining_expansion": [
+            {
+              "label": [
+                -1,
+                0,
+                0,
+                -1,
+                -1,
+                0,
+                0
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "1/(x2*G0*G1)"
+    },
+    {
+      "sector": [
+        -1,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        -1
+      ],
+      "degree": 0,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 1,
+      "kernel_dim": 1,
+      "n_conditions": 0,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            -1,
+            0,
+            0,
+            0,
+            -1,
+            0,
+            -1
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(1/(x2*G1*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                -1,
+                0,
+                0,
+                0,
+                -1,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "1/(x2*G1*G3)"
+    },
+    {
+      "sector": [
+        -1,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        -1
+      ],
+      "degree": 1,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 4,
+      "kernel_dim": 3,
+      "n_conditions": 1,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          0
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            -1,
+            0,
+            0,
+            0,
+            -1,
+            0,
+            -1
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(1/(x2*G1*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                -1,
+                0,
+                0,
+                0,
+                -1,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        },
+        {
+          "sector": [
+            -1,
+            0,
+            0,
+            0,
+            -1,
+            0,
+            -1
+          ],
+          "numerator": "x7",
+          "degree": 1,
+          "lf_verdict": "True",
+          "integrand": "(x7)*(1/(x2*G1*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                -1,
+                0,
+                1,
+                0,
+                -1,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "1/(x2*G1*G3)"
+    },
+    {
+      "sector": [
+        -1,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        -1
+      ],
+      "degree": 2,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 10,
+      "kernel_dim": 4,
+      "n_conditions": 10,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            -1,
+            0,
+            0,
+            0,
+            -1,
+            0,
+            -1
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(1/(x2*G1*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                -1,
+                0,
+                0,
+                0,
+                -1,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        },
+        {
+          "sector": [
+            -1,
+            0,
+            0,
+            0,
+            -1,
+            0,
+            -1
+          ],
+          "numerator": "x7",
+          "degree": 1,
+          "lf_verdict": "True",
+          "integrand": "(x7)*(1/(x2*G1*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                -1,
+                0,
+                1,
+                0,
+                -1,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "1/(x2*G1*G3)"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1
+      ],
+      "degree": 0,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 1,
+      "kernel_dim": 1,
+      "n_conditions": 0,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            0,
+            0,
+            0,
+            -1,
+            0,
+            0,
+            -1
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(1/(G0*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                0,
+                0,
+                0,
+                -1,
+                0,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "1/(G0*G3)"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1
+      ],
+      "degree": 1,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 4,
+      "kernel_dim": 2,
+      "n_conditions": 2,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            0,
+            0,
+            0,
+            -1,
+            0,
+            0,
+            -1
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(1/(G0*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                0,
+                0,
+                0,
+                -1,
+                0,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        },
+        {
+          "sector": [
+            0,
+            0,
+            0,
+            -1,
+            0,
+            0,
+            -1
+          ],
+          "numerator": "x7",
+          "degree": 1,
+          "lf_verdict": "True",
+          "integrand": "(x7)*(1/(G0*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                0,
+                0,
+                1,
+                -1,
+                0,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "1/(G0*G3)"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1
+      ],
+      "degree": 2,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 10,
+      "kernel_dim": 2,
+      "n_conditions": 25,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            0,
+            0,
+            0,
+            -1,
+            0,
+            0,
+            -1
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(1/(G0*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                0,
+                0,
+                0,
+                -1,
+                0,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        },
+        {
+          "sector": [
+            0,
+            0,
+            0,
+            -1,
+            0,
+            0,
+            -1
+          ],
+          "numerator": "x7",
+          "degree": 1,
+          "lf_verdict": "True",
+          "integrand": "(x7)*(1/(G0*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                0,
+                0,
+                1,
+                -1,
+                0,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "1/(G0*G3)"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0
+      ],
+      "degree": 0,
+      "bare_lf": "False",
+      "failing_rays": [
+        {
+          "direction": [
+            -1,
+            0,
+            0
+          ],
+          "score": "-1"
+        },
+        {
+          "direction": [
+            -1,
+            0,
+            -1
+          ],
+          "score": "0"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            0
+          ],
+          "score": "0"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            -1
+          ],
+          "score": "0"
+        }
+      ],
+      "ansatz_size": 1,
+      "kernel_dim": 0,
+      "n_conditions": 5,
+      "clearing_monomials": [],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": true,
+      "status": "NumeratorCureImpossibleAnyDegree",
+      "candidates": [],
+      "sector_name": "1/G1"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0
+      ],
+      "degree": 1,
+      "bare_lf": "False",
+      "failing_rays": [
+        {
+          "direction": [
+            -1,
+            0,
+            0
+          ],
+          "score": "-1"
+        },
+        {
+          "direction": [
+            -1,
+            0,
+            -1
+          ],
+          "score": "0"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            0
+          ],
+          "score": "0"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            -1
+          ],
+          "score": "0"
+        }
+      ],
+      "ansatz_size": 4,
+      "kernel_dim": 0,
+      "n_conditions": 47,
+      "clearing_monomials": [],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": true,
+      "status": "NumeratorCureImpossibleAnyDegree",
+      "candidates": [],
+      "sector_name": "1/G1"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0
+      ],
+      "degree": 2,
+      "bare_lf": "False",
+      "failing_rays": [
+        {
+          "direction": [
+            -1,
+            0,
+            0
+          ],
+          "score": "-1"
+        },
+        {
+          "direction": [
+            -1,
+            0,
+            -1
+          ],
+          "score": "0"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            0
+          ],
+          "score": "0"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            -1
+          ],
+          "score": "0"
+        }
+      ],
+      "ansatz_size": 10,
+      "kernel_dim": 0,
+      "n_conditions": 199,
+      "clearing_monomials": [],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": true,
+      "status": "NumeratorCureImpossibleAnyDegree",
+      "candidates": [],
+      "sector_name": "1/G1"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0
+      ],
+      "degree": 0,
+      "bare_lf": "False",
+      "failing_rays": [
+        {
+          "direction": [
+            -1,
+            0,
+            0
+          ],
+          "score": "-1"
+        },
+        {
+          "direction": [
+            0,
+            -1,
+            0
+          ],
+          "score": "0"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            0
+          ],
+          "score": "-1"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            -1
+          ],
+          "score": "0"
+        }
+      ],
+      "ansatz_size": 1,
+      "kernel_dim": 0,
+      "n_conditions": 6,
+      "clearing_monomials": [],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": true,
+      "status": "NumeratorCureImpossibleAnyDegree",
+      "candidates": [],
+      "sector_name": "1/G2"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0
+      ],
+      "degree": 1,
+      "bare_lf": "False",
+      "failing_rays": [
+        {
+          "direction": [
+            -1,
+            0,
+            0
+          ],
+          "score": "-1"
+        },
+        {
+          "direction": [
+            0,
+            -1,
+            0
+          ],
+          "score": "0"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            0
+          ],
+          "score": "-1"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            -1
+          ],
+          "score": "0"
+        }
+      ],
+      "ansatz_size": 4,
+      "kernel_dim": 0,
+      "n_conditions": 48,
+      "clearing_monomials": [],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": true,
+      "status": "NumeratorCureImpossibleAnyDegree",
+      "candidates": [],
+      "sector_name": "1/G2"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0
+      ],
+      "degree": 2,
+      "bare_lf": "False",
+      "failing_rays": [
+        {
+          "direction": [
+            -1,
+            0,
+            0
+          ],
+          "score": "-1"
+        },
+        {
+          "direction": [
+            0,
+            -1,
+            0
+          ],
+          "score": "0"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            0
+          ],
+          "score": "-1"
+        },
+        {
+          "direction": [
+            -1,
+            -1,
+            -1
+          ],
+          "score": "0"
+        }
+      ],
+      "ansatz_size": 10,
+      "kernel_dim": 0,
+      "n_conditions": 183,
+      "clearing_monomials": [],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": true,
+      "status": "NumeratorCureImpossibleAnyDegree",
+      "candidates": [],
+      "sector_name": "1/G2"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        -1
+      ],
+      "degree": 0,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 1,
+      "kernel_dim": 1,
+      "n_conditions": 0,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            0,
+            0,
+            1,
+            -1,
+            0,
+            0,
+            -1
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(x7/(G0*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                0,
+                0,
+                1,
+                -1,
+                0,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "x7/(G0*G3)"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        -1
+      ],
+      "degree": 1,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 4,
+      "kernel_dim": 1,
+      "n_conditions": 6,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            0,
+            0,
+            1,
+            -1,
+            0,
+            0,
+            -1
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(x7/(G0*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                0,
+                0,
+                1,
+                -1,
+                0,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "x7/(G0*G3)"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        1,
+        -1,
+        0,
+        0,
+        -1
+      ],
+      "degree": 2,
+      "bare_lf": "True",
+      "failing_rays": [],
+      "ansatz_size": 10,
+      "kernel_dim": 1,
+      "n_conditions": 52,
+      "clearing_monomials": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": false,
+      "status": "SectorAlreadyLF",
+      "candidates": [
+        {
+          "sector": [
+            0,
+            0,
+            1,
+            -1,
+            0,
+            0,
+            -1
+          ],
+          "numerator": "1",
+          "degree": 0,
+          "lf_verdict": "True",
+          "integrand": "(1)*(x7/(G0*G3))",
+          "defining_expansion": [
+            {
+              "label": [
+                0,
+                0,
+                1,
+                -1,
+                0,
+                0,
+                -1
+              ],
+              "coeff": "1"
+            }
+          ]
+        }
+      ],
+      "sector_name": "x7/(G0*G3)"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        -1
+      ],
+      "degree": 0,
+      "bare_lf": "False",
+      "failing_rays": [
+        {
+          "direction": [
+            -1,
+            0,
+            0
+          ],
+          "score": "0"
+        }
+      ],
+      "ansatz_size": 1,
+      "kernel_dim": 0,
+      "n_conditions": 1,
+      "clearing_monomials": [],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": true,
+      "status": "NumeratorCureImpossibleAnyDegree",
+      "candidates": [],
+      "sector_name": "1/(G1*G3)"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        -1
+      ],
+      "degree": 1,
+      "bare_lf": "False",
+      "failing_rays": [
+        {
+          "direction": [
+            -1,
+            0,
+            0
+          ],
+          "score": "0"
+        }
+      ],
+      "ansatz_size": 4,
+      "kernel_dim": 0,
+      "n_conditions": 8,
+      "clearing_monomials": [],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": true,
+      "status": "NumeratorCureImpossibleAnyDegree",
+      "candidates": [],
+      "sector_name": "1/(G1*G3)"
+    },
+    {
+      "sector": [
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        -1
+      ],
+      "degree": 2,
+      "bare_lf": "False",
+      "failing_rays": [
+        {
+          "direction": [
+            -1,
+            0,
+            0
+          ],
+          "score": "0"
+        }
+      ],
+      "ansatz_size": 10,
+      "kernel_dim": 0,
+      "n_conditions": 45,
+      "clearing_monomials": [],
+      "lemma_consistent": true,
+      "numerator_cure_impossible_any_degree": true,
+      "status": "NumeratorCureImpossibleAnyDegree",
+      "candidates": [],
+      "sector_name": "1/(G1*G3)"
+    }
+  ],
+  "statuses": [
+    "NumeratorCureImpossibleAnyDegree",
+    "SectorAlreadyLF"
+  ],
+  "new_lf_masters_found": false,
+  "lemma_consistent_everywhere": true,
+  "input": "B:\\Soft\\math_scratch\\examples\\external_int2_dimensionless_input.wl.txt",
+  "sector_labels_are_shifts": true,
+  "base_exponents_note": "offset convention: total exponent = base exponent + label shift; Int2 base is x2^(1+ep)*G0^ep*G1^ep*G2^(-1-ep)*G3^(-1+ep)",
+  "random_trials": 64,
+  "seed": 20260706,
+  "elapsed_seconds": 9.766,
+  "overall_status": "NoFiniteNumeratorBasisWithinAnsatz",
+  "numerator_extended_labels": [],
+  "feasibility": {
+    "status": "SkippedNoCandidates",
+    "note": "no genuinely polynomial LF candidate in any searched sector/degree; the Method.1 modular span test has nothing to extend"
+  },
+  "recommendation": "Numerator decoration cannot cure the stable remnants 1/G1, 1/G2 and the probe sector 1/(G1*G3): every failing ray is componentwise <= 0 (x -> oo type) and polynomial numerators only increase those layer scores (Lemma 2, numerator_cure_impossible_any_degree). Next directions: label shifts with POSITIVE polynomial components (raised denominator powers / dimension-shift-type masters), the Method.3 composite basis change, or an analytic treatment of the remnants outside the reducer."
+}

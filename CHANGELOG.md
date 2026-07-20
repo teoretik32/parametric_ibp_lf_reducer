@@ -67,6 +67,35 @@
   coefficient. Report: `notes/EXTERNAL_INT2_LEADING_POLE_AUDIT.md`; JSON:
   `validation/external_int2_leading_pole_audit.json`; tests:
   `tests/test_external_int2_leading_pole.py`. Reducer core unchanged.
+- **Method.3 for External Int2: composite locally-finite master feasibility.**
+  New module `src/parametric_ibp_lf_reducer/composite_masters.py`, runner
+  `scripts/run_external_int2_method3.py`, tests
+  `tests/test_composite_masters.py` (heavy integration gated by
+  `RUN_EXTERNAL_INT2=1`), artifact
+  `validation/external_int2_composite_feasibility.json`. Outcome:
+  **`FeasibleCompositeBasis`** — from a deterministic 225-candidate pool, the
+  48-participant primary-ray cancellation kernel (dim 21) refines on 69
+  checked rays to a 13-dimensional fully-LF composite basis; interpretable
+  examples `J(1/(x2*G1)) - J(1/(G0*G1))` and `J((1+x5)/G1) - J((1+x7)/G2)`.
+  Statements are scoped to this pool and ray set; `BadSpecialization` rank
+  guard; reducer core, certificates and LF gates untouched.
+- **Finite-numerator LF basis search for External Int2 (honest negative).**
+  New module `src/parametric_ibp_lf_reducer/finite_numerator.py`
+  (single-integrand semantics: a candidate is ONE decorated integrand
+  `N(x)*F_S`, accepted only on a full `is_locally_finite = True` verdict;
+  Lemma 1 graded-lowest-layer kernel cross-check, Lemma 2
+  `numerator_cure_impossible_any_degree`), design doc
+  `docs/FINITE_NUMERATOR_BASIS_DESIGN.md`, runner
+  `scripts/run_external_int2_finite_numerator.py`, artifact
+  `validation/external_int2_finite_numerator.json`, tests
+  `tests/test_finite_numerator.py` (incl. an offset-convention regression and
+  the defining-rows → `lf_reduction_feasible_mod_p` bridge). Verdict over the
+  six certified normal-form sectors plus the probe `1/(G1*G3)` at degrees
+  0–2: `NoFiniteNumeratorBasisWithinAnsatz` — the remnants `1/G1`, `1/G2`,
+  `1/(G1*G3)` fail only on componentwise `<= 0` rays (`x -> oo`), which
+  polynomial numerators can only worsen, so the cure is impossible at ANY
+  degree; the other four sectors are `SectorAlreadyLF`; feasibility stage
+  honestly `SkippedNoCandidates`. Reducer core unchanged.
 
 ## v0.2.0 — 2026
 

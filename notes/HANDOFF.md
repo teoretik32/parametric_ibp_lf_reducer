@@ -5,7 +5,37 @@
 
 ## Текущий статус (2026-07-20)
 
-- **Последний завершённый блок: Method.2 — leading-pole audit на уровне wrapper +
+- **Последний завершённый блок: finite-numerator LF basis search для External
+  Int2 (task #37)** (ядро редьюсера не менялось; read-only диагностика поверх
+  LF-гейтов): модуль `src/parametric_ibp_lf_reducer/finite_numerator.py`
+  (single-integrand semantics — кандидат это ОДИН integrand `N(x)*F_S`,
+  принимается только по полному вердикту `is_locally_finite=True`; Lemma 1 —
+  graded lowest layer, отдельно расходящиеся куски никогда не комбинируются;
+  Lemma 2 — `numerator_cure_impossible_any_degree`), дизайн
+  `docs/FINITE_NUMERATOR_BASIS_DESIGN.md`, раннер
+  `scripts/run_external_int2_finite_numerator.py`, артефакт
+  `validation/external_int2_finite_numerator.json`, тесты
+  `tests/test_finite_numerator.py` (offset-convention регрессия, мост
+  defining-rows → `lf_reduction_feasible_mod_p`, честные статусы). Итог:
+  **честный отрицательный** — `NoFiniteNumeratorBasisWithinAnsatz`
+  (7 секторов: шесть из certified normal form + probe `1/(G1*G3)`, степени
+  0–2): `1/(x2*G0*G1)`, `1/(x2*G1*G3)`, `1/(G0*G3)`, `x7/(G0*G3)` —
+  `SectorAlreadyLF`; `1/G1`, `1/G2`, `1/(G1*G3)` —
+  `NumeratorCureImpossibleAnyDegree` (все failing-лучи покомпонентно `<= 0`,
+  `x -> oo`; полиномиальные числители только ухудшают слоевые score —
+  невозможность для ЛЮБОЙ степени). Feasibility-этап — `SkippedNoCandidates`.
+  Метки — СДВИГИ (offset convention: полный показатель = базовый + сдвиг).
+  Гейт: full suite зелёный, `ruff check .` clean.
+- **Ранее: Method.3 — composite locally-finite master feasibility**
+  (`src/parametric_ibp_lf_reducer/composite_masters.py`,
+  `scripts/run_external_int2_method3.py`,
+  `validation/external_int2_composite_feasibility.json`,
+  `tests/test_composite_masters.py`): **`FeasibleCompositeBasis`** — из пула
+  225 кандидатов 13-мерный полностью LF composite-базис на 69 проверенных
+  лучах; примеры `J(1/(x2*G1)) - J(1/(G0*G1))`, `J((1+x5)/G1) - J((1+x7)/G2)`.
+  Scope: только этот пул/лучи; ядро, сертификаты и LF-гейты не тронуты.
+  Подробности — `notes/EXTERNAL_INT2_AUDIT.md`.
+- **Ранее: Method.2 — leading-pole audit на уровне wrapper +
   исправление префактора для External Int2** (ветка `feature/external-int2`, ядро
   редьюсера не менялось; certified-редукция Int2 не тронута — всё на уровне
   wrapper/reference metadata): точная x7-преинтеграция

@@ -133,3 +133,43 @@ identically? Answer: **yes — `FeasibleCompositeBasis`**.
   replaced by these composites (basis change at the normal-form level), aiming
   at `AllLocallyFinite -> True` for Int2.
 - Elapsed ~31 s (pool build + feasibility, foreground).
+
+## Finite-numerator LF basis search (task #37)
+
+Module: `src/parametric_ibp_lf_reducer/finite_numerator.py`; design:
+`docs/FINITE_NUMERATOR_BASIS_DESIGN.md`; runner:
+`scripts/run_external_int2_finite_numerator.py`; output:
+`validation/external_int2_finite_numerator.json`; tests:
+`tests/test_finite_numerator.py`.
+
+Question: does ONE numerator-decorated integrand `N(x) * F_S` (genuine
+polynomial `N`, complete-integrand semantics — no cancellation after
+integration is ever assumed) exist per remnant sector whose full integrand is
+locally finite? Answer: **no — `NoFiniteNumeratorBasisWithinAnsatz`**
+(degrees 0–2, seven sectors: the six certified normal-form sectors plus the
+probe `1/(G1*G3)`).
+
+- Labels are SHIFTS (offset convention: total exponent = base exponent +
+  label shift against the Int2 base
+  `x2^(1+ep) * G0^ep * G1^ep * G2^(-1-ep) * G3^(-1+ep)`).
+- `1/(x2*G0*G1)`, `1/(x2*G1*G3)`, `1/(G0*G3)`, `x7/(G0*G3)`:
+  `SectorAlreadyLF` (bare integrand already LF; a numerator cure is moot).
+- `1/G1`, `1/G2`, `1/(G1*G3)`: `NumeratorCureImpossibleAnyDegree` — every
+  failing ray is componentwise `<= 0` (`x -> oo` type; the probe's only bad
+  ray is `(-1,0,0)`, `x2 -> oo`), and polynomial numerators only increase
+  those layer scores (Lemma 2), so the impossibility holds for EVERY degree,
+  not just 0–2. The leading-cancellation kernel is empty at all searched
+  degrees.
+- Lemma 1 (graded lowest layer) is consistent everywhere
+  (`lemma_consistent_everywhere: true`): separately divergent pieces never
+  combine into an accepted candidate.
+- Feasibility stage: `SkippedNoCandidates` — nothing to bridge into
+  `lf_reduction_feasible_mod_p`; the bridge itself (defining monomial
+  expansions as rows, expansion labels marked allowed per Lemma 1) is
+  unit-tested on the synthetic curable family.
+- Scope: read-only diagnostics; reducer state, certificates and LF gates
+  untouched. Elapsed ~10 s.
+- Conclusion: numerator decoration alone cannot replace the remnants; the
+  viable routes remain the Method.3 composite basis change (label shifts with
+  positive polynomial components) or analytic treatment of `1/G1`, `1/G2`
+  outside the reducer.
