@@ -1,0 +1,932 @@
+{
+  "script": "run_external_int2_method5.py",
+  "method": "Method.5: label-box geometry audit (per-variable n ranges)",
+  "scope_note": "Label-box geometry audit (Method.4 follow-up). Modular LF-feasibility only: the span test is constrained to LF-True labels; a span passing through divergent labels is never reported as an LF basis. Rank-deficient special points are excluded from verdicts (generic feasibility required). Per-point statements about this row system and label box only; 'Obstructed' is an honest negative at the tested (sample, prime) points \u2014 never a global impossibility claim. No reconstruction is run; reducer core, certificates and LF gates are untouched.",
+  "input": "B:\\Soft\\math_scratch\\examples\\external_int2_dimensionless_input.wl.txt",
+  "baseline_tangent_blocks": [
+    [
+      1,
+      1
+    ],
+    [
+      2,
+      2
+    ]
+  ],
+  "richer_blocks": [
+    [
+      3,
+      3
+    ],
+    [
+      4,
+      4
+    ]
+  ],
+  "n_richer_fields": 33,
+  "richer_fields_elapsed_s": 164.212,
+  "samples": [
+    [
+      [
+        "ep",
+        "15/7"
+      ],
+      [
+        "r",
+        "32/11"
+      ]
+    ],
+    [
+      [
+        "ep",
+        "18/7"
+      ],
+      [
+        "r",
+        "43/11"
+      ]
+    ],
+    [
+      [
+        "ep",
+        "3"
+      ],
+      [
+        "r",
+        "54/11"
+      ]
+    ],
+    [
+      [
+        "ep",
+        "24/7"
+      ],
+      [
+        "r",
+        "28/11"
+      ]
+    ]
+  ],
+  "primes": [
+    2147483647,
+    2147483629
+  ],
+  "min_generic": 3,
+  "boxes": {
+    "A": {
+      "box_name": "A",
+      "n_ranges": [
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "m_range": [
+        -3,
+        0
+      ],
+      "target": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "target_lf_verdict": "False",
+      "n_labels": 3072,
+      "n_lf_true": 1754,
+      "n_base_rows": 39713,
+      "n_richer_rows_offered": 18514,
+      "n_richer_rows_new": 16321,
+      "n_richer_rows_duplicate": 2193,
+      "n_rows_total": 56034,
+      "row_diagnostics": {
+        "by_kind": {
+          "algebraic": 12288,
+          "coordinate_ibp": 25232,
+          "tangent_ibp": 2193
+        },
+        "rejected": {
+          "surface_not_free": 34735
+        }
+      },
+      "richer_row_rejections": {
+        "surface_not_free": 79097
+      },
+      "points": [
+        {
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483647,
+            "sample": [
+              [
+                "ep",
+                "15/7"
+              ],
+              [
+                "r",
+                "32/11"
+              ]
+            ],
+            "rank": 25477,
+            "nrows": 56034,
+            "n_projected_rows": 52038,
+            "n_allowed": 1754,
+            "n_forbidden": 28385,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        },
+        {
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483629,
+            "sample": [
+              [
+                "ep",
+                "15/7"
+              ],
+              [
+                "r",
+                "32/11"
+              ]
+            ],
+            "rank": 25477,
+            "nrows": 56034,
+            "n_projected_rows": 52038,
+            "n_allowed": 1754,
+            "n_forbidden": 28385,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        },
+        {
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483647,
+            "sample": [
+              [
+                "ep",
+                "18/7"
+              ],
+              [
+                "r",
+                "43/11"
+              ]
+            ],
+            "rank": 25477,
+            "nrows": 56034,
+            "n_projected_rows": 52038,
+            "n_allowed": 1754,
+            "n_forbidden": 28385,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        },
+        {
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483629,
+            "sample": [
+              [
+                "ep",
+                "18/7"
+              ],
+              [
+                "r",
+                "43/11"
+              ]
+            ],
+            "rank": 25477,
+            "nrows": 56034,
+            "n_projected_rows": 52038,
+            "n_allowed": 1754,
+            "n_forbidden": 28385,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        },
+        {
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "3"
+            ],
+            [
+              "r",
+              "54/11"
+            ]
+          ],
+          "result": {
+            "status": "Feasible",
+            "prime": 2147483647,
+            "sample": [
+              [
+                "ep",
+                "3"
+              ],
+              [
+                "r",
+                "54/11"
+              ]
+            ],
+            "rank": 22393,
+            "nrows": 56034,
+            "n_projected_rows": 51243,
+            "n_allowed": 1754,
+            "n_forbidden": 24877,
+            "residual_support": [],
+            "detail": ""
+          },
+          "rank_deficit": 3084,
+          "classification": "rank_deficient_special"
+        },
+        {
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "3"
+            ],
+            [
+              "r",
+              "54/11"
+            ]
+          ],
+          "result": {
+            "status": "Feasible",
+            "prime": 2147483629,
+            "sample": [
+              [
+                "ep",
+                "3"
+              ],
+              [
+                "r",
+                "54/11"
+              ]
+            ],
+            "rank": 22393,
+            "nrows": 56034,
+            "n_projected_rows": 51243,
+            "n_allowed": 1754,
+            "n_forbidden": 24877,
+            "residual_support": [],
+            "detail": ""
+          },
+          "rank_deficit": 3084,
+          "classification": "rank_deficient_special"
+        },
+        {
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483647,
+            "sample": [
+              [
+                "ep",
+                "24/7"
+              ],
+              [
+                "r",
+                "28/11"
+              ]
+            ],
+            "rank": 25477,
+            "nrows": 56034,
+            "n_projected_rows": 52038,
+            "n_allowed": 1754,
+            "n_forbidden": 28385,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        },
+        {
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483629,
+            "sample": [
+              [
+                "ep",
+                "24/7"
+              ],
+              [
+                "r",
+                "28/11"
+              ]
+            ],
+            "rank": 25477,
+            "nrows": 56034,
+            "n_projected_rows": 52038,
+            "n_allowed": 1754,
+            "n_forbidden": 28385,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        }
+      ],
+      "elapsed_s": 4620.81,
+      "analysis": {
+        "n_points": 8,
+        "n_generic": 6,
+        "n_special": 2,
+        "max_rank_by_prime": {
+          "2147483629": 25477,
+          "2147483647": 25477
+        },
+        "generic_verdict": "Obstructed",
+        "min_generic_required": 3,
+        "special_only_feasible_rejected": true,
+        "residual_support_stable": true,
+        "common_residual_support_size": 1,
+        "common_residual_support": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    "B": {
+      "box_name": "B",
+      "n_ranges": [
+        [
+          -1,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "m_range": [
+        -3,
+        0
+      ],
+      "target": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "target_lf_verdict": "False",
+      "n_labels": 4096,
+      "n_lf_true": 2050,
+      "n_base_rows": 50792,
+      "n_richer_rows_offered": 23074,
+      "n_richer_rows_new": 20282,
+      "n_richer_rows_duplicate": 2792,
+      "n_rows_total": 71074,
+      "row_diagnostics": {
+        "by_kind": {
+          "algebraic": 16384,
+          "coordinate_ibp": 31616,
+          "tangent_ibp": 2792
+        },
+        "rejected": {
+          "surface_not_free": 46744
+        }
+      },
+      "richer_row_rejections": {
+        "surface_not_free": 107600
+      },
+      "points": [
+        {
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483647,
+            "sample": [
+              [
+                "ep",
+                "15/7"
+              ],
+              [
+                "r",
+                "32/11"
+              ]
+            ],
+            "rank": 31775,
+            "nrows": 71074,
+            "n_projected_rows": 65814,
+            "n_allowed": 2050,
+            "n_forbidden": 35582,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        },
+        {
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483629,
+            "sample": [
+              [
+                "ep",
+                "15/7"
+              ],
+              [
+                "r",
+                "32/11"
+              ]
+            ],
+            "rank": 31775,
+            "nrows": 71074,
+            "n_projected_rows": 65814,
+            "n_allowed": 2050,
+            "n_forbidden": 35582,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        },
+        {
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483647,
+            "sample": [
+              [
+                "ep",
+                "18/7"
+              ],
+              [
+                "r",
+                "43/11"
+              ]
+            ],
+            "rank": 31775,
+            "nrows": 71074,
+            "n_projected_rows": 65814,
+            "n_allowed": 2050,
+            "n_forbidden": 35582,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        },
+        {
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483629,
+            "sample": [
+              [
+                "ep",
+                "18/7"
+              ],
+              [
+                "r",
+                "43/11"
+              ]
+            ],
+            "rank": 31775,
+            "nrows": 71074,
+            "n_projected_rows": 65814,
+            "n_allowed": 2050,
+            "n_forbidden": 35582,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        },
+        {
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "3"
+            ],
+            [
+              "r",
+              "54/11"
+            ]
+          ],
+          "result": {
+            "status": "Feasible",
+            "prime": 2147483647,
+            "sample": [
+              [
+                "ep",
+                "3"
+              ],
+              [
+                "r",
+                "54/11"
+              ]
+            ],
+            "rank": 27828,
+            "nrows": 71074,
+            "n_projected_rows": 64828,
+            "n_allowed": 2050,
+            "n_forbidden": 30939,
+            "residual_support": [],
+            "detail": ""
+          },
+          "rank_deficit": 3947,
+          "classification": "rank_deficient_special"
+        },
+        {
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "3"
+            ],
+            [
+              "r",
+              "54/11"
+            ]
+          ],
+          "result": {
+            "status": "Feasible",
+            "prime": 2147483629,
+            "sample": [
+              [
+                "ep",
+                "3"
+              ],
+              [
+                "r",
+                "54/11"
+              ]
+            ],
+            "rank": 27828,
+            "nrows": 71074,
+            "n_projected_rows": 64828,
+            "n_allowed": 2050,
+            "n_forbidden": 30939,
+            "residual_support": [],
+            "detail": ""
+          },
+          "rank_deficit": 3947,
+          "classification": "rank_deficient_special"
+        },
+        {
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483647,
+            "sample": [
+              [
+                "ep",
+                "24/7"
+              ],
+              [
+                "r",
+                "28/11"
+              ]
+            ],
+            "rank": 31775,
+            "nrows": 71074,
+            "n_projected_rows": 65814,
+            "n_allowed": 2050,
+            "n_forbidden": 35582,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        },
+        {
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "result": {
+            "status": "Obstructed",
+            "prime": 2147483629,
+            "sample": [
+              [
+                "ep",
+                "24/7"
+              ],
+              [
+                "r",
+                "28/11"
+              ]
+            ],
+            "rank": 31775,
+            "nrows": 71074,
+            "n_projected_rows": 65814,
+            "n_allowed": 2050,
+            "n_forbidden": 35582,
+            "residual_support": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "detail": "target unit vector not in projected row span"
+          },
+          "rank_deficit": 0,
+          "classification": "generic"
+        }
+      ],
+      "elapsed_s": 8858.661,
+      "analysis": {
+        "n_points": 8,
+        "n_generic": 6,
+        "n_special": 2,
+        "max_rank_by_prime": {
+          "2147483629": 31775,
+          "2147483647": 31775
+        },
+        "generic_verdict": "Obstructed",
+        "min_generic_required": 3,
+        "special_only_feasible_rejected": true,
+        "residual_support_stable": true,
+        "common_residual_support_size": 1,
+        "common_residual_support": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "elapsed_s": 13644.21
+}
