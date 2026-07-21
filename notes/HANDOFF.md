@@ -3,9 +3,44 @@
 Живой handoff-документ фактического состояния (обновляется в конце каждого pass). Полный
 инженерный контекст — в `notes/assumptions.md` (A1–A26). План — `notes/implementation_plan.md`.
 
-## Текущий статус (2026-07-20)
+## Текущий статус (2026-07-21)
 
-- **Последний завершённый блок: Method.4 — same-dimension LF-basis
+- **Последний завершённый блок: #40 — External Int2 Method.6 (reproducibility
+  cleanup + dual LF-obstruction certificate)** (read-only диагностика; ядро,
+  сертификаты и LF-гейты НЕ тронуты; коммитов нет):
+  - Сделано: раннер `scripts/run_external_int2_t2_rankrepair.py` (воспроизводит
+    T2 Levels 0/1/2; тяжёлые Level 1/2 — только по явному `--allow-heavy`, без
+    `--levels` ничего не запускается; режимы `--witness` / `--probe-rows`),
+    библиотечный модуль
+    `src/parametric_ibp_lf_reducer/lf_obstruction_witness.py`
+    (дуальный obstruction-сертификат: вектор `w` в ПРАВОМ нуль-пространстве
+    спроецированной матрицы, `w[target]=1`, `<row,w>=0` для всех строк, точные
+    проверки `check_annihilation`/`check_target_unit`), два теста-файла
+    `tests/test_lf_obstruction_witness.py`,
+    `tests/test_external_int2_t2_rankrepair.py`.
+  - Артефакты (не перезаписывают записанные): `*_repro.json`,
+    `external_int2_t2_witness_level1.json`,
+    `external_int2_t2_witness_rowprobe_level1.json`.
+  - **Коррекция «codimension-1».** Прежняя формулировка «obstruction
+    codimension-один» неверна: `residual_support == [target]` означает лишь, что
+    канонический остаток `e_target` лежит на target-координате после исключения,
+    и НЕ ограничивает размерность фактора. Размерность фактора = nullity =
+    `n_projected_cols - rank` и может быть > 1 (минимальный пример:
+    `test_nullity_gt_one_target_only_residual` — `residual_support == (target,)`
+    при **nullity 2**). Исправлена только проза; записанные JSON `purpose`
+    оставлены байт-в-байт (историческ.), новые артефакты используют
+    исправленный `purpose`.
+  - Статус (всё — per-(sample, prime), per-label-box, mod p; НЕ глобальное
+    утверждение): Method.4/5/T2 стабильно `Obstructed` в generic-точках;
+    гипотеза усечения бокса в проверенных диапазонах не подтверждается (ни одна
+    generic-точка не перешла в Feasible); `ep=3` ранг-дефицитна и исключена из
+    вердиктов; глобальная невозможность LF-базиса НЕ утверждается.
+  - Не сделано (намеренно): полный пере-solve Level 2; Phase C числа —
+    TODO-PHASE-C: Level 1 witness support size / nullity / стабильность по
+    2 samples x 2 primes + какие семейства строк (3,3)/(4,4) ломают/аннулируют
+    witness. Гейт: full fast suite зелёный (416 passed, 5 skipped),
+    `ruff check src tests scripts` clean.
+- **Ранее: Method.4 — same-dimension LF-basis
   completeness audit для External Int2 (task #39)** (read-only диагностика;
   ядро/сертификаты/LF-гейты не тронуты): раннер
   `scripts/run_external_int2_method4.py` (гейт `RUN_EXTERNAL_INT2=1`),

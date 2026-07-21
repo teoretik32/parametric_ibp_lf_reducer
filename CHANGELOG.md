@@ -3,6 +3,27 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.6: reproducibility cleanup + dual LF-obstruction
+  certificate.** New library module
+  `src/parametric_ibp_lf_reducer/lf_obstruction_witness.py` (exported from
+  `__init__`): for an `Obstructed` LF-span system it builds an explicit dual
+  witness `w` in the RIGHT nullspace of the projected matrix
+  (`<row, w> == 0` for every projected row, `w[target] == 1`), with exact
+  per-point checks (`check_annihilation`, `check_target_unit`), deterministic
+  construction, JSON payload serializers, and a row-pairing helper
+  (`test_rows_against_obstruction_witness`) that flags candidate rows which
+  break vs annihilate a stored witness. New runner
+  `scripts/run_external_int2_t2_rankrepair.py` reproduces the T2 rank-repair
+  Levels 0-2 (`--describe`; nothing runs without `--levels`; heavy Levels 1/2
+  gated behind `--allow-heavy`; `--witness` / `--probe-rows` Phase C modes),
+  writing `*_repro.json` / `*_witness_level{N}.json` /
+  `*_rowprobe_level{N}.json` artifacts that never overwrite the recorded files.
+  Tests `tests/test_lf_obstruction_witness.py` and
+  `tests/test_external_int2_t2_rankrepair.py`. Retro entries: Method.5
+  (`validation/external_int2_method5.json`) and the T2 rank-repair artifacts
+  (`validation/external_int2_t2_rankrepair_level{0,1,2}.json`) — both generic
+  `Obstructed`. **No change to LF/certificate semantics; reducer core, gates
+  and existing behavior are untouched.** No global impossibility claim is made.
 - **External Int1 (standalone example): certified LF reduction.** Input
   `examples/external_int1_corrected_input.wl.txt`, runner
   `scripts/run_external_int1_corrected.py`, artifacts
@@ -110,6 +131,18 @@
   truncation artifact; the viable route remains the Method.3 composite basis
   change. Read-only diagnostics; reducer core, certificates and LF gates
   unchanged. Elapsed ~19413 s (background).
+
+### Docs
+- **External Int2 audit — Method.5 / T2 rank-repair / Method.6 sections.**
+  `notes/EXTERNAL_INT2_AUDIT.md` gains retro-docs for the Method.5 label-box
+  geometry audit and the T2 rank-repair Levels 0-2, plus a Method.6 section with
+  the dual-witness math, determinism rules and the four State bullets.
+  `notes/HANDOFF.md` pass #40. **Codimension-one phrasing corrected**:
+  `residual_support == [target]` does not imply the quotient dimension is one
+  (quotient dimension = nullity = projected cols − rank, may exceed 1); only the
+  prose is corrected — the recorded validation JSON `purpose` strings are
+  historical and intentionally left byte-identical. Explicit: **no change to
+  LF/certificate semantics.**
 
 ## v0.2.0 — 2026
 

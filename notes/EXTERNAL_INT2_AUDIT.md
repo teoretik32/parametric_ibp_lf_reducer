@@ -210,3 +210,101 @@ richer tangent-IBP vector-field blocks `(3,3)` and `(4,4)` (baseline uses
 - Scope: per-(sample, prime) statements about this row system and label box
   only; reducer state, certificates and LF gates untouched.
 - Elapsed ~19413 s total (phases s+d, background run).
+
+## Method.5: label-box geometry audit (per-variable n ranges, retro-doc)
+
+Script `scripts/run_external_int2_method5.py`; artifact
+`validation/external_int2_method5.json`; tests `tests/test_external_int2_method5.py`.
+
+Question: is the Method.1/Method.4 `Obstructed` verdict an artifact of label-box
+*geometry* — too-narrow numerator (`n`) ranges truncating IBP chains? The audit
+widens the per-variable `n2` range across two boxes and re-tests feasibility with
+the enriched (baseline + `(3,3)`/`(4,4)`) row system, under a binding genericity
+guard (`_analyze_points`): a (sample, prime) point whose rank falls below the
+maximal rank at that prime is `rank_deficient_special` and excluded from the
+verdict; feasibility that appears only at such points is rejected
+(`special_only_feasible_rejected`). Result:
+
+- Box A (`n2 in [-1,1]`, 3072 labels, 56034 rows) and Box B (`n2 in [-1,2]`,
+  4096 labels, 71074 rows): both **`Obstructed`** over 6 generic points each
+  (2 primes 2147483647, 2147483629); the 2 special points per box (ep=3) are
+  excluded and their Feasible status is rejected as special-only.
+- Interpretation: widening the numerator geometry does not restore LF
+  feasibility at generic points. Per-(sample, prime), per-label-box only —
+  never a global impossibility claim.
+
+## T2 rank-repair Levels 0-2 (retro-doc)
+
+Original driver was an unsaved heredoc reusing Method.1/Method.4 internals; it is
+now replaced by the in-tree runner `scripts/run_external_int2_t2_rankrepair.py`
+(Method.6, below). Recorded artifacts
+`validation/external_int2_t2_rankrepair_level{0,1,2}.json` (untouched). Rows =
+baseline (coordinate IBP `max_ibp_degree=2` + tangent `((1,1),(2,2))`) plus a
+richer `(3,3)` tangent block, merged by `dedup_key`. Prime 2147483647; target
+`[0,0,0,0,0,0,0]`.
+
+| Level | box (`n2`; `m`) | labels | LF-True | rows | generic rank | verdict | ep=3 |
+|-------|-----------------|--------|---------|------|--------------|---------|------|
+| 0 | `[-1,1]`; `[-3,0]` | 3072 | 1754 | 46737 | 24617 | **Mixed** | Feasible, rank 20964 |
+| 1 | `[-1,2]`; `[-3,0]` | 4096 | 2050 | 59605 | 30807 | **Mixed** | rank 26319 |
+| 2 | `[-1,2]`; `[-4,0]` | 10000 | 6165 | 155298 | 70827 | **Obstructed** | omitted (recorded note) |
+
+Generic points are `Obstructed` at every level, with canonical
+`residual_support == [[0,0,0,0,0,0,0]]` (target only). Levels 0/1 are `Mixed`
+solely because of the excluded rank-deficient `ep=3` special point; Level 2 omits
+`ep=3` per its recorded `note` ("its Feasible status established at Levels
+A/B/0/1") and is uniformly `Obstructed`. Enlarging the label box did **not**
+restore LF feasibility at generic points in the tested ranges.
+
+## Method.6: reproducibility cleanup + dual LF-obstruction certificate
+
+Runner `scripts/run_external_int2_t2_rankrepair.py` (reproduces T2 Levels 0-2;
+`--describe` / `--allow-heavy` gating; `--witness` / `--probe-rows` modes; nothing
+runs without `--levels`, heavy levels need `--allow-heavy`). Library module
+`src/parametric_ibp_lf_reducer/lf_obstruction_witness.py`. Tests
+`tests/test_lf_obstruction_witness.py`, `tests/test_external_int2_t2_rankrepair.py`.
+**No LF/certificate semantics were changed; no reducer behavior was altered.**
+
+State (all per-(sample, prime), per-label-box, mod p — never a global claim):
+
+- Method.4 / Method.5 / T2 rank-repair are consistently `Obstructed` at generic
+  points across every tested box.
+- The box-truncation hypothesis (that a wider label box restores LF feasibility)
+  is **disfavored** in the tested ranges — no generic point flipped to Feasible.
+- The `ep=3` sample is rank-deficient and is excluded from all verdicts.
+- **No global impossibility claim** is made; every statement is bounded to the
+  tested row system, label box, sample and prime.
+
+**Codimension-one correction (binding).** Earlier phrasing called the obstruction
+"codimension-one" and the recorded JSON `purpose` strings say "codimension-1
+truncation hypothesis". This is retracted for the mathematics:
+`residual_support == [target]` only says the canonical residual of `e_target`
+lands on the target coordinate after elimination — it does **not** bound the
+quotient dimension. The quotient dimension is the nullity
+`n_projected_cols - rank`, which may exceed 1 (minimal witness in
+`tests/test_lf_obstruction_witness.py::test_nullity_gt_one_target_only_residual`:
+`residual_support == (target,)` with **nullity 2**). Only the prose is corrected;
+the recorded JSON `purpose` strings are historical artifacts and are intentionally
+left byte-identical (new artifacts use the corrected `purpose`
+"box-truncation obstruction probe; residual_support=[target] does not imply
+quotient dimension one").
+
+**Dual witness.** For an `Obstructed` system the module produces an explicit
+vector `w` in the RIGHT nullspace of the projected matrix (`<row, w> == 0` for
+every projected row) with `w[target] == 1`; this certifies `e_target` is not in
+the projected row span. Construction is deterministic (column order
+`sorted(cols | {target})`; target-pivot free column = first such column; witness
+sorted, coefficients in `[0, prime)`) and both facts are checked exactly per point
+(`check_annihilation`, `check_target_unit`). The row-pairing helper pairs candidate
+rows against a stored `w`: a nonzero pairing (`breaks=True`) is **necessary but not
+sufficient** to cure the obstruction (other nullvectors may still obstruct); a zero
+pairing means the row annihilates that witness and cannot cure it.
+
+Phase C numeric results (Level 1 witness at 2 samples x primes 2147483647 /
+2147483629, and the Level 2\Level 1 row probe) are pending:
+
+- TODO-PHASE-C: Level 1 witness support size, nullity, rank, and per-(sample,
+  prime) support-pattern stability.
+- TODO-PHASE-C: which candidate row families (3,3)/(4,4) break vs annihilate the
+  Level 1 witness, and the resulting `rerun_justified` verdict (no re-elimination
+  is run regardless).
