@@ -1,0 +1,250 @@
+{
+  "script": "T2 rank-repair driver (heredoc, read-only reuse of Method.1/Method.4 internals)",
+  "purpose": "Test whether enlarging the label box restores LF feasibility (codimension-1 truncation hypothesis)",
+  "level": "0",
+  "label_box": [
+    [
+      [
+        -1,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        -3,
+        0
+      ],
+      [
+        -3,
+        0
+      ],
+      [
+        -3,
+        0
+      ],
+      [
+        -3,
+        0
+      ]
+    ]
+  ],
+  "baseline": {
+    "max_ibp_degree": 2,
+    "tangent_degree_blocks": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    "extra_block": [
+      3,
+      3
+    ]
+  },
+  "target": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "n_labels": 3072,
+  "n_lf_true": 1754,
+  "n_base_rows": 39713,
+  "n_extra_new": 7024,
+  "n_rows_total": 46737,
+  "row_diagnostics": {
+    "by_kind": {
+      "algebraic": 12288,
+      "coordinate_ibp": 25232,
+      "tangent_ibp": 2193
+    },
+    "rejected": {
+      "surface_not_free": 34735
+    }
+  },
+  "richer_row_rejections": {
+    "surface_not_free": 29572
+  },
+  "samples": [
+    [
+      [
+        "ep",
+        "15/7"
+      ],
+      [
+        "r",
+        "32/11"
+      ]
+    ],
+    [
+      [
+        "ep",
+        "18/7"
+      ],
+      [
+        "r",
+        "43/11"
+      ]
+    ],
+    [
+      [
+        "ep",
+        "3"
+      ],
+      [
+        "r",
+        "54/11"
+      ]
+    ],
+    [
+      [
+        "ep",
+        "24/7"
+      ],
+      [
+        "r",
+        "28/11"
+      ]
+    ]
+  ],
+  "primes": [
+    2147483647
+  ],
+  "points": [
+    {
+      "status": "Obstructed",
+      "prime": 2147483647,
+      "sample": [
+        [
+          "ep",
+          "15/7"
+        ],
+        [
+          "r",
+          "32/11"
+        ]
+      ],
+      "rank": 24617,
+      "nrows": 46737,
+      "n_projected_rows": 42741,
+      "n_allowed": 1754,
+      "n_forbidden": 28045,
+      "residual_support": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "detail": "target unit vector not in projected row span",
+      "solve_seconds": 431.0
+    },
+    {
+      "status": "Obstructed",
+      "prime": 2147483647,
+      "sample": [
+        [
+          "ep",
+          "18/7"
+        ],
+        [
+          "r",
+          "43/11"
+        ]
+      ],
+      "rank": 24617,
+      "nrows": 46737,
+      "n_projected_rows": 42741,
+      "n_allowed": 1754,
+      "n_forbidden": 28045,
+      "residual_support": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "detail": "target unit vector not in projected row span",
+      "solve_seconds": 436.1
+    },
+    {
+      "status": "Feasible",
+      "prime": 2147483647,
+      "sample": [
+        [
+          "ep",
+          "3"
+        ],
+        [
+          "r",
+          "54/11"
+        ]
+      ],
+      "rank": 20964,
+      "nrows": 46737,
+      "n_projected_rows": 41946,
+      "n_allowed": 1754,
+      "n_forbidden": 23436,
+      "residual_support": [],
+      "detail": "",
+      "solve_seconds": 302.9
+    },
+    {
+      "status": "Obstructed",
+      "prime": 2147483647,
+      "sample": [
+        [
+          "ep",
+          "24/7"
+        ],
+        [
+          "r",
+          "28/11"
+        ]
+      ],
+      "rank": 24617,
+      "nrows": 46737,
+      "n_projected_rows": 42741,
+      "n_allowed": 1754,
+      "n_forbidden": 28045,
+      "residual_support": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "detail": "target unit vector not in projected row span",
+      "solve_seconds": 428.7
+    }
+  ],
+  "verdict": "Mixed",
+  "elapsed_seconds": 2047.1
+}

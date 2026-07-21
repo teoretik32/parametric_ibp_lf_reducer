@@ -1,0 +1,219 @@
+{
+  "script": "T2 rank-repair driver (heredoc, read-only reuse of Method.1/Method.4 internals)",
+  "purpose": "Test whether widening m_range (with enlarged n-box) restores LF feasibility",
+  "level": "2",
+  "label_box": [
+    [
+      [
+        -1,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        -4,
+        0
+      ],
+      [
+        -4,
+        0
+      ],
+      [
+        -4,
+        0
+      ],
+      [
+        -4,
+        0
+      ]
+    ]
+  ],
+  "baseline": {
+    "max_ibp_degree": 2,
+    "tangent_degree_blocks": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    "extra_block": [
+      3,
+      3
+    ]
+  },
+  "note": "ep=3 special sample omitted; its Feasible status established at Levels A/B/0/1",
+  "target": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "n_labels": 10000,
+  "n_lf_true": 6165,
+  "n_base_rows": 128271,
+  "n_extra_new": 27027,
+  "n_rows_total": 155298,
+  "row_diagnostics": {
+    "by_kind": {
+      "algebraic": 40000,
+      "coordinate_ibp": 80225,
+      "tangent_ibp": 8046
+    },
+    "rejected": {
+      "surface_not_free": 107154
+    }
+  },
+  "richer_row_rejections": {
+    "surface_not_free": 91071
+  },
+  "samples": [
+    [
+      [
+        "ep",
+        "15/7"
+      ],
+      [
+        "r",
+        "32/11"
+      ]
+    ],
+    [
+      [
+        "ep",
+        "18/7"
+      ],
+      [
+        "r",
+        "43/11"
+      ]
+    ],
+    [
+      [
+        "ep",
+        "24/7"
+      ],
+      [
+        "r",
+        "28/11"
+      ]
+    ]
+  ],
+  "primes": [
+    2147483647
+  ],
+  "points": [
+    {
+      "status": "Obstructed",
+      "prime": 2147483647,
+      "sample": [
+        [
+          "ep",
+          "15/7"
+        ],
+        [
+          "r",
+          "32/11"
+        ]
+      ],
+      "rank": 70827,
+      "nrows": 155298,
+      "n_projected_rows": 138427,
+      "n_allowed": 6165,
+      "n_forbidden": 78889,
+      "residual_support": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "detail": "target unit vector not in projected row span",
+      "solve_seconds": 4109.0
+    },
+    {
+      "status": "Obstructed",
+      "prime": 2147483647,
+      "sample": [
+        [
+          "ep",
+          "18/7"
+        ],
+        [
+          "r",
+          "43/11"
+        ]
+      ],
+      "rank": 70827,
+      "nrows": 155298,
+      "n_projected_rows": 138427,
+      "n_allowed": 6165,
+      "n_forbidden": 78889,
+      "residual_support": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "detail": "target unit vector not in projected row span",
+      "solve_seconds": 4046.1
+    },
+    {
+      "status": "Obstructed",
+      "prime": 2147483647,
+      "sample": [
+        [
+          "ep",
+          "24/7"
+        ],
+        [
+          "r",
+          "28/11"
+        ]
+      ],
+      "rank": 70827,
+      "nrows": 155298,
+      "n_projected_rows": 138427,
+      "n_allowed": 6165,
+      "n_forbidden": 78889,
+      "residual_support": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "detail": "target unit vector not in projected row span",
+      "solve_seconds": 3717.6
+    }
+  ],
+  "verdict": "Obstructed",
+  "elapsed_seconds": 13239.0
+}
