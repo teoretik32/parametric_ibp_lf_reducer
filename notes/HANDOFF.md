@@ -5,7 +5,19 @@
 
 ## Текущий статус (2026-07-20)
 
-- **Последний завершённый блок: finite-numerator LF basis search для External
+- **Последний завершённый блок: Method.4 — same-dimension LF-basis
+  completeness audit для External Int2 (task #39)** (read-only диагностика;
+  ядро/сертификаты/LF-гейты не тронуты): раннер
+  `scripts/run_external_int2_method4.py` (гейт `RUN_EXTERNAL_INT2=1`),
+  артефакт `validation/external_int2_method4.json`, тесты
+  `tests/test_external_int2_method4.py`. Обогащение row-системы Method.1
+  (level `deep`: 5000 лейблов, 77379 строк) блоками tangent-IBP `(3,3)`/`(4,4)`
+  (46 новых полей, 39715 новых строк, ранг 49559 → 54990) даёт **flipped=0**:
+  generic-точки остаются `Obstructed`, спец-точка `ep=3, r=54/11` остаётся
+  Feasible. Вывод: препятствие Method.1 — не артефакт усечения строк; рабочий
+  путь — композитная замена базиса (Method.3). Детали — секция «Int2 Method.4»
+  ниже.
+- **Ранее: finite-numerator LF basis search для External
   Int2 (task #37)** (ядро редьюсера не менялось; read-only диагностика поверх
   LF-гейтов): модуль `src/parametric_ibp_lf_reducer/finite_numerator.py`
   (single-integrand semantics — кандидат это ОДИН integrand `N(x)*F_S`,
@@ -525,3 +537,20 @@ Status: **complete, verified**.
   (другой базис/ordering, сектора, аналитика для остатка), а не крутить
   ручки поиска.
 - Финальный гейт: полный fast-suite 361 тест зелёный, `ruff check .` чистый.
+
+## Int2 Method.4 — аудит полноты строк на той же размерности (task #39)
+
+- Вопрос: не является ли `Obstructed` из Method.1 артефактом бедного
+  tangent-базиса строк? Раннер `scripts/run_external_int2_method4.py`
+  (гейт `RUN_EXTERNAL_INT2=1`), артефакт
+  `validation/external_int2_method4.json`, тесты
+  `tests/test_external_int2_method4.py`.
+- Обогащение системы строк (level `deep`: 5000 лейблов, 77379 базовых строк)
+  богатыми tangent-IBP блоками `(3,3)`/`(4,4)`: 46 новых векторных полей,
+  39715 действительно новых строк (итого 117094, ранг 49559 → 54990).
+- Итог: `flipped=0` — ни одна точка не поменяла вердикт на 3 сэмплах ×
+  2 простых. Генерические точки остаются `Obstructed` («target unit vector
+  not in projected row span»), спец-точка `ep=3, r=54/11` остаётся Feasible.
+- Вывод: препятствие Method.1 — не артефакт усечения строк; рабочий путь
+  по-прежнему композитная замена базиса (Method.3). Read-only диагностика,
+  ядро/сертификаты/LF-гейты не тронуты. Фоновый прогон ~19413 с.

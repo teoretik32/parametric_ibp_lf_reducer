@@ -1,0 +1,570 @@
+{
+  "script": "run_external_int2_method4.py",
+  "method": "Method.4: same-dimension LF-basis completeness audit (richer rows)",
+  "scope_note": "Same-dimension LF-basis completeness audit. Reduction is constrained to LF-True labels only; a span passing through divergent labels (a sum of separately divergent integrals) is never reported as an LF basis. Per-point statements about this row system and label box only; 'Obstructed' is an honest negative at the tested (sample, prime) points \u2014 never a global impossibility claim. Certificate and LF gates are untouched.",
+  "input": "B:\\Soft\\math_scratch\\examples\\external_int2_dimensionless_input.wl.txt",
+  "level_name": "deep",
+  "label_box": [
+    [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        -4,
+        0
+      ],
+      [
+        -4,
+        0
+      ],
+      [
+        -4,
+        0
+      ],
+      [
+        -4,
+        0
+      ]
+    ]
+  ],
+  "baseline_tangent_blocks": [
+    [
+      1,
+      1
+    ],
+    [
+      2,
+      2
+    ]
+  ],
+  "richer_blocks_requested": [
+    [
+      3,
+      3
+    ],
+    [
+      4,
+      4
+    ]
+  ],
+  "phases": "sd",
+  "target": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "phase_s": {
+    "budget_s": 600.0,
+    "total_elapsed_s": 142.111,
+    "blocks": [
+      {
+        "block": [
+          3,
+          3
+        ],
+        "status": "ok",
+        "n_fields": 13,
+        "elapsed_s": 20.977
+      },
+      {
+        "block": [
+          4,
+          4
+        ],
+        "status": "ok",
+        "n_fields": 33,
+        "elapsed_s": 121.134
+      }
+    ],
+    "n_richer_fields": 46
+  },
+  "n_labels": 5000,
+  "n_lf_true": 3395,
+  "target_lf_verdict": "False",
+  "row_diagnostics": {
+    "by_kind": {
+      "algebraic": 20000,
+      "coordinate_ibp": 52475,
+      "tangent_ibp": 4904
+    },
+    "rejected": {
+      "surface_not_free": 44196
+    }
+  },
+  "richer_row_rejections": {
+    "surface_not_free": 156065
+  },
+  "samples": [
+    [
+      [
+        "ep",
+        "15/7"
+      ],
+      [
+        "r",
+        "32/11"
+      ]
+    ],
+    [
+      [
+        "ep",
+        "18/7"
+      ],
+      [
+        "r",
+        "43/11"
+      ]
+    ],
+    [
+      [
+        "ep",
+        "3"
+      ],
+      [
+        "r",
+        "54/11"
+      ]
+    ]
+  ],
+  "primes": [
+    2147483647,
+    2147483629
+  ],
+  "phase_d": {
+    "n_base_rows": 77379,
+    "n_extra_rows_offered": 44619,
+    "n_extra_rows_new": 39715,
+    "n_extra_rows_duplicate": 4904,
+    "points": [
+      {
+        "prime": 2147483647,
+        "sample": [
+          [
+            "ep",
+            "15/7"
+          ],
+          [
+            "r",
+            "32/11"
+          ]
+        ],
+        "baseline": {
+          "status": "Obstructed",
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "rank": 49559,
+          "nrows": 77379,
+          "n_projected_rows": 70766,
+          "n_allowed": 3395,
+          "n_forbidden": 59693,
+          "residual_support": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "detail": "target unit vector not in projected row span"
+        },
+        "enriched": {
+          "status": "Obstructed",
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "rank": 54990,
+          "nrows": 117094,
+          "n_projected_rows": 110481,
+          "n_allowed": 3395,
+          "n_forbidden": 61233,
+          "residual_support": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "detail": "target unit vector not in projected row span"
+        }
+      },
+      {
+        "prime": 2147483629,
+        "sample": [
+          [
+            "ep",
+            "15/7"
+          ],
+          [
+            "r",
+            "32/11"
+          ]
+        ],
+        "baseline": {
+          "status": "Obstructed",
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "rank": 49559,
+          "nrows": 77379,
+          "n_projected_rows": 70766,
+          "n_allowed": 3395,
+          "n_forbidden": 59693,
+          "residual_support": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "detail": "target unit vector not in projected row span"
+        },
+        "enriched": {
+          "status": "Obstructed",
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "rank": 54990,
+          "nrows": 117094,
+          "n_projected_rows": 110481,
+          "n_allowed": 3395,
+          "n_forbidden": 61233,
+          "residual_support": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "detail": "target unit vector not in projected row span"
+        }
+      },
+      {
+        "prime": 2147483647,
+        "sample": [
+          [
+            "ep",
+            "18/7"
+          ],
+          [
+            "r",
+            "43/11"
+          ]
+        ],
+        "baseline": {
+          "status": "Obstructed",
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "rank": 49559,
+          "nrows": 77379,
+          "n_projected_rows": 70766,
+          "n_allowed": 3395,
+          "n_forbidden": 59693,
+          "residual_support": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "detail": "target unit vector not in projected row span"
+        },
+        "enriched": {
+          "status": "Obstructed",
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "rank": 54990,
+          "nrows": 117094,
+          "n_projected_rows": 110481,
+          "n_allowed": 3395,
+          "n_forbidden": 61233,
+          "residual_support": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "detail": "target unit vector not in projected row span"
+        }
+      },
+      {
+        "prime": 2147483629,
+        "sample": [
+          [
+            "ep",
+            "18/7"
+          ],
+          [
+            "r",
+            "43/11"
+          ]
+        ],
+        "baseline": {
+          "status": "Obstructed",
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "rank": 49559,
+          "nrows": 77379,
+          "n_projected_rows": 70766,
+          "n_allowed": 3395,
+          "n_forbidden": 59693,
+          "residual_support": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "detail": "target unit vector not in projected row span"
+        },
+        "enriched": {
+          "status": "Obstructed",
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "rank": 54990,
+          "nrows": 117094,
+          "n_projected_rows": 110481,
+          "n_allowed": 3395,
+          "n_forbidden": 61233,
+          "residual_support": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "detail": "target unit vector not in projected row span"
+        }
+      },
+      {
+        "prime": 2147483647,
+        "sample": [
+          [
+            "ep",
+            "3"
+          ],
+          [
+            "r",
+            "54/11"
+          ]
+        ],
+        "baseline": {
+          "status": "Feasible",
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "3"
+            ],
+            [
+              "r",
+              "54/11"
+            ]
+          ],
+          "rank": 47482,
+          "nrows": 77379,
+          "n_projected_rows": 70036,
+          "n_allowed": 3395,
+          "n_forbidden": 56621,
+          "residual_support": [],
+          "detail": ""
+        },
+        "enriched": {
+          "status": "Feasible",
+          "prime": 2147483647,
+          "sample": [
+            [
+              "ep",
+              "3"
+            ],
+            [
+              "r",
+              "54/11"
+            ]
+          ],
+          "rank": 54289,
+          "nrows": 117094,
+          "n_projected_rows": 109731,
+          "n_allowed": 3395,
+          "n_forbidden": 60467,
+          "residual_support": [],
+          "detail": ""
+        }
+      },
+      {
+        "prime": 2147483629,
+        "sample": [
+          [
+            "ep",
+            "3"
+          ],
+          [
+            "r",
+            "54/11"
+          ]
+        ],
+        "baseline": {
+          "status": "Feasible",
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "3"
+            ],
+            [
+              "r",
+              "54/11"
+            ]
+          ],
+          "rank": 47482,
+          "nrows": 77379,
+          "n_projected_rows": 70036,
+          "n_allowed": 3395,
+          "n_forbidden": 56621,
+          "residual_support": [],
+          "detail": ""
+        },
+        "enriched": {
+          "status": "Feasible",
+          "prime": 2147483629,
+          "sample": [
+            [
+              "ep",
+              "3"
+            ],
+            [
+              "r",
+              "54/11"
+            ]
+          ],
+          "rank": 54289,
+          "nrows": 117094,
+          "n_projected_rows": 109731,
+          "n_allowed": 3395,
+          "n_forbidden": 60467,
+          "residual_support": [],
+          "detail": ""
+        }
+      }
+    ],
+    "baseline_verdict": "Mixed",
+    "enriched_verdict": "Mixed",
+    "n_points_flipped_to_feasible": 0
+  },
+  "elapsed_s": 19412.885
+}

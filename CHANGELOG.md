@@ -96,6 +96,20 @@
   polynomial numerators can only worsen, so the cure is impossible at ANY
   degree; the other four sectors are `SectorAlreadyLF`; feasibility stage
   honestly `SkippedNoCandidates`. Reducer core unchanged.
+- **Method.4 for External Int2: same-dimension LF-basis completeness audit
+  (obstruction confirmed stable).** Gated runner
+  `scripts/run_external_int2_method4.py` (`RUN_EXTERNAL_INT2=1`), artifact
+  `validation/external_int2_method4.json` (+ probe JSONs), tests
+  `tests/test_external_int2_method4.py`. Enriching the Method.1-style row
+  system (level `deep`: 5000 labels, 77379 baseline rows) with richer
+  tangent-IBP blocks `(3,3)`/`(4,4)` — 46 new vector fields, 39715 genuinely
+  new rows (117094 total, rank 49559 → 54990) — flips **no** verdict at
+  3 samples × 2 primes: generic points stay `Obstructed` ("target unit vector
+  not in projected row span"), the special point `ep=3, r=54/11` stays
+  Feasible; `flipped=0`. The Method.1 obstruction is not a row-basis
+  truncation artifact; the viable route remains the Method.3 composite basis
+  change. Read-only diagnostics; reducer core, certificates and LF gates
+  unchanged. Elapsed ~19413 s (background).
 
 ## v0.2.0 — 2026
 

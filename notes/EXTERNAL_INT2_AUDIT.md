@@ -173,3 +173,40 @@ probe `1/(G1*G3)`).
   viable routes remain the Method.3 composite basis change (label shifts with
   positive polynomial components) or analytic treatment of `1/G1`, `1/G2`
   outside the reducer.
+
+## Method.4: same-dimension LF-basis completeness audit (richer rows, task #39)
+
+Script: `scripts/run_external_int2_method4.py`; output:
+`validation/external_int2_method4.json` (probes:
+`external_int2_method4_probe.json`, `external_int2_method4_probe44.json`);
+tests: `tests/test_external_int2_method4.py` (heavy run gated by
+`RUN_EXTERNAL_INT2=1`).
+
+Question: is the Method.1 `Obstructed` verdict an artifact of a too-poor
+tangent row basis at the same label-box dimension? Enrich the row system with
+richer tangent-IBP vector-field blocks `(3,3)` and `(4,4)` (baseline uses
+`(1,1)`, `(2,2)`) and re-test feasibility at the same points. Answer:
+**no — `flipped=0`**; the obstruction is stable.
+
+- Level `deep`: 5000 labels, 3395 LF-True; target `[0,0,0,0,0,0,0]`
+  LF verdict **False** (consistent with the certified result).
+- Baseline rows: 77379 (`algebraic` 20000, `coordinate_ibp` 52475,
+  `tangent_ibp` 4904; 44196 rejected `surface_not_free`).
+- Phase S (richer fields): 46 fields total — 13 from block `(3,3)` (~21 s),
+  33 from block `(4,4)` (~121 s); 156065 candidate rows rejected
+  `surface_not_free`.
+- Phase D: 44619 richer rows offered, **39715 genuinely new**, 4904
+  duplicates of baseline tangent rows; enriched system 117094 rows.
+- Verdicts at 3 samples x 2 primes (2147483647, 2147483629): the two generic
+  samples stay **Obstructed** (rank 49559 -> 54990; still "target unit vector
+  not in projected row span"); the special point `ep=3, r=54/11` stays
+  Feasible (rank 47482 -> 54289). No point flips in either direction —
+  baseline=Mixed, enriched=Mixed, `flipped=0`.
+- Interpretation: adding a substantial, genuinely new same-dimension row
+  supply (+51% rows, +11% rank) does not move the target into the
+  LF-constrained span at generic points; the Method.1 obstruction is not a
+  row-basis truncation artifact. The viable route remains the Method.3
+  composite basis change.
+- Scope: per-(sample, prime) statements about this row system and label box
+  only; reducer state, certificates and LF gates untouched.
+- Elapsed ~19413 s total (phases s+d, background run).

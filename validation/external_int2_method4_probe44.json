@@ -1,0 +1,84 @@
+{
+  "script": "run_external_int2_method4.py",
+  "method": "Method.4: same-dimension LF-basis completeness audit (richer rows)",
+  "scope_note": "Same-dimension LF-basis completeness audit. Reduction is constrained to LF-True labels only; a span passing through divergent labels (a sum of separately divergent integrals) is never reported as an LF basis. Per-point statements about this row system and label box only; 'Obstructed' is an honest negative at the tested (sample, prime) points \u2014 never a global impossibility claim. Certificate and LF gates are untouched.",
+  "input": "B:\\Soft\\math_scratch\\examples\\external_int2_dimensionless_input.wl.txt",
+  "level_name": "deep",
+  "label_box": [
+    [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        -4,
+        0
+      ],
+      [
+        -4,
+        0
+      ],
+      [
+        -4,
+        0
+      ],
+      [
+        -4,
+        0
+      ]
+    ]
+  ],
+  "baseline_tangent_blocks": [
+    [
+      1,
+      1
+    ],
+    [
+      2,
+      2
+    ]
+  ],
+  "richer_blocks_requested": [
+    [
+      4,
+      4
+    ]
+  ],
+  "phases": "s",
+  "target": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "phase_s": {
+    "budget_s": 600.0,
+    "total_elapsed_s": 123.697,
+    "blocks": [
+      {
+        "block": [
+          4,
+          4
+        ],
+        "status": "ok",
+        "n_fields": 33,
+        "elapsed_s": 123.697
+      }
+    ],
+    "n_richer_fields": 33
+  },
+  "elapsed_s": 123.697
+}
