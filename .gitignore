@@ -9,3 +9,5 @@ dist/
 *.zip
 outputs/
 .tmp_accept/
+*.7z
+validation/*.log
