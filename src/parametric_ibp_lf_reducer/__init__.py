@@ -63,6 +63,16 @@ from .lf_feasibility import (
     lf_reduction_coefficients_mod_p,
     lf_reduction_feasible_mod_p,
 )
+from .lf_obstruction_witness import (
+    STATUS_WITNESS,
+    LFObstructionWitness,
+    RowPairing,
+    lf_obstruction_witness_mod_p,
+    pairings_to_payload,
+    test_rows_against_obstruction_witness,
+    witness_from_payload,
+    witness_to_payload,
+)
 from .modular_normal_form import (
     BadSpecialization,
     NormalFormResult,
@@ -230,6 +240,15 @@ __all__ = [
     "lf_reduction_feasible_mod_p",
     "lf_reduction_coefficients_mod_p",
     "feasibility_to_payload",
+    # dual LF-obstruction certificate (Method.6, External Int2)
+    "STATUS_WITNESS",
+    "LFObstructionWitness",
+    "RowPairing",
+    "lf_obstruction_witness_mod_p",
+    "test_rows_against_obstruction_witness",
+    "witness_to_payload",
+    "witness_from_payload",
+    "pairings_to_payload",
     # multi-sample record collector (Pass 2G.1)
     "NormalFormRecord",
     "collect_normal_form_records",
