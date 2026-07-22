@@ -3,6 +3,25 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.8: targeted Level-0 re-elimination with the
+  `ibp_deg3` rows (the one Method.7-breaking family).** New runner
+  `scripts/run_external_int2_method8.py` (nothing runs without `--phase`;
+  `--phase rerun` is HEAVY — witness-mode RREFs on the enlarged
+  merged+`ibp_deg3` Level-0 system at 3 generic samples x 2 primes — and is
+  gated behind `--allow-heavy`), tests `tests/test_external_int2_method8.py`
+  (tiny box; integration gated by `RUN_EXTERNAL_INT2_M8=1`), artifact
+  `validation/external_int2_method8_reelim.json`. Per point the runner
+  reports `Feasible` (obstruction CURED at that point) or `Witness` (still
+  obstructed; the NEW dual witness must annihilate every included `ibp_deg3`
+  row, plus rank/nullity deltas vs the recorded Method.7 baseline).
+  Recorded Method.6/7 artifacts are never overwritten; reducer core,
+  certificates and LF gates untouched; no Level 1/2 rerun; per-(sample,
+  prime), per-box statements only. Outcome: still `Obstructed` at all 6
+  generic points (3 samples x 2 primes, 62241 rows) —
+  rank=37478 / nullity=6779 / support=3796 identically (Δ vs the Method.7
+  baseline: +12861 / +3350 / +1339); the new dual witness annihilates every
+  included `ibp_deg3` row (0 breaks). The one breaking family is confirmed
+  necessary-but-not-sufficient at this box.
 - **External Int2 Method Audit.1 (Phase A): all-row-support LF feasibility —
   seed-box defect candidate refuted.** Domain-feedback hypothesis: the Level 0
   `Obstructed` could be an artifact of restricting the allowed set to LF-True

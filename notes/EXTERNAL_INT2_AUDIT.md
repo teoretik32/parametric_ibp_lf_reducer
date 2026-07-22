@@ -403,3 +403,54 @@ so the obstruction lives in the row system itself, not in the allowed-label
 box. Consistent with Method.4 (row completeness) and Method.6/7 (dual
 witness). As everywhere: per-(sample, prime), per-box honest negative — no
 global impossibility claim.
+
+## Method.8: targeted Level-0 re-elimination with the `ibp_deg3` rows (HEAVY)
+
+Justification: Method.7 screening left exactly ONE breaking candidate family
+at the medium T2 box — the degree-3 coordinate-IBP rows (6972 of 15504
+new-vs-baseline rows pair nontrivially against every stable witness), with
+the binding caveat that a breaking row is NECESSARY, not sufficient, to cure
+the obstruction. Method.8 performs the justified follow-up: the SAME merged
+Level-0 rows PLUS the `ibp_deg3` rows, re-eliminated from scratch with
+production seed-box semantics (witness-mode RREF) at the generic scattered
+samples x primes.
+
+Setup: runner `scripts/run_external_int2_method8.py` (nothing runs without
+`--phase`; `--phase rerun` is HEAVY — each Level-0 RREF on ~62k rows — and
+requires `--allow-heavy`), tests `tests/test_external_int2_method8.py` (tiny
+box; integration gated by `RUN_EXTERNAL_INT2_M8=1`), artifact
+`validation/external_int2_method8_reelim.json`. Per point on the enlarged
+system: `Feasible` -> the obstruction is CURED at that point (prominent
+banner; remaining points still run so stability of the cure is recorded);
+`Witness` -> still obstructed, and the NEW dual witness must annihilate
+every included `ibp_deg3` row (recorded consistency check, 0 breaks
+expected), with rank/nullity deltas vs the recorded Method.7 baseline.
+Cross-checks against the recorded Method.7 artifacts (candidate count vs the
+screen artifact; per-point baseline ranks vs the witness artifact) are
+recorded in the output. Recorded Method.6/7 artifacts are never overwritten;
+reducer core, certificates, LF gates untouched; no Level 1/2 rerun. Honest
+per-(sample, prime), per-label-box statements only — neither verdict is a
+global (im)possibility claim.
+
+Numbers (run completed, exit 0, 5967.9s total): Level 0 — 3072 labels,
+46737 baseline rows + 15504 new `ibp_deg3` rows (40736 generated,
+`surface_not_free=51456` rejected, generation 230.7s) -> 62241 rows;
+`matches_screen_artifact=true`. 6 points = 3 generic samples
+(`ep=15/7,r=32/11`; `ep=18/7,r=43/11`; `ep=24/7,r=28/11`) x 2 primes
+(2147483647, 2147483629); per-point witness-mode RREF 806-1004s.
+
+Verdict: `outcome=still_obstructed_all_points` — all 6 points `Witness`,
+`n_feasible=0`, `cured_points=[]`. Identical across all points/primes:
+rank=37478, nullity=6779, support=3796 (projected system 58245x44257,
+allowed=1754, forbidden=44256). Deltas vs the recorded Method.7 baseline
+(rank 24617 / nullity 3429 / support 2457): Δrank=+12861, Δnullity=+3350,
+Δsupport=+1339. Per-point checks all pass: `check_annihilation=true` (the
+NEW dual witness annihilates every included `ibp_deg3` row,
+`included_ibp3_breaks_new_witness=0`) and `check_target_unit=true`.
+
+Interpretation: adjoining the ONE Method.7-breaking family and
+re-eliminating from scratch does NOT cure the obstruction at any generic
+point — consistent with Methods.4/6/7 (a breaking row is NECESSARY, not
+sufficient). Honest negative: per-(sample, prime), per-label-box only; no
+global claim. Artifact `validation/external_int2_method8_reelim.json`
+(4.2 MB); recorded Method.6/7 artifacts untouched.

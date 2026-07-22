@@ -645,3 +645,44 @@ Status: **complete, verified**.
 - Вывод: `defect_confirmed=false` — seed-box-ограничение не источник
   препятствия в этой точке; согласуется с Method.4/6/7. Диагностика
   read-only; per-(sample, prime), per-box; глобальных заявлений нет.
+
+## External Int2 Method.8: точечная Level-0 ре-элиминация с `ibp_deg3`
+
+- Обоснование: скрининг Method.7 оставил ровно ОДНУ ломающую семью —
+  `ibp_deg3` (6972 из 15504 новых строк ломают каждый стабильный витнес);
+  ломающая строка необходима, но НЕ достаточна для излечения. Method.8 —
+  оправданный follow-up: те же merged Level-0 строки ПЛЮС `ibp_deg3`,
+  ре-элиминация с нуля с продакшн-семантикой seed-box (witness-mode RREF)
+  на генерических (sample, prime).
+- Setup: раннер `scripts/run_external_int2_method8.py` (ничего не запускается
+  без `--phase`; `--phase rerun` HEAVY — RREF на ~62k строк на точку — за
+  гейтом `--allow-heavy`), тесты `tests/test_external_int2_method8.py`
+  (tiny-бокс; интеграция за `RUN_EXTERNAL_INT2_M8=1`), артефакт
+  `validation/external_int2_method8_reelim.json`. На точку: `Feasible` =
+  препятствие ИЗЛЕЧЕНО в этой точке (баннер; остальные точки продолжают
+  считаться — фиксируем стабильность излечения); `Witness` = всё ещё
+  препятствие, новый дуальный витнес обязан аннигилировать каждую включённую
+  `ibp_deg3`-строку (записываемая проверка, ожидаем 0 breaks) + дельты
+  rank/nullity против записанного baseline Method.7. Кросс-чеки с артефактами
+  Method.7 записываются; артефакты Method.6/7 никогда не перезаписываются;
+  ядро редьюсера, сертификаты, LF-гейты не тронуты; без Level 1/2.
+- Числа (прогон завершён, exit 0, 5967.9с всего): Level 0 — 3072 лейбла,
+  46737 baseline-строк + 15504 новых `ibp_deg3` (сгенерировано 40736,
+  отклонено `surface_not_free=51456`, генерация 230.7с) → 62241 строка;
+  `matches_screen_artifact=true`. 6 точек = 3 генерических сэмпла
+  (`ep=15/7,r=32/11`; `ep=18/7,r=43/11`; `ep=24/7,r=28/11`) × 2 прайма
+  (2147483647, 2147483629); RREF на точку 806–1004с.
+- Вердикт: `outcome=still_obstructed_all_points` — все 6 точек `Witness`,
+  `n_feasible=0`, `cured_points=[]`. Идентично на всех точках/праймах:
+  rank=37478, nullity=6779, support=3796 (proj 58245×44257, allowed=1754,
+  forbidden=44256). Дельты против baseline Method.7 (rank 24617 /
+  nullity 3429 / support 2457): Δrank=+12861, Δnullity=+3350,
+  Δsupport=+1339. Проверки на каждой точке: `check_annihilation=true`
+  (новый дуальный витнес аннигилирует каждую включённую `ibp_deg3`-строку,
+  `included_ibp3_breaks_new_witness=0`), `check_target_unit=true`.
+- Вывод: добавление ЕДИНСТВЕННОЙ ломающей семьи `ibp_deg3` и полная
+  ре-элиминация с нуля НЕ излечивают препятствие ни в одной генерической
+  точке — согласуется с Method.4/6/7 (ломающая строка необходима, но не
+  достаточна). Honest negative: per-(sample, prime), per-box; глобальных
+  заявлений нет. Артефакт: `validation/external_int2_method8_reelim.json`
+  (4.2 МБ); артефакты Method.6/7 не тронуты.
