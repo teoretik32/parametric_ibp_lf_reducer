@@ -454,3 +454,60 @@ point — consistent with Methods.4/6/7 (a breaking row is NECESSARY, not
 sufficient). Honest negative: per-(sample, prime), per-label-box only; no
 global claim. Artifact `validation/external_int2_method8_reelim.json`
 (4.2 MB); recorded Method.6/7 artifacts untouched.
+
+## Method.9: surface-policy audit (limit vs chamber) + tangent-module export
+
+Justification: Method.8 closed the row-enlargement path (the one breaking
+family is necessary-but-not-sufficient). The remaining untested modeling
+choice is the surface-freeness SIGN POLICY itself: production
+`surface.regulated_sign` classifies scores in the LIMIT `ep -> 0^-`, while
+the convergence chamber of the problem sits at finite `ep` (chamber point
+`ep = -3/5`; `r` never enters exponents, so the test depends on `ep` only).
+Method.9 pushes both policies through the IDENTICAL library filter code and
+diffs the accept/reject decisions.
+
+Setup: runner `scripts/run_external_int2_method9.py` (pairing-only against
+the recorded Method.7 witnesses; NO RREF, no re-elimination, read-only;
+`chamber_sign_factory(ep0)` evaluates exact rational signs at the chamber
+point, `sign_policy(...)` is an exception-safe context manager that swaps
+`surface.regulated_sign` and always restores it), tests
+`tests/test_external_int2_method9.py` (10 tests: chamber signs, policy
+restore incl. exception path, the confirmed flip, limit-mode equivalence
+with the library generator accept-sets on a tiny box, tangent-field
+exactness, exporter consistency), artifact
+`validation/external_int2_method9.json`.
+
+Tangent inputs re-derived and verified: blocks `((1,1),(2,2))` give 3
+tangent fields (all effective block `(2,2)`, `deg_x(Q)=2`), each passing
+the library `is_tangent` defect check AND an independent SymPy divisibility
+check (`sum_i Q_i dG/dx_i - H*G == 0` exactly for every polynomial).
+
+Numbers (run completed, 16.1s): box `n_ranges=[[-1,1],[0,1],[0,1]]`,
+`m_ranges=[[-1,0]]*4` -> 192 seeds, `max_ibp_degree=2`, 3 tangent fields,
+586 policy-diff checks. Verdicts: `agree_keep=41`, `agree_reject=506`,
+`chamber_only=39`, `limit_only=0`, `unknown=0` — the chamber policy
+STRICTLY EXTENDS acceptance (nothing accepted by the limit policy is lost).
+All 39 chamber-only rows are `tangent_ibp` (0 trivial after materialization)
+and they DO pair against the recorded Method.7 witnesses:
+`n_breaks_total=180` across the 6 recorded witnesses.
+
+Confirmed minimal flip (unit-tested): seed `(-1,0,1,0,-1,-1,0)`, tangent
+field 2, score `-3*ep - 1` -> limit policy `neg` (row rejected) vs chamber
+policy `pos` (value `4/5` at `ep=-3/5`; row accepted);
+`vector_field_surface_free` returns False (limit) vs True (chamber).
+
+Part C (offline follow-up prepared): `scripts/export_external_int2_tangent_module.py`
+renders `scripts/external_int2_tangent_module.sing` — a Singular script
+computing the FULL tangent module as a syzygy module
+(`ring R = (0,r),(x2,x5,x7),dp;` ... `module K = syz(module(A));`) to check
+whether the degree-capped generator misses tangent directions. No Singular
+binary on this machine; the artifact is regeneration-consistent (tested).
+
+Interpretation: the Level-0 `Obstructed` verdicts are POLICY-DEPENDENT at
+the row-acceptance layer: 39 additional tangent-IBP rows become admissible
+under the chamber sign policy and break the recorded witnesses — a breaking
+row remains NECESSARY, not sufficient, so this does NOT claim a cure; the
+justified next step would be a Method.8-style re-elimination under the
+chamber policy. Production sign policy (limit `ep -> 0^-`) unchanged;
+recorded Method.6/7/8 artifacts untouched; per-(seed, field), per-box
+statements only.

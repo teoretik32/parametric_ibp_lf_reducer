@@ -1,0 +1,521 @@
+{
+ "script": "scripts/run_external_int2_method9.py",
+ "method": "External Int2 Method.9: surface-policy audit (limit vs chamber)",
+ "scope_note": "Two sign policies through the IDENTICAL library filter code: production regulated_sign at ep->0^- vs exact rational sign at the convergence-chamber point ep=-3/5. r never enters exponents, so the chamber test depends on ep only. Pairing-only against recorded Method.7 witnesses; NO RREF; diagnostic only.",
+ "chamber_ep": "-3/5",
+ "box": {
+  "n_ranges": [
+   [
+    -1,
+    1
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    0,
+    1
+   ]
+  ],
+  "m_ranges": [
+   [
+    -1,
+    0
+   ],
+   [
+    -1,
+    0
+   ],
+   [
+    -1,
+    0
+   ],
+   [
+    -1,
+    0
+   ]
+  ],
+  "n_seeds": 192,
+  "max_ibp_degree": 2,
+  "tangent_degree_blocks": [
+   [
+    1,
+    1
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "n_tangent_fields": 3
+ },
+ "n_checks": 586,
+ "verdict_counts": {
+  "agree_keep": 41,
+  "agree_reject": 506,
+  "chamber_only": 39,
+  "limit_only": 0,
+  "unknown": 0
+ },
+ "families": {
+  "chamber_only": {
+   "n_entries": 39,
+   "by_kind": {
+    "tangent_ibp": 39
+   },
+   "n_rows": 39,
+   "n_trivial_dropped": 0,
+   "per_witness": [
+    {
+     "witness_prime": 2147483647,
+     "witness_sample": [
+      [
+       "ep",
+       "15/7"
+      ],
+      [
+       "r",
+       "32/11"
+      ]
+     ],
+     "n_rows": 39,
+     "n_breaks": 30,
+     "breaking_examples": [
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, -1, -1)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, 0, -1)",
+        "field_index": "2"
+       }
+      }
+     ]
+    },
+    {
+     "witness_prime": 2147483629,
+     "witness_sample": [
+      [
+       "ep",
+       "15/7"
+      ],
+      [
+       "r",
+       "32/11"
+      ]
+     ],
+     "n_rows": 39,
+     "n_breaks": 30,
+     "breaking_examples": [
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, -1, -1)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, 0, -1)",
+        "field_index": "2"
+       }
+      }
+     ]
+    },
+    {
+     "witness_prime": 2147483647,
+     "witness_sample": [
+      [
+       "ep",
+       "18/7"
+      ],
+      [
+       "r",
+       "43/11"
+      ]
+     ],
+     "n_rows": 39,
+     "n_breaks": 30,
+     "breaking_examples": [
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, -1, -1)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, 0, -1)",
+        "field_index": "2"
+       }
+      }
+     ]
+    },
+    {
+     "witness_prime": 2147483629,
+     "witness_sample": [
+      [
+       "ep",
+       "18/7"
+      ],
+      [
+       "r",
+       "43/11"
+      ]
+     ],
+     "n_rows": 39,
+     "n_breaks": 30,
+     "breaking_examples": [
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, -1, -1)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, 0, -1)",
+        "field_index": "2"
+       }
+      }
+     ]
+    },
+    {
+     "witness_prime": 2147483647,
+     "witness_sample": [
+      [
+       "ep",
+       "24/7"
+      ],
+      [
+       "r",
+       "28/11"
+      ]
+     ],
+     "n_rows": 39,
+     "n_breaks": 30,
+     "breaking_examples": [
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, -1, -1)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, 0, -1)",
+        "field_index": "2"
+       }
+      }
+     ]
+    },
+    {
+     "witness_prime": 2147483629,
+     "witness_sample": [
+      [
+       "ep",
+       "24/7"
+      ],
+      [
+       "r",
+       "28/11"
+      ]
+     ],
+     "n_rows": 39,
+     "n_breaks": 30,
+     "breaking_examples": [
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 0, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(-1, 1, 1, 0, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, -1, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, -1, 0, -1, 0)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, -1, -1)",
+        "field_index": "2"
+       }
+      },
+      {
+       "kind": "tangent_ibp",
+       "provenance": {
+        "seed": "(0, 0, 1, 0, -1, 0, -1)",
+        "field_index": "2"
+       }
+      }
+     ]
+    }
+   ],
+   "n_breaks_total": 180
+  },
+  "limit_only": {
+   "n_entries": 0,
+   "by_kind": {},
+   "n_rows": 0,
+   "n_trivial_dropped": 0,
+   "per_witness": [],
+   "n_breaks_total": 0
+  }
+ },
+ "elapsed_seconds": 16.073
+}

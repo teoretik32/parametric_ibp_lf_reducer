@@ -3,6 +3,28 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.9: surface-policy audit (limit vs chamber sign
+  policy) + tangent-module Singular export (Part C).** New runner
+  `scripts/run_external_int2_method9.py` — pushes TWO sign policies through
+  the IDENTICAL library filter code (production `regulated_sign` in the
+  limit `ep -> 0^-` vs exact rational signs at the convergence-chamber
+  point `ep = -3/5`) and diffs accept/reject decisions; pairing-only
+  against the recorded Method.7 witnesses, NO RREF, read-only. Tests
+  `tests/test_external_int2_method9.py` (10 tests incl. limit-mode
+  equivalence with the library generator accept-sets and independent SymPy
+  tangency residuals), artifact `validation/external_int2_method9.json`.
+  Outcome (192 seeds, 586 checks, 16.1s): `agree_keep=41`,
+  `agree_reject=506`, `chamber_only=39`, `limit_only=0` — the chamber
+  policy strictly extends acceptance; all 39 chamber-only rows are
+  `tangent_ibp` and break the recorded witnesses (`n_breaks_total=180`
+  across 6 witnesses). Confirmed minimal flip: seed `(-1,0,1,0,-1,-1,0)`,
+  tangent field 2, score `-3*ep-1` (limit `neg` -> rejected; chamber `pos`
+  -> accepted). Part C: `scripts/export_external_int2_tangent_module.py`
+  renders `scripts/external_int2_tangent_module.sing` (full tangent module
+  via `syz`; Singular not installed — prepared for offline execution,
+  regeneration-consistency tested). Production sign policy unchanged;
+  recorded Method.6/7/8 artifacts untouched; per-(seed, field), per-box
+  statements only — no cure claim.
 - **External Int2 Method.8: targeted Level-0 re-elimination with the
   `ibp_deg3` rows (the one Method.7-breaking family).** New runner
   `scripts/run_external_int2_method8.py` (nothing runs without `--phase`;

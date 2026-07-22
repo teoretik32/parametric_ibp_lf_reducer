@@ -686,3 +686,41 @@ Status: **complete, verified**.
   достаточна). Honest negative: per-(sample, prime), per-box; глобальных
   заявлений нет. Артефакт: `validation/external_int2_method8_reelim.json`
   (4.2 МБ); артефакты Method.6/7 не тронуты.
+
+## External Int2 Method.9: аудит sign-policy (limit vs chamber) + Часть C
+
+- Обоснование: Method.8 закрыл путь расширения строк. Осталась немодельная
+  развилка — сама ПОЛИТИКА ЗНАКА surface-freeness: продакшн
+  `surface.regulated_sign` берёт предел `ep -> 0^-`, а chamber сходимости
+  сидит в конечной точке `ep = -3/5` (`r` в показатели не входит — тест
+  зависит только от `ep`). Method.9 прогоняет ОБЕ политики через ОДИН И
+  ТОТ ЖЕ библиотечный фильтр и диффит решения accept/reject.
+- Setup: раннер `scripts/run_external_int2_method9.py` (pairing-only против
+  записанных витнесов Method.7; БЕЗ RREF, read-only;
+  `chamber_sign_factory` — точные рациональные знаки в chamber-точке;
+  `sign_policy` — exception-safe контекст-менеджер подмены/восстановления),
+  тесты `tests/test_external_int2_method9.py` (10 тестов: знаки, восстановление
+  политики вкл. путь с исключением, подтверждённый flip, эквивалентность
+  limit-режима библиотечным генераторам на tiny-боксе, точная тангенциальность
+  полей — библиотечный defect + независимая SymPy-делимость, консистентность
+  экспортера), артефакт `validation/external_int2_method9.json`.
+- Числа (exit 0, 16.1с): бокс 192 сида, `max_ibp_degree=2`, 3 тангенциальных
+  поля (блоки `((1,1),(2,2))`, все эффективно `(2,2)`, `deg_x(Q)=2`);
+  586 проверок: `agree_keep=41`, `agree_reject=506`, `chamber_only=39`,
+  `limit_only=0`, `unknown=0` — chamber-политика СТРОГО РАСШИРЯЕТ приём.
+  Все 39 chamber-only строк — `tangent_ibp`, и они ЛОМАЮТ записанные
+  витнесы Method.7: `n_breaks_total=180` по 6 витнесам.
+- Подтверждённый минимальный flip (юнит-тест): сид `(-1,0,1,0,-1,-1,0)`,
+  поле 2, score `-3*ep-1` — limit `neg` (строка отвергнута) vs chamber
+  `pos` (значение `4/5`; принята); `vector_field_surface_free` False/True.
+- Часть C (подготовлен offline follow-up):
+  `scripts/export_external_int2_tangent_module.py` рендерит
+  `scripts/external_int2_tangent_module.sing` — Singular-скрипт полного
+  тангенциального модуля через `syz` (`ring R = (0,r),(x2,x5,x7),dp;`);
+  бинаря Singular на машине нет; регенерация покрыта тестом.
+- Вывод: вердикты `Obstructed` Level 0 ЗАВИСЯТ ОТ ПОЛИТИКИ на слое приёма
+  строк; ломающая строка по-прежнему необходима, но НЕ достаточна — заявки
+  на излечение НЕТ. Оправданный следующий шаг: ре-элиминация в стиле
+  Method.8 под chamber-политикой (HEAVY, отдельное одобрение). Продакшн
+  политика знака не изменена; артефакты Method.6/7/8 не тронуты;
+  per-(seed, field), per-box.
