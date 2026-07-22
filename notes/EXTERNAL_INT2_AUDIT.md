@@ -300,11 +300,69 @@ rows against a stored `w`: a nonzero pairing (`breaks=True`) is **necessary but 
 sufficient** to cure the obstruction (other nullvectors may still obstruct); a zero
 pairing means the row annihilates that witness and cannot cure it.
 
-Phase C numeric results (Level 1 witness at 2 samples x primes 2147483647 /
-2147483629, and the Level 2\Level 1 row probe) are pending:
+Phase C numeric results (recorded):
 
-- TODO-PHASE-C: Level 1 witness support size, nullity, rank, and per-(sample,
-  prime) support-pattern stability.
-- TODO-PHASE-C: which candidate row families (3,3)/(4,4) break vs annihilate the
-  Level 1 witness, and the resulting `rerun_justified` verdict (no re-elimination
-  is run regardless).
+- Level 1 witness (`validation/external_int2_t2_witness_level1.json`; 2 generic
+  samples `ep=15/7, r=32/11` and `ep=18/7, r=43/11` x primes 2147483647 /
+  2147483629): all 4 points are `Witness` with identical rank 30807,
+  nullity 4452, support size 5136; a single support pattern across all points
+  (`support_pattern_stable=true`, `all_checks_pass=true`,
+  `witness_obstruction_consistent=true`).
+- Level 2\Level 1 row probe
+  (`validation/external_int2_t2_witness_rowprobe_level1.json`; extra blocks
+  (3,3)/(4,4) at the Level 1 box, witness support 5136): the (3,3) block
+  contributes 0 new candidate rows; the (4,4) block contributes 11469 and
+  **all 11469 annihilate** the stored witness — `rerun_justified=false` at
+  Level 1 (a breaking row would be necessary, not sufficient, to cure the
+  obstruction; no re-elimination is run).
+
+## Method.7: dual-witness stability + pairing-only candidate screening (Level 0)
+
+Runner `scripts/run_external_int2_method7.py` (nothing runs without `--phase`;
+`--phase witness` is HEAVY and gated behind `--allow-heavy`; `--phase screen`
+is cheap, pairing-only, and never re-eliminates), tests
+`tests/test_external_int2_method7.py`, recorded artifacts
+`validation/external_int2_method7_witness.json` /
+`validation/external_int2_method7_screen.json`. Read-only diagnostics: reducer
+core, certificates and LF gates untouched. All statements are per-(sample,
+prime), per-label-box, mod p; no global impossibility claim.
+
+Question: at the medium T2 box (Level 0: 3072 labels, 46737 rows), is the dual
+obstruction witness stable across generic samples and primes, and does any
+cheap candidate-row family pair nontrivially against it (pairing only — no
+RREF rerun, no re-elimination)?
+
+Phase A — witness stability (6 Level 0 RREFs, HEAVY):
+
+- All 6 points (generic samples `ep=15/7, r=32/11`, `ep=18/7, r=43/11`,
+  `ep=24/7, r=28/11` x primes 2147483647 / 2147483629) are `Witness` with
+  identical rank 24617, nullity 3429, support size 2457
+  (`all_points_witness=true`, `rank_constant=true`, `nullity_constant=true`);
+  a single shared support pattern (`n_distinct_support_patterns=1`, pairwise
+  support Jaccard 1.0), with exact `check_annihilation` / `check_target_unit`
+  per point.
+- `recorded_consistency` vs `external_int2_t2_rankrepair_level0.json` holds:
+  label/row counts match and the recorded generic verdicts are `Obstructed`;
+  the rank-deficient special sample `ep=3, r=54/11` stays excluded from
+  verdicts.
+
+Phase B/C — pairing-only screening (no RREF):
+
+- Existing row families annihilate all 6 witnesses
+  (`existing_rows_all_annihilate=true`, 0 breaks): algebraic 12288,
+  coordinate-IBP deg<=2 25232, tangent (1,1)+(2,2)+(3,3) 9217, tangent (4,4)
+  probe 9297 — consistent with the recorded `Obstructed` verdicts.
+- Candidate families: `ibp_deg3` — 15504 new rows vs baseline, **6972 break**
+  the witness; `ray_multipliers` deg 4-6 — 15808 new rows, 0 breaks;
+  `tangent_(5,5)` — 18748 new rows (complete within budget), 0 breaks.
+- Decision: `rerun_justified=true` with `candidate_ibp_deg3` as the only
+  breaking family. **Binding caveat (recorded in the artifact):** a breaking
+  row is NECESSARY, not sufficient, to cure the obstruction (other nullvectors
+  may still obstruct); no re-elimination was run.
+
+Net state after Method.7: the Level 0 obstruction is witness-stable across
+samples and primes; tangent-block and ray-multiplier enlargements are
+pairing-inert, while degree-3 coordinate-IBP rows are the one tested family
+that pairs nontrivially. The justified next probe (HEAVY, not run) is a
+targeted Level 0 re-elimination with the `ibp_deg3` rows added — still
+per-(sample, prime), per-box.

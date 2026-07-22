@@ -1,0 +1,1477 @@
+{
+  "script": "run_external_int2_method7.py",
+  "method": "External Int2 Method.7: pairing-only candidate screening (Phase B/C)",
+  "scope_note": "Method.7: dual-witness stability + pairing-only candidate-row screening at the medium T2 box (Level 0); no Level 1/2 RREF rerun, no re-elimination. T2 rank-repair reproduction + dual LF-obstruction witness (Method.6). Modular LF-feasibility only: the span test is constrained to LF-True labels; a span through divergent labels is never reported as an LF basis. Rank-deficient special points (ep=3) are excluded from verdicts. Per-(sample, prime), per-label-box statements only; 'Obstructed'/'Witness' are honest negatives, never a global impossibility claim. No reconstruction; reducer core, certificates and LF gates are untouched.",
+  "level": 0,
+  "label_box": [
+    [
+      [
+        -1,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        -3,
+        0
+      ],
+      [
+        -3,
+        0
+      ],
+      [
+        -3,
+        0
+      ],
+      [
+        -3,
+        0
+      ]
+    ]
+  ],
+  "baseline": {
+    "max_ibp_degree": 2,
+    "tangent_degree_blocks": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    "extra_block": [
+      3,
+      3
+    ]
+  },
+  "target": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "n_labels": 3072,
+  "n_rows_total": 46737,
+  "witness_points": [
+    {
+      "sample": [
+        [
+          "ep",
+          "15/7"
+        ],
+        [
+          "r",
+          "32/11"
+        ]
+      ],
+      "prime": 2147483647,
+      "support_size": 2457,
+      "support_hash": "b6eecbc3e2484d4bea62bdb38ed69b3b27b60bc7f98ab6ff09cd751431f88af9"
+    },
+    {
+      "sample": [
+        [
+          "ep",
+          "15/7"
+        ],
+        [
+          "r",
+          "32/11"
+        ]
+      ],
+      "prime": 2147483629,
+      "support_size": 2457,
+      "support_hash": "b6eecbc3e2484d4bea62bdb38ed69b3b27b60bc7f98ab6ff09cd751431f88af9"
+    },
+    {
+      "sample": [
+        [
+          "ep",
+          "18/7"
+        ],
+        [
+          "r",
+          "43/11"
+        ]
+      ],
+      "prime": 2147483647,
+      "support_size": 2457,
+      "support_hash": "b6eecbc3e2484d4bea62bdb38ed69b3b27b60bc7f98ab6ff09cd751431f88af9"
+    },
+    {
+      "sample": [
+        [
+          "ep",
+          "18/7"
+        ],
+        [
+          "r",
+          "43/11"
+        ]
+      ],
+      "prime": 2147483629,
+      "support_size": 2457,
+      "support_hash": "b6eecbc3e2484d4bea62bdb38ed69b3b27b60bc7f98ab6ff09cd751431f88af9"
+    },
+    {
+      "sample": [
+        [
+          "ep",
+          "24/7"
+        ],
+        [
+          "r",
+          "28/11"
+        ]
+      ],
+      "prime": 2147483647,
+      "support_size": 2457,
+      "support_hash": "b6eecbc3e2484d4bea62bdb38ed69b3b27b60bc7f98ab6ff09cd751431f88af9"
+    },
+    {
+      "sample": [
+        [
+          "ep",
+          "24/7"
+        ],
+        [
+          "r",
+          "28/11"
+        ]
+      ],
+      "prime": 2147483629,
+      "support_size": 2457,
+      "support_hash": "b6eecbc3e2484d4bea62bdb38ed69b3b27b60bc7f98ab6ff09cd751431f88af9"
+    }
+  ],
+  "witness_stability_summary": {
+    "n_points": 6,
+    "n_witness_points": 6,
+    "statuses": [
+      "Witness"
+    ],
+    "all_points_witness": true,
+    "ranks": [
+      24617
+    ],
+    "nullities": [
+      3429
+    ],
+    "rank_constant": true,
+    "nullity_constant": true,
+    "support_sizes": [
+      2457,
+      2457,
+      2457,
+      2457,
+      2457,
+      2457
+    ],
+    "n_distinct_support_patterns": 1,
+    "support_pattern_stable": true,
+    "pairwise_support_jaccard": [
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "common_core_size": 2457,
+    "union_support_size": 2457,
+    "common_core_hash": "b6eecbc3e2484d4bea62bdb38ed69b3b27b60bc7f98ab6ff09cd751431f88af9",
+    "all_checks_pass": true
+  },
+  "families": [
+    {
+      "family": "existing_algebraic",
+      "category": "existing",
+      "n_candidates": 12288,
+      "n_breaks_total": 0,
+      "per_witness": [
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 12288,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 12288,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 12288,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 12288,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 12288,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 12288,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        }
+      ]
+    },
+    {
+      "family": "existing_coordinate_ibp_deg<=2",
+      "category": "existing",
+      "n_candidates": 25232,
+      "n_breaks_total": 0,
+      "per_witness": [
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 25232,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 25232,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 25232,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 25232,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 25232,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 25232,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        }
+      ]
+    },
+    {
+      "family": "existing_tangent_(1,1)+(2,2)+(3,3)",
+      "category": "existing",
+      "n_candidates": 9217,
+      "n_breaks_total": 0,
+      "per_witness": [
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 9217,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 9217,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 9217,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 9217,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 9217,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 9217,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        }
+      ]
+    },
+    {
+      "family": "existing_tangent_(4,4)_probe",
+      "category": "existing",
+      "n_candidates": 9297,
+      "n_breaks_total": 0,
+      "per_witness": [
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 9297,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 9297,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 9297,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 9297,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 9297,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 9297,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        }
+      ],
+      "generation_seconds": 709.217
+    },
+    {
+      "family": "candidate_ibp_deg3",
+      "category": "candidate",
+      "n_candidates": 15504,
+      "n_breaks_total": 6972,
+      "per_witness": [
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 1162,
+          "n_annihilate": 14342,
+          "breaking_kinds": {
+            "coordinate_ibp": 1162
+          },
+          "breaking_examples": [
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -3, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -2, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -1, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, 0, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -3, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -2, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -1, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, 0, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            }
+          ]
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 1162,
+          "n_annihilate": 14342,
+          "breaking_kinds": {
+            "coordinate_ibp": 1162
+          },
+          "breaking_examples": [
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -3, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -2, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -1, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, 0, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -3, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -2, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -1, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, 0, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            }
+          ]
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 1162,
+          "n_annihilate": 14342,
+          "breaking_kinds": {
+            "coordinate_ibp": 1162
+          },
+          "breaking_examples": [
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -3, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -2, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -1, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, 0, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -3, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -2, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -1, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, 0, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            }
+          ]
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 1162,
+          "n_annihilate": 14342,
+          "breaking_kinds": {
+            "coordinate_ibp": 1162
+          },
+          "breaking_examples": [
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -3, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -2, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -1, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, 0, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -3, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -2, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -1, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, 0, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            }
+          ]
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 1162,
+          "n_annihilate": 14342,
+          "breaking_kinds": {
+            "coordinate_ibp": 1162
+          },
+          "breaking_examples": [
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -3, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -2, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -1, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, 0, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -3, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -2, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -1, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, 0, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            }
+          ]
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 1162,
+          "n_annihilate": 14342,
+          "breaking_kinds": {
+            "coordinate_ibp": 1162
+          },
+          "breaking_examples": [
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -3, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -2, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, -1, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 0, 1, 0, 0, -3, 0)",
+                "var": "2",
+                "P": "(0, 0, 3)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -3, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -2, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, -1, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            },
+            {
+              "kind": "coordinate_ibp",
+              "provenance": {
+                "seed": "(0, 1, 0, 0, -3, 0, 0)",
+                "var": "1",
+                "P": "(0, 3, 0)"
+              }
+            }
+          ]
+        }
+      ],
+      "generation_seconds": 227.768,
+      "n_generated": 40736,
+      "n_new_vs_baseline": 15504,
+      "surface_rejected": {
+        "surface_not_free": 51456
+      }
+    },
+    {
+      "family": "candidate_ray_multipliers_deg4-6",
+      "category": "candidate",
+      "n_candidates": 15808,
+      "n_breaks_total": 0,
+      "per_witness": [
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 15808,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 15808,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 15808,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 15808,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 15808,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 15808,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        }
+      ],
+      "generation_seconds": 88.232,
+      "ray_note": "single-variable monomial multipliers x_j^d; primary failing-ray variable (index 0, audit ray (-1,0,0)) probed first",
+      "degrees": [
+        4,
+        5,
+        6
+      ],
+      "n_generated": 24320,
+      "n_new_vs_baseline_and_deg3": 15808,
+      "surface_rejected": {
+        "surface_not_free": 44928
+      },
+      "truncated_by_cap": false
+    },
+    {
+      "family": "candidate_tangent_(5,5)",
+      "category": "candidate",
+      "n_candidates": 18748,
+      "n_breaks_total": 0,
+      "per_witness": [
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 18748,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "15/7"
+            ],
+            [
+              "r",
+              "32/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 18748,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 18748,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "18/7"
+            ],
+            [
+              "r",
+              "43/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 18748,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483647,
+          "n_breaks": 0,
+          "n_annihilate": 18748,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        },
+        {
+          "witness_sample": [
+            [
+              "ep",
+              "24/7"
+            ],
+            [
+              "r",
+              "28/11"
+            ]
+          ],
+          "witness_prime": 2147483629,
+          "n_breaks": 0,
+          "n_annihilate": 18748,
+          "breaking_kinds": {},
+          "breaking_examples": []
+        }
+      ],
+      "block": [
+        5,
+        5
+      ],
+      "status": "complete",
+      "budget_seconds": 1800.0,
+      "n_fields": 66,
+      "n_labels_total": 3072,
+      "n_labels_processed": 3072,
+      "rejected": {
+        "surface_not_free": 167256
+      },
+      "truncated_by_cap": false,
+      "fields_seconds": 521.466,
+      "elapsed_seconds": 1842.356,
+      "n_new_vs_baseline": 18748
+    }
+  ],
+  "surface_rejected_diagnostics": {
+    "note": "diagnostic only; RejectedRow carries no terms and can never enter a pairing family",
+    "existing_richer_(3,3)": {
+      "surface_not_free": 29572
+    },
+    "candidate_ibp_deg3": {
+      "surface_not_free": 51456
+    },
+    "candidate_ray_multipliers": {
+      "surface_not_free": 44928
+    },
+    "candidate_tangent_(5,5)": {
+      "surface_not_free": 167256
+    }
+  },
+  "decision": {
+    "existing_rows_all_annihilate": true,
+    "n_existing_breaks": 0,
+    "n_candidate_breaks": 6972,
+    "breaking_candidate_families": [
+      "candidate_ibp_deg3"
+    ],
+    "rerun_justified": true,
+    "recommendation": "targeted enlargement justified: re-run the Level-0 elimination with the breaking famil(ies) ['candidate_ibp_deg3'] added (see breaking_kinds/breaking_examples)",
+    "rerun_caveat": "a breaking row is NECESSARY, not sufficient, to cure the obstruction (other nullvectors may still obstruct); no re-elimination is run here"
+  },
+  "elapsed_seconds": 3350.967
+}

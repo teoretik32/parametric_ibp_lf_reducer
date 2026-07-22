@@ -3,6 +3,25 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.7: dual-witness stability + pairing-only candidate
+  screening at the medium T2 box (Level 0).** New runner
+  `scripts/run_external_int2_method7.py` (nothing runs without `--phase`;
+  `--phase witness` is HEAVY and gated behind `--allow-heavy`; `--phase screen`
+  is cheap, pairing-only, and never re-eliminates), tests
+  `tests/test_external_int2_method7.py`, recorded artifacts
+  `validation/external_int2_method7_witness.json` /
+  `validation/external_int2_method7_screen.json`. Phase A: all 6 points
+  (3 generic samples x primes 2147483647/2147483629) are `Witness` with
+  identical rank 24617 / nullity 3429 / support 2457 and a single shared
+  support pattern (pairwise Jaccard 1.0), consistent with the recorded
+  `external_int2_t2_rankrepair_level0.json`. Phase B/C: every existing row
+  family annihilates all 6 witnesses (0 breaks); candidate `ibp_deg3` rows
+  break the witness (6972 of 15504 new rows) while `ray_multipliers` deg 4-6
+  and `tangent_(5,5)` are pairing-inert — `rerun_justified=true` for
+  `candidate_ibp_deg3` only (a breaking row is necessary, NOT sufficient, to
+  cure the obstruction; no re-elimination is run). Read-only diagnostics:
+  reducer core, certificates and LF gates untouched; per-(sample, prime),
+  per-label-box statements only, no global impossibility claim.
 - **External Int2 Method.6: reproducibility cleanup + dual LF-obstruction
   certificate.** New library module
   `src/parametric_ibp_lf_reducer/lf_obstruction_witness.py` (exported from

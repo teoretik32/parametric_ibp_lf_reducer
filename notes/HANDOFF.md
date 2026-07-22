@@ -3,11 +3,47 @@
 Живой handoff-документ фактического состояния (обновляется в конце каждого pass). Полный
 инженерный контекст — в `notes/assumptions.md` (A1–A26). План — `notes/implementation_plan.md`.
 
-## Текущий статус (2026-07-21)
+## Текущий статус (2026-07-22)
 
-- **Последний завершённый блок: #40 — External Int2 Method.6 (reproducibility
+- **Последний завершённый блок: #41 — External Int2 Method.7 (dual-witness
+  stability + pairing-only candidate screening, Level 0)** (read-only
+  диагностика; ядро, сертификаты и LF-гейты НЕ тронуты):
+  - Сделано: раннер `scripts/run_external_int2_method7.py` (без `--phase`
+    ничего не запускается; `--phase witness` — HEAVY, только по явному
+    `--allow-heavy`; `--phase screen` — дёшево, pairing-only, БЕЗ RREF и без
+    пере-исключения), тесты `tests/test_external_int2_method7.py`; артефакты
+    `validation/external_int2_method7_witness.json`,
+    `validation/external_int2_method7_screen.json`.
+  - Phase A (witness-стабильность; средний T2-бокс Level 0: 3072 лейбла,
+    46737 строк; 6 RREF): все 6 точек (generic-сэмплы `ep=15/7, r=32/11`,
+    `ep=18/7, r=43/11`, `ep=24/7, r=28/11` x простые 2147483647/2147483629) —
+    `Witness` с идентичными rank 24617 / nullity 3429 / support 2457; один
+    общий support-паттерн (pairwise Jaccard 1.0), точные проверки
+    `check_annihilation`/`check_target_unit`; `recorded_consistency` с
+    `external_int2_t2_rankrepair_level0.json` выполняется (`ep=3` исключена
+    как ранг-дефицитная).
+  - Phase B/C (pairing-only скрининг, БЕЗ RREF): все существующие семейства
+    строк аннулируют всех 6 свидетелей (0 breaks: algebraic 12288,
+    coordinate-IBP deg<=2 25232, tangent (1,1)+(2,2)+(3,3) 9217, probe (4,4)
+    9297); кандидаты: `ibp_deg3` — 15504 новых строк, **6972 ломают** witness;
+    `ray_multipliers` deg 4-6 (15808) и `tangent_(5,5)` (18748, complete в
+    бюджете) — 0 breaks. Решение: `rerun_justified=true` ТОЛЬКО для
+    `candidate_ibp_deg3`; оговорка (в артефакте): break НЕОБХОДИМ, но НЕ
+    достаточен для излечения обструкции (другие нуль-векторы могут
+    обструктировать); пере-исключение НЕ запускалось.
+  - Закрыт TODO-PHASE-C (Method.6): Level 1 witness — 4/4 точки `Witness`,
+    rank 30807 / nullity 4452 / support 5136, support-паттерн стабилен
+    (`external_int2_t2_witness_level1.json`); rowprobe (3,3)/(4,4) на Level 1
+    (`external_int2_t2_witness_rowprobe_level1.json`): (3,3) даёт 0 новых
+    строк, (4,4) — 11469, ВСЕ аннулируют → `rerun_justified=false` на Level 1.
+  - Следующий оправданный шаг (НЕ выполнен, HEAVY): точечный Level 0 re-run с
+    добавленными `ibp_deg3`-строками (per-(sample, prime), per-box; глобальных
+    утверждений нет).
+  - Гейт: `tests/test_external_int2_method7.py` — 24 passed, 1 skipped; полный
+    fast suite + `ruff check src tests scripts` зелёные.
+- **Ранее: #40 — External Int2 Method.6 (reproducibility
   cleanup + dual LF-obstruction certificate)** (read-only диагностика; ядро,
-  сертификаты и LF-гейты НЕ тронуты; коммитов нет):
+  сертификаты и LF-гейты НЕ тронуты; коммиты 34bb1ef..b3f6dbe):
   - Сделано: раннер `scripts/run_external_int2_t2_rankrepair.py` (воспроизводит
     T2 Levels 0/1/2; тяжёлые Level 1/2 — только по явному `--allow-heavy`, без
     `--levels` ничего не запускается; режимы `--witness` / `--probe-rows`),
@@ -35,11 +71,10 @@
     гипотеза усечения бокса в проверенных диапазонах не подтверждается (ни одна
     generic-точка не перешла в Feasible); `ep=3` ранг-дефицитна и исключена из
     вердиктов; глобальная невозможность LF-базиса НЕ утверждается.
-  - Не сделано (намеренно): полный пере-solve Level 2; Phase C числа —
-    TODO-PHASE-C: Level 1 witness support size / nullity / стабильность по
-    2 samples x 2 primes + какие семейства строк (3,3)/(4,4) ломают/аннулируют
-    witness. Гейт: full fast suite зелёный (416 passed, 5 skipped),
-    `ruff check src tests scripts` clean.
+  - Не сделано (намеренно): полный пере-solve Level 2. Phase C числа
+    (TODO-PHASE-C) закрыты в pass #41 — см. блок #41 выше и
+    `notes/EXTERNAL_INT2_AUDIT.md`. Гейт: full fast suite зелёный
+    (416 passed, 5 skipped), `ruff check src tests scripts` clean.
 - **Ранее: Method.4 — same-dimension LF-basis
   completeness audit для External Int2 (task #39)** (read-only диагностика;
   ядро/сертификаты/LF-гейты не тронуты): раннер

@@ -1,0 +1,96 @@
+{
+  "script": "run_external_int2_t2_rankrepair.py (probe-rows)",
+  "scope_note": "T2 rank-repair reproduction + dual LF-obstruction witness (Method.6). Modular LF-feasibility only: the span test is constrained to LF-True labels; a span through divergent labels is never reported as an LF basis. Rank-deficient special points (ep=3) are excluded from verdicts. Per-(sample, prime), per-label-box statements only; 'Obstructed'/'Witness' are honest negatives, never a global impossibility claim. No reconstruction; reducer core, certificates and LF gates are untouched.",
+  "witness_sample": [
+    [
+      "ep",
+      "15/7"
+    ],
+    [
+      "r",
+      "32/11"
+    ]
+  ],
+  "witness_prime": 2147483647,
+  "witness_support_size": 5136,
+  "extra_blocks": [
+    [
+      3,
+      3
+    ],
+    [
+      4,
+      4
+    ]
+  ],
+  "families": [
+    {
+      "block": "3,3",
+      "n_candidates": 0,
+      "n_breaks": 0,
+      "n_annihilate": 0,
+      "breaking_provenance": {},
+      "pairings_sample": []
+    },
+    {
+      "block": "4,4",
+      "n_candidates": 11469,
+      "n_breaks": 0,
+      "n_annihilate": 11469,
+      "breaking_provenance": {},
+      "pairings_sample": [
+        {
+          "index": 0,
+          "kind": "tangent_ibp",
+          "pairing": 0,
+          "breaks": false
+        },
+        {
+          "index": 1,
+          "kind": "tangent_ibp",
+          "pairing": 0,
+          "breaks": false
+        },
+        {
+          "index": 2,
+          "kind": "tangent_ibp",
+          "pairing": 0,
+          "breaks": false
+        },
+        {
+          "index": 3,
+          "kind": "tangent_ibp",
+          "pairing": 0,
+          "breaks": false
+        },
+        {
+          "index": 4,
+          "kind": "tangent_ibp",
+          "pairing": 0,
+          "breaks": false
+        },
+        {
+          "index": 5,
+          "kind": "tangent_ibp",
+          "pairing": 0,
+          "breaks": false
+        },
+        {
+          "index": 6,
+          "kind": "tangent_ibp",
+          "pairing": 0,
+          "breaks": false
+        },
+        {
+          "index": 7,
+          "kind": "tangent_ibp",
+          "pairing": 0,
+          "breaks": false
+        }
+      ]
+    }
+  ],
+  "rerun_justified": false,
+  "rerun_caveat": "a breaking row is NECESSARY, not sufficient, to cure the obstruction (other nullvectors may still obstruct); no re-elimination is run here",
+  "elapsed_seconds": 1644.753
+}
