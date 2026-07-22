@@ -3,6 +3,21 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method Audit.1 (Phase A): all-row-support LF feasibility —
+  seed-box defect candidate refuted.** Domain-feedback hypothesis: the Level 0
+  `Obstructed` could be an artifact of restricting the allowed set to LF-True
+  labels inside the seed box. New opt-in all-row-support mode in
+  `src/parametric_ibp_lf_reducer/lf_feasibility.py` (production seed-box
+  default unchanged), runner `scripts/run_external_int2_audit1.py` (nothing
+  runs without `--phase`; HEAVY behind `--allow-heavy`), tests
+  `tests/test_lf_feasibility_all_support.py`, artifact
+  `validation/external_int2_audit1_allsupport.json`. At the generic point
+  `ep=15/7, r=32/11`, p=2147483647 the allowed set widens 1754 -> 13531
+  (11777 newly allowed out-of-box LF-True labels), yet both modes stay
+  `Obstructed` with the same `residual_support` = the target unit label:
+  the target unit vector is not in the projected row span either way.
+  `defect_confirmed=false`; read-only diagnostics, no new rows, no
+  re-elimination; per-(sample, prime), per-box statement only.
 - **External Int2 Method.7: dual-witness stability + pairing-only candidate
   screening at the medium T2 box (Level 0).** New runner
   `scripts/run_external_int2_method7.py` (nothing runs without `--phase`;

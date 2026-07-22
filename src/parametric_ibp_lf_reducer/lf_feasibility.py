@@ -23,10 +23,12 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
 from .certificate import _reduce_vector_by_pivots
+from .family import ParametricFamily
 from .labels import Label
 from .modular_normal_form import BadSpecialization, assemble_rows_mod_p
 from .row_generation import Row
 from .sparse_rref import rref_mod_p
+from .valuations import is_locally_finite
 
 STATUS_FEASIBLE = "Feasible"
 STATUS_OBSTRUCTED = "Obstructed"
@@ -146,6 +148,70 @@ def lf_reduction_feasible_mod_p(
         residual_support=tuple(sorted(residual)),
         detail="" if not residual else "target unit vector not in projected row span",
     )
+
+
+# --- all-row-support mode (Method Audit.1 Phase A) ---------------------------------------------
+def collect_row_support_labels(rows: Sequence[Row]) -> tuple[Label, ...]:
+    """Sorted union of every label appearing in ``rows`` — the full row-support column set."""
+    support: set[Label] = set()
+    for row in rows:
+        support.update(row.terms.keys())
+    return tuple(sorted(support))
+
+
+def classify_row_support_lf(
+    family: ParametricFamily | None,
+    rows: Sequence[Row],
+    *,
+    known_lf_flags: Mapping[Label, object] | None = None,
+    random_trials: int = 64,
+    seed: int = 20260706,
+) -> dict[Label, object]:
+    """Full LF verdict (``True`` / ``False`` / ``"Unknown"``) for EVERY row-support label.
+
+    ``known_lf_flags`` short-circuits labels already classified (e.g. a seed box); every
+    other support label gets a fresh :func:`is_locally_finite` verdict — no label is
+    treated as forbidden merely because it lies outside a seed list. ``family`` may be
+    ``None`` only when ``known_lf_flags`` covers the whole support (raises otherwise).
+    """
+    known = known_lf_flags if known_lf_flags is not None else {}
+    verdicts: dict[Label, object] = {}
+    for lab in collect_row_support_labels(rows):
+        if lab in known:
+            verdicts[lab] = known[lab]
+        elif family is None:
+            raise ValueError(f"no family given and no known LF flag for support label {lab!r}")
+        else:
+            verdicts[lab] = is_locally_finite(family, lab, random_trials=random_trials, seed=seed)
+    return verdicts
+
+
+def lf_reduction_feasible_all_support_mod_p(
+    family: ParametricFamily | None,
+    rows: Sequence[Row],
+    target_label: Label,
+    known_lf_flags: Mapping[Label, object] | None,
+    sample: Mapping,
+    prime: int,
+    column_order: Sequence[Label] | None = None,
+) -> tuple[LFFeasibilityResult, dict[Label, object]]:
+    """ALL-ROW-SUPPORT feasibility mode (explicit, named — Method Audit.1 Phase A).
+
+    Allowed = every column appearing in ``rows`` whose FULL LF verdict is ``True``,
+    target excluded; ``False`` / ``"Unknown"`` support columns stay forbidden. No new
+    rows are generated, and the seed-box behaviour of
+    :func:`lf_reduction_feasible_mod_p` is left untouched (this is an additional mode,
+    not a replacement). Returns ``(result, per-support-label verdicts)``.
+    """
+    verdicts = classify_row_support_lf(family, rows, known_lf_flags=known_lf_flags)
+    labels: list[Label] = list(collect_row_support_labels(rows))
+    if target_label not in verdicts:
+        labels.append(target_label)
+        verdicts[target_label] = (known_lf_flags or {}).get(target_label, "Unknown")
+    result = lf_reduction_feasible_mod_p(
+        rows, labels, target_label, verdicts, sample, prime, column_order=column_order
+    )
+    return result, verdicts
 
 
 # --- explicit coefficients (only meaningful after Feasible) ------------------------------------

@@ -624,3 +624,24 @@ Status: **complete, verified**.
 - Вывод: препятствие Method.1 — не артефакт усечения строк; рабочий путь
   по-прежнему композитная замена базиса (Method.3). Read-only диагностика,
   ядро/сертификаты/LF-гейты не тронуты. Фоновый прогон ~19413 с.
+
+## Int2 Method Audit.1 — all-row-support LF feasibility (Phase A)
+
+- Гипотеза (доменный фидбек): `Obstructed` на Level 0 — артефакт того, что
+  allowed-набор ограничен LF-True лейблами внутри seed-бокса, хотя строки
+  задевают 26728 out-of-box колонок поддержки.
+- Реализация: opt-in режим all-row-support в `lf_feasibility.py`
+  (продакшн-дефолт seed-box не тронут), раннер
+  `scripts/run_external_int2_audit1.py` (ничего не запускается без
+  `--phase`; HEAVY за гейтом `--allow-heavy`), тесты
+  `tests/test_lf_feasibility_all_support.py`, артефакт
+  `validation/external_int2_audit1_allsupport.json`.
+- Числа (Level 0: 3072 лейбла, 46737 строк): out-of-box LF-классификация
+  True=11777 / False=14951 / Unknown=0; allowed 1754 → 13531 (новых 11777).
+  Точка `ep=15/7, r=32/11`, p=2147483647: seed_only `Obstructed`
+  (rank 24617, 390.8с), all_support `Obstructed` (rank 13694, 141.3с);
+  в обоих режимах `residual_support = [(0,...,0)]` — сам целевой единичный
+  вектор вне спана спроецированных строк.
+- Вывод: `defect_confirmed=false` — seed-box-ограничение не источник
+  препятствия в этой точке; согласуется с Method.4/6/7. Диагностика
+  read-only; per-(sample, prime), per-box; глобальных заявлений нет.

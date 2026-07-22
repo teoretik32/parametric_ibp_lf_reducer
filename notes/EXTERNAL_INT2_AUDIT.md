@@ -366,3 +366,40 @@ pairing-inert, while degree-3 coordinate-IBP rows are the one tested family
 that pairs nontrivially. The justified next probe (HEAVY, not run) is a
 targeted Level 0 re-elimination with the `ibp_deg3` rows added — still
 per-(sample, prime), per-box.
+
+## Method Audit.1 — all-row-support LF feasibility (Phase A)
+
+Hypothesis under audit (domain feedback): the recorded Level 0 `Obstructed`
+could be an implementation artifact of the seed-box restriction — the allowed
+set of the feasibility projection is limited to LF-True labels INSIDE the
+seed box, while the merged rows also touch out-of-box support labels that may
+be LF-True and could legitimately enter the allowed set.
+
+Setup: opt-in all-row-support mode in
+`src/parametric_ibp_lf_reducer/lf_feasibility.py` (production seed-box
+default unchanged), runner `scripts/run_external_int2_audit1.py` (nothing
+runs without `--phase`; Phase A is HEAVY, gated behind `--allow-heavy`),
+tests `tests/test_lf_feasibility_all_support.py`. Artifact:
+`validation/external_int2_audit1_allsupport.json`. Same merged Level 0 rows,
+no new rows, no re-elimination — diagnostic only.
+
+Numbers (Level 0 medium T2 box: 3072 seed labels, 46737 rows):
+
+- Support: 29800 support columns, 26728 out-of-box; LF classification at one
+  generic modular point (46.7s): True=11777, False=14951, Unknown=0. Allowed
+  set widens 1754 (seed-box) -> 13531 (all-support; 11777 newly allowed).
+- `seed_only` (`ep=15/7, r=32/11`, p=2147483647): `Obstructed`, rank 24617,
+  42741 projected rows, 1754 allowed / 28045 forbidden (390.8s).
+- `all_support` (same point): `Obstructed`, rank 13694, 23011 projected rows,
+  13531 allowed / 16268 forbidden (141.3s).
+- Both modes report the same structural detail: `residual_support =
+  [(0,0,0,0,0,0,0)]` — the TARGET UNIT VECTOR itself is not in the projected
+  row span; widening the allowed set does not change this.
+
+Verdict: `defect_confirmed=false` (total 974.6s). The seed-box restriction of
+the allowed set is NOT the source of the Level 0 obstruction at this point:
+the target unit label is unreachable in the projected row span in both modes,
+so the obstruction lives in the row system itself, not in the allowed-label
+box. Consistent with Method.4 (row completeness) and Method.6/7 (dual
+witness). As everywhere: per-(sample, prime), per-box honest negative — no
+global impossibility claim.

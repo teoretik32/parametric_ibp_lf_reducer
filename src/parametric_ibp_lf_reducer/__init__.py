@@ -59,8 +59,11 @@ from .labels import (
 )
 from .lf_feasibility import (
     LFFeasibilityResult,
+    classify_row_support_lf,
+    collect_row_support_labels,
     feasibility_to_payload,
     lf_reduction_coefficients_mod_p,
+    lf_reduction_feasible_all_support_mod_p,
     lf_reduction_feasible_mod_p,
 )
 from .lf_obstruction_witness import (
@@ -240,6 +243,10 @@ __all__ = [
     "lf_reduction_feasible_mod_p",
     "lf_reduction_coefficients_mod_p",
     "feasibility_to_payload",
+    # all-row-support feasibility mode (Method Audit.1 Phase A)
+    "collect_row_support_labels",
+    "classify_row_support_lf",
+    "lf_reduction_feasible_all_support_mod_p",
     # dual LF-obstruction certificate (Method.6, External Int2)
     "STATUS_WITNESS",
     "LFObstructionWitness",
