@@ -1,0 +1,68 @@
+{
+  "schema": "external-int2-full-laurent-audit-v1",
+  "scope": "Independent analytic oracle through ep^0; does not construct or certify an LF basis.",
+  "checks": [
+    {
+      "name": "exact_x7_preintegration",
+      "passed": true,
+      "derivative_ok": true,
+      "endpoint_ok": true
+    },
+    {
+      "name": "ode_epsilon_recurrence_s0_s3",
+      "passed": true,
+      "residual_coefficients": {
+        "-1": "0",
+        "0": "0",
+        "1": "0",
+        "2": "0",
+        "3": "0"
+      }
+    },
+    {
+      "name": "full_laurent_coefficients_through_ep0",
+      "passed": true,
+      "residuals": {
+        "-4": "0",
+        "-3": "0",
+        "-2": "0",
+        "-1": "0",
+        "0": "0"
+      },
+      "coefficients": {
+        "ep^-4": "-4",
+        "ep^-3": "3*log(r) + 4*log(t)",
+        "ep^-2": "-log(r)**2/2 - 3*log(r)*log(t) - 2*log(t)**2 + 5*pi**2/3",
+        "ep^-1": "-log(r)**3/2 + log(r)**2*log(t)/2 + 3*log(r)*log(t)**2/2 - 7*pi**2*log(r)/3 + 2*log(t)**3/3 - 5*pi**2*log(t)/3 + pi**2*HPL(m1, r) + 2*HPL(m1_0_0, r) + 62*zeta(3)/3",
+        "ep^0": "(-pi**2*log(t) + 2*zeta(3))*HPL(m1, r) + (-log(t)**2/4 + 11*pi**2/6)*log(r)**2 + (-log(t)**3/2 + 7*pi**2*log(t)/3 - 18*zeta(3))*log(r) + 11*log(r)**4/24 + log(r)**3*log(t)/2 - log(t)**4/6 + 5*pi**2*log(t)**2/6 - 2*log(t)*HPL(m1_0_0, r) - 62*log(t)*zeta(3)/3 - 4*pi**2*HPL(0_m1, r) - 8*HPL(0_m1_0_0, r) - 4*pi**2*HPL(m1_0, r)/3 - 6*HPL(m1_0_0_0, r) + pi**2*HPL(m1_m1, r) + 2*HPL(m1_m1_0_0, r) + 23*pi**4/45"
+      }
+    }
+  ],
+  "passed": true,
+  "reference": {
+    "source": "ParametricInt examples 4 ChatGPT v2.nb / AnsvInt2",
+    "comparison_claim": "Compact coefficients map to the source GPL expression under r=s/t and GPL scaling."
+  },
+  "numeric_fingerprints": [
+    {
+      "s": "0.75",
+      "t": "1.0",
+      "r": "0.75",
+      "F_-4": "-4.0",
+      "F_-3": "-0.8630462173553427823176570179814822945105",
+      "F_-2": "16.4079601810771884993263024855552467632",
+      "F_-1": "38.80219612276416887410928217878302913837",
+      "F_0": "31.46471495560738472152639998476048361396"
+    },
+    {
+      "s": "1.7",
+      "t": "0.8",
+      "r": "2.125",
+      "F_-4": "-4.0",
+      "F_-3": "1.368741201872301432928334399256452480587",
+      "F_-2": "16.57026656505549577111804491189858620326",
+      "F_-1": "24.06556333991683159845920459835140111739",
+      "F_0": "-13.59985304103326012387409217901659836162"
+    }
+  ]
+}

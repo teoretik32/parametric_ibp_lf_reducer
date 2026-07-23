@@ -3,6 +3,31 @@
 ## Unreleased
 
 ### Added
+- **External Int2: full analytic Laurent oracle through `ep^0`
+  (independent of the reducer).** New standalone script
+  `scripts/audit_external_int2_full_laurent.py` — implements the exact `x7`
+  preintegration, the one-dimensional hypergeometric ODE, the
+  epsilon-recursion for `S=rQ` and the compact Laurent coefficients derived
+  in `notes/EXTERNAL_INT2_FULL_LAURENT_DERIVATION.md`. Three symbolic checks
+  (`exact_x7_preintegration`, `ode_epsilon_recurrence_s0_s3`,
+  `full_laurent_coefficients_through_ep0`) — all pass; optional `--numeric`
+  HPL fingerprints (mpmath, `--dps >= 20`; recorded at dps=40 for
+  `(s,t)=(0.75,1)` and `(1.7,0.8)`). Artifact
+  `validation/external_int2_full_laurent_audit.json`, WL cross-check
+  `validation/external_int2_full_laurent_result.m`, tests
+  `tests/test_external_int2_full_laurent.py` (6 tests, incl. a guard that
+  the script does not import reducer core). Source notebook preserved
+  verbatim at `examples/source/ParametricInt_examples_4_ChatGPT_v2.nb`;
+  `examples/external_int2_source_reference.wl.txt` rewritten as
+  pure-integrand + prefactor reference (`ExternalInt2PureIntegrand`,
+  `ExternalPrefactor2`, `r = s/t`). Transplant bundle
+  `external_int2_full_analytic_patch/` (byte-identical copies of all new
+  files) with RU prompts `PROMPT_1_INTEGRATE_ANALYTIC_ORACLE_RU.md`,
+  `PROMPT_2_FIND_TRUE_LF_BASIS_RU.md` and `README_PATCH_RU.md`. Scope: the
+  oracle does NOT prove or construct an LF basis — it is the acceptance
+  gate for future LF-basis work (any certified LF decomposition of External
+  Int2 must reproduce these coefficients). Reducer core, certificates and
+  LF gates untouched.
 - **External Int2 Method.9: surface-policy audit (limit vs chamber sign
   policy) + tangent-module Singular export (Part C).** New runner
   `scripts/run_external_int2_method9.py` — pushes TWO sign policies through

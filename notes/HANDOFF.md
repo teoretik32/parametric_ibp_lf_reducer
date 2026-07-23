@@ -724,3 +724,36 @@ Status: **complete, verified**.
   Method.8 под chamber-политикой (HEAVY, отдельное одобрение). Продакшн
   политика знака не изменена; артефакты Method.6/7/8 не тронуты;
   per-(seed, field), per-box.
+
+## External Int2: полный аналитический Laurent-оракул (через ep^0)
+
+- Назначение: независимый от `parametric_ibp_lf_reducer` аналитический оракул
+  полного Laurent-разложения External Int2 через `ep^0`. НЕ строит и НЕ
+  доказывает LF-базис; это acceptance-гейт для будущей работы над истинным
+  LF-базисом (любая сертифицированная LF-декомпозиция External Int2 обязана
+  воспроизвести эти коэффициенты).
+- Сделано: скрипт `scripts/audit_external_int2_full_laurent.py` (точная
+  x7-преинтеграция, одномерная гипергеометрическая ODE, epsilon-рекурсия для
+  `S=rQ`, компактные коэффициенты из
+  `notes/EXTERNAL_INT2_FULL_LAURENT_DERIVATION.md`); вывод зафиксирован в этой
+  заметке; тесты `tests/test_external_int2_full_laurent.py` (6 passed, включая
+  guard, что скрипт не импортирует ядро редьюсера); артефакты
+  `validation/external_int2_full_laurent_audit.json` (schema
+  `external-int2-full-laurent-audit-v1`) и WL-кросс-чек
+  `validation/external_int2_full_laurent_result.m`.
+- Проверки (все True): `exact_x7_preintegration`,
+  `ode_epsilon_recurrence_s0_s3`, `full_laurent_coefficients_through_ep0`.
+  Численные HPL-отпечатки (`--numeric`, dps=40) записаны для
+  `(s,t)=(0.75,1)` и `(1.7,0.8)`; `F_-4 = -4` в обеих точках.
+- Источник: ноутбук `examples/source/ParametricInt_examples_4_ChatGPT_v2.nb`
+  сохранён дословно; `examples/external_int2_source_reference.wl.txt`
+  переписан как чистый интегранд + префактор (`ExternalInt2PureIntegrand`,
+  `ExternalPrefactor2`, `r = s/t`).
+- Бандл для переноса: `external_int2_full_analytic_patch/` — байт-в-байт копии
+  всех новых файлов + RU-промпты `PROMPT_1_INTEGRATE_ANALYTIC_ORACLE_RU.md`
+  (интеграция оракула), `PROMPT_2_FIND_TRUE_LF_BASIS_RU.md` (поиск истинного
+  LF-базиса, гейтированный оракулом), `README_PATCH_RU.md`.
+- Ядро редьюсера, сертификаты, LF-гейты и записанные Method.6–9 артефакты НЕ
+  тронуты. Ветка: `feature/external-int2-full-oracle`.
+- Следующий оправданный шаг (НЕ выполнен): по `PROMPT_2_FIND_TRUE_LF_BASIS_RU`
+  — построение кандидата LF-базиса с обязательной сверкой против оракула.
