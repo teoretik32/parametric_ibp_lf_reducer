@@ -3,6 +3,32 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.10: chamber-policy controlled LF-feasibility solve
+  (full Level-0 box).** New runner `scripts/run_external_int2_method10.py`
+  (nothing heavy without `--allow-heavy`; `--max-solves`,
+  `--primes`) — re-assembles the FULL Level-0 system (3072 labels,
+  chamber point `ep = -3/5`, target `(0,0,0,0,0,0,0)`) under the exact
+  convergence-chamber sign policy (same diagnostic `surface.regulated_sign`
+  swap as Method.9, script-local only), screens the chamber-only rows
+  against the recorded Method.7 witnesses and, gated on breaks, runs
+  witness-mode RREF solves with the span test constrained to LF-True
+  labels. Tests `tests/test_external_int2_method10.py` (15 tests, incl.
+  recorded-artifact schema/gates and the literal "NOT an LF basis" scope
+  disclaimer), artifact `validation/external_int2_method10.json`. Outcome
+  (exit 0, 4388.1s): limit-policy rows 46737 (392.8s), chamber-policy rows
+  49439 (1411.1s); `chamber_only=2702` (`coordinate_ibp` 1024 +
+  `tangent_ibp` 1678), `limit_only=0` — the chamber policy strictly
+  extends production acceptance on the full box. Screening: 1685 breaking
+  chamber-only rows per witness (identical dedup sets; 10110 total over 6
+  witnesses), `rerun_justified=True`. Solve: 6/6 `Feasible` at rank 25234
+  (3 generic samples x 2 primes `2147483647`/`2147483629`; nrows=49439,
+  n_projected_rows=45443, n_allowed=1754, n_forbidden=28224, empty
+  residual support) — verdict **`Feasible(modular)`**, vs `Obstructed`
+  under the production policy (Method.6/7). Scope: per-(sample, prime)
+  span evidence only, NOT an LF basis — reconstruction, row-span
+  certificate and per-term LF export checks (gated by the analytic Laurent
+  oracle) are still required before any Success claim. Production sign
+  policy unchanged; recorded Method.6–9 artifacts untouched.
 - **External Int2: full analytic Laurent oracle through `ep^0`
   (independent of the reducer).** New standalone script
   `scripts/audit_external_int2_full_laurent.py` — implements the exact `x7`

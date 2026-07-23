@@ -57,8 +57,9 @@ class TestChamberSign:
         assert sign(5 * EP + 3, ["ep"]) == "zero"
 
     def test_foreign_symbol_is_unknown(self, m9):
+        # lowercase "unknown": chamber_sign is a drop-in for surface.regulated_sign
         sign = m9.chamber_sign_factory(sp.Rational(-3, 5))
-        assert sign(EP + sp.Symbol("mu"), ["ep"]) == "Unknown"
+        assert sign(EP + sp.Symbol("mu"), ["ep"]) == "unknown"
 
     def test_limit_vs_chamber_disagree_on_flip_score(self, m9):
         # production limit policy: value at ep=0 is -1 -> "neg"; chamber: 4/5 -> "pos"

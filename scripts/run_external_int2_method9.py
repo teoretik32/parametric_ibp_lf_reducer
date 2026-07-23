@@ -91,7 +91,7 @@ def chamber_sign_factory(ep_value: sp.Rational):
             val = val.subs(sp.Symbol(str(reg)), ep_value)
         val = sp.nsimplify(sp.expand(val))
         if val.free_symbols:
-            return "Unknown"
+            return "unknown"  # lowercase: must match the surface.regulated_sign contract
         if val > 0:
             return "pos"
         if val < 0:

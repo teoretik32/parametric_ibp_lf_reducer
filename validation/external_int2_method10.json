@@ -1,0 +1,471 @@
+{
+ "script": "scripts/run_external_int2_method10.py",
+ "method": "External Int2 Method.10: chamber-policy controlled LF-feasibility solve",
+ "scope_note": "Method.10 controlled solve: Level-0 system re-assembled under the exact convergence-chamber sign policy (diagnostic swap of surface.regulated_sign inside this script only). The span test is constrained to LF-True labels; a span through divergent labels is NOT an LF basis and is never reported as one. 'Feasible(modular)' is per-(sample, prime) span evidence only -- reconstruction, row-span certificate and per-term LF export checks are still required before Success. 'Obstructed' remains an honest per-point, per-box negative, never a global claim. Reducer core, production surface policy, certificates and LF gates are untouched.",
+ "chamber_ep": "-3/5",
+ "level": 0,
+ "n_labels": 3072,
+ "target_label": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "rows": {
+  "n_limit": 46737,
+  "n_chamber": 49439,
+  "n_chamber_only": 2702,
+  "n_limit_only": 0,
+  "chamber_only_by_kind": {
+   "coordinate_ibp": 1024,
+   "tangent_ibp": 1678
+  }
+ },
+ "screening": {
+  "n_witnesses": 6,
+  "n_breaks_total": 10110,
+  "per_witness": [
+   {
+    "witness_prime": 2147483647,
+    "witness_sample": [
+     [
+      "ep",
+      "15/7"
+     ],
+     [
+      "r",
+      "32/11"
+     ]
+    ],
+    "n_rows": 2702,
+    "n_breaks": 1685,
+    "breaking_examples": [
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "8c62bd6891aaada3"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "a081a7253a6f0cf6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "00af13c987893699"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "870ddba77df87313"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "aefb6682562185fb"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "7bd83f0e686eb4f6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "94309c6e2f23f6ce"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "accaa2ceb81e7adb"
+     }
+    ]
+   },
+   {
+    "witness_prime": 2147483629,
+    "witness_sample": [
+     [
+      "ep",
+      "15/7"
+     ],
+     [
+      "r",
+      "32/11"
+     ]
+    ],
+    "n_rows": 2702,
+    "n_breaks": 1685,
+    "breaking_examples": [
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "8c62bd6891aaada3"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "a081a7253a6f0cf6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "00af13c987893699"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "870ddba77df87313"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "aefb6682562185fb"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "7bd83f0e686eb4f6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "94309c6e2f23f6ce"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "accaa2ceb81e7adb"
+     }
+    ]
+   },
+   {
+    "witness_prime": 2147483647,
+    "witness_sample": [
+     [
+      "ep",
+      "18/7"
+     ],
+     [
+      "r",
+      "43/11"
+     ]
+    ],
+    "n_rows": 2702,
+    "n_breaks": 1685,
+    "breaking_examples": [
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "8c62bd6891aaada3"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "a081a7253a6f0cf6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "00af13c987893699"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "870ddba77df87313"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "aefb6682562185fb"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "7bd83f0e686eb4f6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "94309c6e2f23f6ce"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "accaa2ceb81e7adb"
+     }
+    ]
+   },
+   {
+    "witness_prime": 2147483629,
+    "witness_sample": [
+     [
+      "ep",
+      "18/7"
+     ],
+     [
+      "r",
+      "43/11"
+     ]
+    ],
+    "n_rows": 2702,
+    "n_breaks": 1685,
+    "breaking_examples": [
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "8c62bd6891aaada3"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "a081a7253a6f0cf6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "00af13c987893699"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "870ddba77df87313"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "aefb6682562185fb"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "7bd83f0e686eb4f6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "94309c6e2f23f6ce"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "accaa2ceb81e7adb"
+     }
+    ]
+   },
+   {
+    "witness_prime": 2147483647,
+    "witness_sample": [
+     [
+      "ep",
+      "24/7"
+     ],
+     [
+      "r",
+      "28/11"
+     ]
+    ],
+    "n_rows": 2702,
+    "n_breaks": 1685,
+    "breaking_examples": [
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "8c62bd6891aaada3"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "a081a7253a6f0cf6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "00af13c987893699"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "870ddba77df87313"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "aefb6682562185fb"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "7bd83f0e686eb4f6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "94309c6e2f23f6ce"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "accaa2ceb81e7adb"
+     }
+    ]
+   },
+   {
+    "witness_prime": 2147483629,
+    "witness_sample": [
+     [
+      "ep",
+      "24/7"
+     ],
+     [
+      "r",
+      "28/11"
+     ]
+    ],
+    "n_rows": 2702,
+    "n_breaks": 1685,
+    "breaking_examples": [
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "8c62bd6891aaada3"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "a081a7253a6f0cf6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "00af13c987893699"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "870ddba77df87313"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "aefb6682562185fb"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "7bd83f0e686eb4f6"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "94309c6e2f23f6ce"
+     },
+     {
+      "kind": "coordinate_ibp",
+      "dedup_sha16": "accaa2ceb81e7adb"
+     }
+    ]
+   }
+  ],
+  "rerun_justified": true
+ },
+ "solve": {
+  "requested_max_solves": 6,
+  "primes": [
+   2147483647,
+   2147483629
+  ],
+  "points": [
+   {
+    "status": "Feasible",
+    "prime": 2147483647,
+    "sample": [
+     [
+      "ep",
+      "15/7"
+     ],
+     [
+      "r",
+      "32/11"
+     ]
+    ],
+    "rank": 25234,
+    "nrows": 49439,
+    "n_projected_rows": 45443,
+    "n_allowed": 1754,
+    "n_forbidden": 28224,
+    "residual_support": [],
+    "detail": "",
+    "solve_seconds": 403.483
+   },
+   {
+    "status": "Feasible",
+    "prime": 2147483629,
+    "sample": [
+     [
+      "ep",
+      "15/7"
+     ],
+     [
+      "r",
+      "32/11"
+     ]
+    ],
+    "rank": 25234,
+    "nrows": 49439,
+    "n_projected_rows": 45443,
+    "n_allowed": 1754,
+    "n_forbidden": 28224,
+    "residual_support": [],
+    "detail": "",
+    "solve_seconds": 428.939
+   },
+   {
+    "status": "Feasible",
+    "prime": 2147483647,
+    "sample": [
+     [
+      "ep",
+      "18/7"
+     ],
+     [
+      "r",
+      "43/11"
+     ]
+    ],
+    "rank": 25234,
+    "nrows": 49439,
+    "n_projected_rows": 45443,
+    "n_allowed": 1754,
+    "n_forbidden": 28224,
+    "residual_support": [],
+    "detail": "",
+    "solve_seconds": 419.175
+   },
+   {
+    "status": "Feasible",
+    "prime": 2147483629,
+    "sample": [
+     [
+      "ep",
+      "18/7"
+     ],
+     [
+      "r",
+      "43/11"
+     ]
+    ],
+    "rank": 25234,
+    "nrows": 49439,
+    "n_projected_rows": 45443,
+    "n_allowed": 1754,
+    "n_forbidden": 28224,
+    "residual_support": [],
+    "detail": "",
+    "solve_seconds": 410.167
+   },
+   {
+    "status": "Feasible",
+    "prime": 2147483647,
+    "sample": [
+     [
+      "ep",
+      "24/7"
+     ],
+     [
+      "r",
+      "28/11"
+     ]
+    ],
+    "rank": 25234,
+    "nrows": 49439,
+    "n_projected_rows": 45443,
+    "n_allowed": 1754,
+    "n_forbidden": 28224,
+    "residual_support": [],
+    "detail": "",
+    "solve_seconds": 454.638
+   },
+   {
+    "status": "Feasible",
+    "prime": 2147483629,
+    "sample": [
+     [
+      "ep",
+      "24/7"
+     ],
+     [
+      "r",
+      "28/11"
+     ]
+    ],
+    "rank": 25234,
+    "nrows": 49439,
+    "n_projected_rows": 45443,
+    "n_allowed": 1754,
+    "n_forbidden": 28224,
+    "residual_support": [],
+    "detail": "",
+    "solve_seconds": 458.086
+   }
+  ],
+  "verdict": "Feasible(modular)"
+ },
+ "elapsed_seconds": 4388.133
+}

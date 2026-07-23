@@ -757,3 +757,40 @@ Status: **complete, verified**.
   тронуты. Ветка: `feature/external-int2-full-oracle`.
 - Следующий оправданный шаг (НЕ выполнен): по `PROMPT_2_FIND_TRUE_LF_BASIS_RU`
   — построение кандидата LF-базиса с обязательной сверкой против оракула.
+
+## External Int2 Method.10: контролируемый LF-feasibility solve под chamber-политикой
+
+- Обоснование: Method.9 показал (pairing-only, 192 сида), что chamber-политика
+  строго расширяет приём и что chamber-only строки ломают витнесы Method.7.
+  Оправданный следующий шаг оттуда — ре-элиминация в стиле Method.8 под
+  chamber-политикой на ПОЛНОМ Level-0 боксе (HEAVY).
+- Setup: раннер `scripts/run_external_int2_method10.py` (ничего тяжёлого без
+  `--allow-heavy`; `--max-solves`, `--primes`); полная пересборка
+  Level-0 системы (3072 лейбла, chamber-точка `ep = -3/5`, target
+  `(0,0,0,0,0,0,0)`) под точной chamber-политикой знака — тот же
+  диагностический swap `surface.regulated_sign`, что в Method.9 (только внутри
+  скрипта); скрининг chamber-only строк против записанных витнесов Method.7;
+  gated witness-mode RREF со span-тестом, ограниченным LF-True лейблами. Тесты
+  `tests/test_external_int2_method10.py` (15), артефакт
+  `validation/external_int2_method10.json`.
+- Числа (exit 0, 4388.1с): limit-строки 46737 (392.8с), chamber-строки 49439
+  (1411.1с); `chamber_only=2702` (`coordinate_ibp` 1024, `tangent_ibp` 1678),
+  `limit_only=0` — строгое расширение приёма подтверждено на полном боксе.
+  Скрининг: 1685 ломающих chamber-only строк на каждом витнесе (идентичные
+  dedup-наборы; всего 10110 по 6 витнесам), `rerun_justified=True`. Solve: 6/6
+  `Feasible`, rank 25234 (3 генерических сэмпла x 2 прайма
+  `2147483647`/`2147483629`; nrows=49439, n_projected_rows=45443,
+  n_allowed=1754, n_forbidden=28224, residual_support пуст) — вердикт
+  `Feasible(modular)`.
+- Интерпретация: под chamber-политикой Level-0 система модулярно СОВМЕСТИМА с
+  целевой редукцией во всех проверенных генерических точках — в отличие от
+  `Obstructed` под продакшн-политикой (Method.6/7). Это span-эвиденс
+  per-(sample, prime), НЕ LF-базис (дословная фраза "NOT an LF basis" в
+  `scope_note` артефакта — гейт в тестах): до любой заявки на Success требуются
+  реконструкция, row-span сертификат и per-term LF export с обязательной
+  сверкой против аналитического Laurent-оракула.
+- Пост-ран фикс: `SCOPE_NOTE` скрипта переформулирован ASCII-only с дословной
+  фразой "NOT an LF basis"; поле `scope_note` записанного артефакта приведено к
+  константе скрипта (только метаданные; вычисленные результаты не тронуты).
+- Продакшн политика знака не изменена; записанные Method.6–9 артефакты не
+  тронуты; заявление per-(sample, prime), per-box — заявки на излечение НЕТ.
