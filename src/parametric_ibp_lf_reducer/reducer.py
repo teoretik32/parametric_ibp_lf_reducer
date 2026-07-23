@@ -58,6 +58,7 @@ from .row_generation import (
     generate_coordinate_ibp_rows,
     generate_tangent_ibp_rows,
 )
+from .surface import SurfacePolicy
 from .tangent_fields import generate_tangent_fields
 from .timing import StageTimings, new_stage_timings
 from .valuations import is_locally_finite
@@ -76,6 +77,9 @@ class ReducerConfig:
     min_valid_records: int = 1
     preferred_masters: Sequence[Label] = ()
     eps_direction: str = "minus"
+    # Explicit surface sign policy (External Int2 Method.11). None keeps the package default
+    # ``SurfacePolicy.limit(eps_direction)`` — identical to the historical filter behaviour.
+    surface_policy: SurfacePolicy | None = None
     # row-span certification of the reconstructed relation (Pass D4.5 / Verify.1):
     certificate_points: Sequence[Mapping] = ()  # explicit off-sample points (auto if empty)
     certificate_primes: Sequence[int] = ()  # primes for certification (main ``primes`` if empty)
@@ -124,6 +128,11 @@ def _generate_rows(
     timings: StageTimings | None = None,
 ) -> tuple[list[Row], dict]:
     t = timings if timings is not None else StageTimings()
+    policy = (
+        config.surface_policy
+        if config.surface_policy is not None
+        else SurfacePolicy.limit(config.eps_direction)
+    )
     rows: list[Row] = []
     by_kind: dict[str, int] = {}
     rejected: dict[str, int] = {}
@@ -140,7 +149,11 @@ def _generate_rows(
         _tally(res_alg, "algebraic")
         with t.stage("coordinate_rows"):
             res_coord = generate_coordinate_ibp_rows(
-                family, seed_labels, config.max_ibp_degree, eps_direction=config.eps_direction
+                family,
+                seed_labels,
+                config.max_ibp_degree,
+                eps_direction=config.eps_direction,
+                policy=policy,
             )
         _tally(res_coord, "coordinate_ibp")
         if config.tangent_degree_blocks:
@@ -148,10 +161,10 @@ def _generate_rows(
                 fields = generate_tangent_fields(family, list(config.tangent_degree_blocks))
             with t.stage("tangent_rows"):
                 res_tan = generate_tangent_ibp_rows(
-                    family, seed_labels, fields, eps_direction=config.eps_direction
+                    family, seed_labels, fields, eps_direction=config.eps_direction, policy=policy
                 )
             _tally(res_tan, "tangent_ibp")
-    return rows, {"by_kind": by_kind, "rejected": rejected}
+    return rows, {"by_kind": by_kind, "rejected": rejected, "surface_policy": policy.describe()}
 
 
 # --- row-span certificate step (Pass D4.5) ----------------------------------------------------

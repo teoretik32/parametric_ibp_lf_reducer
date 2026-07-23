@@ -794,3 +794,33 @@ Status: **complete, verified**.
   константе скрипта (только метаданные; вычисленные результаты не тронуты).
 - Продакшн политика знака не изменена; записанные Method.6–9 артефакты не
   тронуты; заявление per-(sample, prime), per-box — заявки на излечение НЕТ.
+
+## External Int2 Method.11 Phase A: явный SurfacePolicy API (ядро)
+
+- Обоснование: Method.10 дал `Feasible(modular)` под chamber-политикой через
+  диагностический swap `surface.regulated_sign` (только внутри скрипта).
+  Method.11 требует полной сертифицированной LF-реконструкции под явной
+  политикой — Phase A переносит политику в ядро как первоклассный неизменяемый
+  объект (никаких monkey-patch).
+- Сделано: `SurfacePolicy` в `surface.py` (frozen dataclass; конструкторы
+  `SurfacePolicy.limit(direction)` — историческое лимит-чтение, дефолт
+  `minus`; `SurfacePolicy.chamber({"ep": Fraction(-3, 5)})` — точная
+  рациональная chamber-точка, float отвергается на конструкции). Chamber-знак
+  решается ТОЛЬКО точной подстановкой: строгий pos/neg решает, точный ноль —
+  `zero`, оставшиеся символы — `unknown` (оба отклоняют строку, никогда не
+  дают ложный `True`). Прокинуто опциональным `policy` через
+  `coordinate_primitive_surface_free`, `vector_field_surface_free`,
+  `generate_coordinate_ibp_rows`, `generate_tangent_ibp_rows`;
+  `ReducerConfig.surface_policy` (None -> `SurfacePolicy.limit(eps_direction)`
+  — дефолтное поведение НЕ изменено); `_generate_rows` пишет `surface_policy`
+  (mode + точные значения) в row diagnostics. Экспорт на уровне пакета;
+  analytic-continuation семантика обоих режимов задокументирована в docstring
+  класса.
+- Гейт: `tests/test_surface_policy.py` (9 тестов: конструкторы и
+  иммутабельность, строгие chamber-знаки, эквивалентность дефолта
+  историческому поведению, прокидка в reducer + запись диагностики); полный
+  fast suite + `ruff check`/`format` зелёные.
+- Продакшн политика знака не изменена (дефолт = лимит `minus`); записанные
+  артефакты не тронуты. Следующие фазы Method.11: реконструкция + row-span
+  сертификат + per-term LF export под `SurfacePolicy.chamber({"ep": -3/5})` с
+  обязательной сверкой против аналитического Laurent-оракула.

@@ -145,6 +145,7 @@ from .row_generation import (
 from .sparse_poly import SparsePoly
 from .sparse_rref import RREFResult, rref_mod_p
 from .surface import (
+    SurfacePolicy,
     coordinate_primitive_surface_free,
     regulated_sign,
     vector_field_surface_free,
@@ -210,6 +211,7 @@ __all__ = [
     "coordinate_primitive_surface_free",
     "vector_field_surface_free",
     "regulated_sign",
+    "SurfacePolicy",
     # row generation (Pass 2A)
     "Row",
     "RejectedRow",

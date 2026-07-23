@@ -30,7 +30,11 @@ from dataclasses import dataclass, field
 from .coefficients import ParamExpr
 from .family import ParametricFamily
 from .labels import Label
-from .surface import coordinate_primitive_surface_free, vector_field_surface_free
+from .surface import (
+    SurfacePolicy,
+    coordinate_primitive_surface_free,
+    vector_field_surface_free,
+)
 from .tangent_fields import TangentField
 from .wolfram_text_export import coeff_to_wolfram_text
 
@@ -178,6 +182,7 @@ def generate_coordinate_ibp_rows(
     max_degree: int,
     eps_direction: str = "minus",
     dedup: bool = True,
+    policy: SurfacePolicy | None = None,
 ) -> RowGenerationResult:
     """Generate surface-filtered coordinate IBP rows for monomial multipliers up to ``max_degree``."""
     result = RowGenerationResult()
@@ -187,7 +192,12 @@ def generate_coordinate_ibp_rows(
             for p in monomials_up_to(family.nvars, max_degree):
                 prov = {"seed": label, "var": var_index, "P": p}
                 verdict = coordinate_primitive_surface_free(
-                    family, label, var_index, multiplier_exps=p, eps_direction=eps_direction
+                    family,
+                    label,
+                    var_index,
+                    multiplier_exps=p,
+                    eps_direction=eps_direction,
+                    policy=policy,
                 )
                 if verdict is not True:
                     reason = "surface_unknown" if verdict == "Unknown" else "surface_not_free"
@@ -206,9 +216,7 @@ def generate_coordinate_ibp_rows(
 
 
 # ---- tangent (syzygy) IBP rows ---------------------------------------------
-def tangent_ibp_primitive_row(
-    family: ParametricFamily, label: Label, field: TangentField
-) -> Row:
+def tangent_ibp_primitive_row(family: ParametricFamily, label: Label, field: TangentField) -> Row:
     """Raw expansion of ``0 = integral div(Q F_label)`` for a tangent field ``Q`` (no m-shift).
 
     Uses ``div(Q F) = F [ div Q + sum_i e_i Q_i / x_i + sum_l f_l H_l ]``, where ``H_l`` are the
@@ -244,6 +252,7 @@ def generate_tangent_ibp_rows(
     fields: Iterable[TangentField],
     eps_direction: str = "minus",
     dedup: bool = True,
+    policy: SurfacePolicy | None = None,
 ) -> RowGenerationResult:
     """Generate surface-filtered tangent IBP rows (``div(Q F)``) for verified tangent fields.
 
@@ -257,14 +266,12 @@ def generate_tangent_ibp_rows(
     seed_labels = list(seed_labels)
     for tf in fields:
         if not tf.is_tangent(family):
-            result.rejected.append(
-                RejectedRow("tangent_ibp", {"field": tf}, "field_not_tangent")
-            )
+            result.rejected.append(RejectedRow("tangent_ibp", {"field": tf}, "field_not_tangent"))
             continue
         for label in seed_labels:
             prov = {"seed": label, "field": tf}
             verdict = vector_field_surface_free(
-                family, label, list(tf.components), eps_direction=eps_direction
+                family, label, list(tf.components), eps_direction=eps_direction, policy=policy
             )
             if verdict is not True:
                 reason = "surface_unknown" if verdict == "Unknown" else "surface_not_free"

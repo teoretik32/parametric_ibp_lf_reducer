@@ -3,6 +3,23 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.11 Phase A: explicit `SurfacePolicy` API (core).**
+  New immutable `SurfacePolicy` (`surface.py`, exported at package level) with
+  constructors `SurfacePolicy.limit(direction)` (the historical
+  regulated-limit reading; package default `minus`) and
+  `SurfacePolicy.chamber({"ep": Fraction(-3, 5)})` (exact rational chamber
+  point; floats rejected at construction). Chamber signs are decided by exact
+  rational substitution only — strictly positive/negative decides, an exact
+  zero stays `zero`, leftover symbols give `unknown` (both reject the row).
+  Threaded as an optional `policy` argument through
+  `coordinate_primitive_surface_free`, `vector_field_surface_free`,
+  `generate_coordinate_ibp_rows`, `generate_tangent_ibp_rows`, and as
+  `ReducerConfig.surface_policy` into `reducer._generate_rows`; row
+  diagnostics now record the active policy (`surface_policy: {mode,
+  direction|point}`). Default behaviour is unchanged (`None` ->
+  `SurfacePolicy.limit(eps_direction)`); the analytic-continuation reading of
+  both modes is documented in the class docstring. Tests
+  `tests/test_surface_policy.py` (9).
 - **External Int2 Method.10: chamber-policy controlled LF-feasibility solve
   (full Level-0 box).** New runner `scripts/run_external_int2_method10.py`
   (nothing heavy without `--allow-heavy`; `--max-solves`,
