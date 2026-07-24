@@ -5,8 +5,10 @@ from __future__ import annotations
 import importlib.util
 import json
 import sys
+from dataclasses import replace
 from fractions import Fraction
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -197,3 +199,195 @@ class TestScopeNote:
     def test_no_analytic_value_claim(self, m11):
         assert "does NOT claim the analytic Laurent value" in m11.SCOPE_NOTE
         assert "default surface policy" in m11.SCOPE_NOTE
+
+
+class TestRecordCacheJson:
+    """Perf.12: the JSONL record cache round-trips exactly and rejects corruption."""
+
+    def _record(self, m11):
+        return m11.NormalFormRecord(
+            prime=101,
+            sample={"ep": Fraction(-3, 5)},
+            target_label=(0, 0, 0),
+            status="Reduced",
+            formal_success=True,
+            coeffs={(0, 0, -1): 7, (1, 0, 0): 100},
+            support=((0, 0, -1), (1, 0, 0)),
+            all_terms_lf=True,
+            non_lf_terms=(),
+            unknown_lf_terms=((1, 0, 0),),
+            rank=5,
+            diagnostics={"nrows": 9, "pivot_label": (0, 0, 0)},
+        )
+
+    def test_roundtrip_is_faithful(self, m11):
+        rec = self._record(m11)
+        key = m11.sample_prime_key(rec.sample, rec.prime)
+        back = m11._record_from_json(json.loads(json.dumps(m11._record_to_json(key, rec))))
+        assert back == rec
+
+    def test_key_is_canonical(self, m11):
+        k = m11.sample_prime_key
+        assert k({"ep": Fraction(2, 1)}, 7) == k({"ep": 2}, 7)
+        assert k({"a": 1, "b": Fraction(1, 2)}, 7) == k({"b": Fraction(1, 2), "a": 1}, 7)
+        assert k({"ep": 1}, 7) != k({"ep": 1}, 11)
+
+    def test_load_missing_file_is_empty(self, m11, tmp_path):
+        assert m11._load_record_cache(tmp_path / "none.jsonl", (0, 0, 0)) == {}
+
+    def test_load_roundtrip_and_duplicate_last_wins(self, m11, tmp_path):
+        rec = self._record(m11)
+        key = m11.sample_prime_key(rec.sample, rec.prime)
+        path = tmp_path / "cache.jsonl"
+        lines = [
+            json.dumps(m11._record_to_json(key, rec)),
+            json.dumps(m11._record_to_json(key, replace(rec, rank=6))),
+        ]
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        cache = m11._load_record_cache(path, (0, 0, 0))
+        assert set(cache) == {key}
+        assert cache[key].rank == 6
+
+    def test_load_rejects_key_mismatch(self, m11, tmp_path):
+        rec = self._record(m11)
+        path = tmp_path / "cache.jsonl"
+        path.write_text(
+            json.dumps(m11._record_to_json("p=999;ep=-3/5", rec)) + "\n", encoding="utf-8"
+        )
+        with pytest.raises(SystemExit, match="key mismatch"):
+            m11._load_record_cache(path, (0, 0, 0))
+
+    def test_load_rejects_foreign_target(self, m11, tmp_path):
+        rec = self._record(m11)
+        key = m11.sample_prime_key(rec.sample, rec.prime)
+        path = tmp_path / "cache.jsonl"
+        path.write_text(json.dumps(m11._record_to_json(key, rec)) + "\n", encoding="utf-8")
+        with pytest.raises(SystemExit, match="foreign target"):
+            m11._load_record_cache(path, (9, 9, 9))
+
+
+class TestCollectRecordCacheSeam:
+    """Perf.12: cache hits skip the per-point solve; misses stream through ``on_record``."""
+
+    @staticmethod
+    def _install_stub(monkeypatch, records_mod, calls):
+        def fake_mnf(family, rows, target_label, sample, prime, **kwargs):
+            calls.append((tuple(sorted(sample.items())), prime))
+            return SimpleNamespace(
+                terms={(0, 0, -1): prime - 1},
+                prime=prime,
+                sample=dict(sample),
+                target_label=target_label,
+                status="Reduced",
+                formal_success=True,
+                all_terms_lf=True,
+                non_lf_terms=(),
+                unknown_lf_terms=(),
+                rank=3,
+                nrows=4,
+                pivot_label=target_label,
+            )
+
+        monkeypatch.setattr(records_mod, "modular_normal_form", fake_mnf)
+
+    def test_cache_and_stream_behavior(self, monkeypatch):
+        import parametric_ibp_lf_reducer.records as records_mod
+
+        target = (0, 0, 0)
+        samples = [{"ep": Fraction(1, 3)}, {"ep": Fraction(2, 3)}]
+        primes = [101, 103]
+        calls: list = []
+        self._install_stub(monkeypatch, records_mod, calls)
+        kw = dict(preferred_masters=(), lf_map={}, ranking=object())
+
+        baseline = records_mod.collect_normal_form_records(None, [], target, primes, samples, **kw)
+        assert len(calls) == 4
+
+        calls.clear()
+        cache: dict = {}
+        seen: list = []
+        first = records_mod.collect_normal_form_records(
+            None,
+            [],
+            target,
+            primes,
+            samples,
+            record_cache=cache,
+            on_record=lambda key, rec: seen.append(key),
+            **kw,
+        )
+        assert first == baseline
+        assert len(calls) == 4 and len(cache) == 4
+        assert seen == [records_mod.sample_prime_key(s, p) for s in samples for p in primes]
+
+        calls.clear()
+        seen.clear()
+        warm = records_mod.collect_normal_form_records(
+            None,
+            [],
+            target,
+            primes,
+            samples,
+            record_cache=cache,
+            on_record=lambda key, rec: seen.append(key),
+            **kw,
+        )
+        assert warm == baseline
+        assert calls == [] and seen == []
+
+    def test_partial_cache_computes_only_missing_points(self, monkeypatch):
+        import parametric_ibp_lf_reducer.records as records_mod
+
+        target = (0, 0, 0)
+        samples = [{"ep": Fraction(1, 3)}, {"ep": Fraction(2, 3)}]
+        calls: list = []
+        self._install_stub(monkeypatch, records_mod, calls)
+        kw = dict(preferred_masters=(), lf_map={}, ranking=object())
+
+        cache: dict = {}
+        records_mod.collect_normal_form_records(
+            None, [], target, [101, 103], samples, record_cache=cache, **kw
+        )
+        calls.clear()
+        out = records_mod.collect_normal_form_records(
+            None, [], target, [101, 103, 107], samples, record_cache=cache, **kw
+        )
+        assert [p for _, p in calls] == [107, 107]  # only the new prime, per sample
+        # deterministic order preserved: samples outer, primes inner
+        assert [(r.sample["ep"], r.prime) for r in out] == [
+            (s["ep"], p) for s in samples for p in [101, 103, 107]
+        ]
+
+
+class TestInterpolationFailureMessage:
+    """The original reconstruction failure reason must surface in the diagnostics messages."""
+
+    def test_reconstruction_error_text_is_propagated(self, m11, monkeypatch):
+        import parametric_ibp_lf_reducer.reducer as reducer_mod
+
+        records = [
+            m11.NormalFormRecord(
+                prime=p,
+                sample={"ep": Fraction(1, 3)},
+                target_label=(0, 0, 0),
+                status="Reduced",
+                formal_success=True,
+                coeffs={(0, 0, -1): 2},
+                support=((0, 0, -1),),
+                rank=3,
+            )
+            for p in (101, 103)
+        ]
+
+        def boom(selected, parameters):
+            raise reducer_mod.InterpolationFailed("boom-424242")
+
+        monkeypatch.setattr(reducer_mod, "reconstruct_coefficients", boom)
+        fam = parse_family_text(EP_FAMILY)
+        run = reducer_mod.ReducerRunDiagnostics(n_labels=1, n_rows=1, row_diagnostics={})
+        st = reducer_mod._select_and_reconstruct(
+            fam, records, 1, run, reducer_mod.new_stage_timings()
+        )
+        assert st.interpolation_failed is True
+        assert st.coeffs is None
+        assert any("boom-424242" in msg for msg in st.messages)

@@ -11,3 +11,4 @@ outputs/
 .tmp_accept/
 *.7z
 validation/*.log
+validation/*_records.jsonl

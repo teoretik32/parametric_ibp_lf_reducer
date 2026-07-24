@@ -3,6 +3,27 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.11: первый тяжёлый certified-solve прогон (честный
+  `Failure(InterpolationFailed)`) + Perf.12 record-кэш.**
+  - Тяжёлый прогон (12 samples x 3 простых `[2147483647, 2147483629,
+    2147483587]`, `--jobs 3`): solve 6869.135 s, всего 7338.514 s. Все 36/36
+    grid-записей собраны (0 bad specializations, 0 skipped); rank-фильтр
+    оставил 33/36 записей на ранге 26984 (гистограмма `{23206: 3, 26984: 33}`).
+    Реконструкция коэффициентов не провалидировалась => вердикт
+    `Failure(InterpolationFailed)` в `validation/external_int2_method11.json`
+    (formal_success=True, reconstruction_verified=False, certificate NotRun,
+    n_terms=0). Вероятная причина — мало точек сэмплирования; не math-баг.
+  - Perf.12: персистентный per-(sample, prime) record-кэш.
+    `collect_normal_form_records()` принимает `record_cache` (сквозной
+    параметр через `reduce_rows_once`/`_reduce_core`); новый ключ
+    `sample_prime_key()`; в раннере CLI `--record-cache` (JSONL, по умолчанию
+    `validation/external_int2_method11_records.jsonl`, append-only) и
+    `--no-record-cache`; cache-hit пропускает весь mod-p проход точки
+    (~190 s/точку wall при `--jobs 3` в тяжёлом прогоне). `.gitignore`:
+    добавлен `validation/*_records.jsonl`. Тяжёлый прогон шёл до Perf.12 —
+    кэш пуст, записи прогона в него не попали.
+  - Тесты: `TestRecordCacheJson`, `TestCollectRecordCacheSeam` (+194 строки в
+    `tests/test_external_int2_method11.py`); полный fast suite зелёный.
 - **External Int2 Method.11 Phase B: certified-solve runner (scaffold).**
   New runner `scripts/run_external_int2_method11.py`: assembles the full
   Level-0 system (baseline blocks + the `(3, 3)` extra tangent block) under

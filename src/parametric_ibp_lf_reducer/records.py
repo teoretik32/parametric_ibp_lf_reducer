@@ -16,9 +16,10 @@ Strict rules honoured here:
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, MutableMapping, Sequence
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
+from fractions import Fraction
 
 from .family import ParametricFamily
 from .labels import Label
@@ -82,6 +83,22 @@ def record_from_result(result: NormalFormResult) -> NormalFormRecord:
     )
 
 
+def sample_prime_key(sample: Mapping, prime: int) -> str:
+    """Canonical, JSON-friendly identity of one ``(sample, prime)`` point (Perf.12 record cache).
+
+    Parameter values are canonicalized through :class:`~fractions.Fraction` and names are
+    sorted, so logically equal samples map to the same key regardless of dict order or value
+    representation (``2`` vs ``Fraction(2, 1)``). The key deliberately excludes the row system:
+    a cache file is only valid for the exact system it was produced from, and the *caller*
+    owning the cache is responsible for scoping it (one cache file per system + target).
+    """
+    parts = ",".join(
+        f"{name}={Fraction(value)}"
+        for name, value in sorted(sample.items(), key=lambda kv: str(kv[0]))
+    )
+    return f"p={prime};{parts}"
+
+
 # --- Perf.3: process-parallel point collection ------------------------------------------------
 # The per-run inputs (family/rows/ranking/...) are installed once per worker process by the
 # executor initializer, so each ``(sample, prime)`` task ships only the point itself.
@@ -126,8 +143,19 @@ def collect_normal_form_records(
     ranking: RankedLabels | None = None,
     jobs: int = 1,
     rref_backend: str | None = None,
+    record_cache: MutableMapping | None = None,
+    on_record: Callable[[str, NormalFormRecord], None] | None = None,
 ) -> list[NormalFormRecord]:
     """Run :func:`modular_normal_form` over ``samples x primes`` and collect every point.
+
+    Perf.12 (record cache): when ``record_cache`` is given (a mutable mapping keyed by
+    :func:`sample_prime_key`), points already present are **not** recomputed and are returned
+    from the cache; newly computed records are inserted into it. ``on_record(key, record)`` is
+    invoked once per *newly computed* record, in deterministic task order, as results become
+    available — a caller can persist incrementally and survive interruption. With
+    ``record_cache=None`` and ``on_record=None`` the behavior is bit-identical to the
+    historical path. The cache is trusted: scoping it to the exact system/target is the
+    caller's responsibility.
 
     ``rref_backend`` (Perf.11) selects the RREF implementation for every point (serial and
     parallel paths alike); all backends return identical results by construction.
@@ -170,31 +198,56 @@ def collect_normal_form_records(
                 lf_map=lf_map,
             )
     tasks = [(sample, prime) for sample in samples for prime in primes]
-    if jobs > 1 and len(tasks) > 1:
-        max_workers = min(jobs, len(tasks))
-        chunksize = max(1, len(tasks) // (max_workers * 4))
+    if record_cache is None:
+        todo = list(tasks)
+    else:
+        todo = [
+            (sample, prime)
+            for sample, prime in tasks
+            if sample_prime_key(sample, prime) not in record_cache
+        ]
+
+    def _note(sample, prime, record: NormalFormRecord) -> None:
+        key = sample_prime_key(sample, prime)
+        if record_cache is not None:
+            record_cache[key] = record
+        if on_record is not None:
+            on_record(key, record)
+
+    computed: list[NormalFormRecord] = []
+    if jobs > 1 and len(todo) > 1:
+        max_workers = min(jobs, len(todo))
+        chunksize = max(1, len(todo) // (max_workers * 4))
         with ProcessPoolExecutor(
             max_workers=max_workers,
             initializer=_init_point_worker,
             initargs=(family, rows, target_label, preferred_masters, lf_map, ranking, rref_backend),
         ) as pool:
-            return list(pool.map(_run_point, tasks, chunksize=chunksize))
-    records: list[NormalFormRecord] = []
-    for sample, prime in tasks:
-        result = modular_normal_form(
-            family,
-            rows,
-            target_label,
-            dict(sample),
-            prime,
-            preferred_masters=preferred_masters,
-            lf_map=lf_map,
-            timings=timings,
-            ranking=ranking,
-            rref_backend=rref_backend,
-        )
-        records.append(record_from_result(result))
-    return records
+            for (sample, prime), record in zip(
+                todo, pool.map(_run_point, todo, chunksize=chunksize)
+            ):
+                _note(sample, prime, record)
+                computed.append(record)
+    else:
+        for sample, prime in todo:
+            result = modular_normal_form(
+                family,
+                rows,
+                target_label,
+                dict(sample),
+                prime,
+                preferred_masters=preferred_masters,
+                lf_map=lf_map,
+                timings=timings,
+                ranking=ranking,
+                rref_backend=rref_backend,
+            )
+            record = record_from_result(result)
+            _note(sample, prime, record)
+            computed.append(record)
+    if record_cache is None:
+        return computed  # todo == tasks: identical to the historical path
+    return [record_cache[sample_prime_key(sample, prime)] for sample, prime in tasks]
 
 
 # --- Perf.5: multi-target collection over ONE shared RREF per point ---------------------------
@@ -280,7 +333,15 @@ def collect_normal_form_records_multi(
         with ProcessPoolExecutor(
             max_workers=max_workers,
             initializer=_init_point_worker,
-            initargs=(family, rows, tuple(targets), preferred_masters, lf_map, ranking, rref_backend),
+            initargs=(
+                family,
+                rows,
+                tuple(targets),
+                preferred_masters,
+                lf_map,
+                ranking,
+                rref_backend,
+            ),
         ) as pool:
             for point_records in pool.map(_run_point_multi, tasks, chunksize=chunksize):
                 for tgt, rec in zip(targets, point_records):

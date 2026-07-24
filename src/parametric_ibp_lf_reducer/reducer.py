@@ -418,9 +418,10 @@ def _select_and_reconstruct(
                 with timings.stage("reconstruction"):
                     st.coeffs = reconstruct_coefficients(selected, family.parameters)
                 st.verified = True  # reconstruction validated on independent holdout points
-            except InterpolationFailed:
+            except InterpolationFailed as exc:
                 st.coeffs = None
                 st.interpolation_failed = True
+                st.messages.append(f"reconstruction failed: {exc}")
     return st
 
 
@@ -525,6 +526,8 @@ def _reduce_core(
     jobs: int = 1,
     rref_backend: str | None = None,
     timings: StageTimings | None = None,
+    record_cache: MutableMapping | None = None,
+    on_record=None,
 ) -> ReductionResult:
     if certificate_rank_policy != "selected_rank":
         raise ValueError(
@@ -548,6 +551,8 @@ def _reduce_core(
             timings=timings,
             jobs=jobs,
             rref_backend=rref_backend,
+            record_cache=record_cache,
+            on_record=on_record,
         )
     st = _select_and_reconstruct(family, records, min_valid_records, run, timings)
 
@@ -652,6 +657,8 @@ def reduce_rows_once(
     certificate_rank_policy: str = "selected_rank",
     jobs: int = 1,
     rref_backend: str | None = None,
+    record_cache: MutableMapping | None = None,
+    on_record=None,
 ) -> ReductionResult:
     """Orchestrate a reduction over ready-made ``rows`` (for testing without row generation).
 
@@ -685,6 +692,8 @@ def reduce_rows_once(
         jobs=jobs,
         rref_backend=rref_backend,
         timings=timings,
+        record_cache=record_cache,
+        on_record=on_record,
     )
 
 

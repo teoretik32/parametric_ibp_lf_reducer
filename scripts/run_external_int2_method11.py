@@ -34,6 +34,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 
 from parametric_ibp_lf_reducer import SurfacePolicy, parse_family_text  # noqa: E402
 from parametric_ibp_lf_reducer.api import default_scattered_samples  # noqa: E402
+from parametric_ibp_lf_reducer.records import NormalFormRecord, sample_prime_key  # noqa: E402
 from parametric_ibp_lf_reducer.reducer import _generate_rows, reduce_rows_once  # noqa: E402
 from parametric_ibp_lf_reducer.row_generation import generate_tangent_ibp_rows  # noqa: E402
 from parametric_ibp_lf_reducer.sparse_rref import RREF_BACKEND_CHOICES  # noqa: E402
@@ -60,6 +61,7 @@ DEFAULT_MIN_VALID_RECORDS = 6
 DEFAULT_MIN_CERTIFICATE_POINTS = 2
 DEFAULT_OUT = REPO_ROOT / "validation" / "external_int2_method11.json"
 DEFAULT_EXPORT = REPO_ROOT / "validation" / "external_int2_method11_reduction.txt"
+DEFAULT_RECORD_CACHE = REPO_ROOT / "validation" / "external_int2_method11_records.jsonl"
 METHOD10_ARTIFACT = REPO_ROOT / "validation" / "external_int2_method10.json"
 
 SCOPE_NOTE = (
@@ -169,6 +171,79 @@ def _write_report(out_path: Path, report: dict) -> None:
     out_path.write_text(json.dumps(report, indent=2, default=str) + "\n", encoding="utf-8")
 
 
+# --- Perf.12: persistent (sample, prime) record cache -----------------------------------------
+
+
+def _record_to_json(key: str, record: NormalFormRecord) -> dict:
+    """Faithful JSON form of one record (exact ints / Fraction-strings; no floats)."""
+    return {
+        "key": key,
+        "prime": record.prime,
+        "sample": {str(k): str(Fraction(v)) for k, v in record.sample.items()},
+        "target_label": list(record.target_label),
+        "status": record.status,
+        "formal_success": bool(record.formal_success),
+        "coeffs": [[list(lab), int(c)] for lab, c in sorted(record.coeffs.items())],
+        "all_terms_lf": record.all_terms_lf,
+        "non_lf_terms": [list(t) for t in record.non_lf_terms],
+        "unknown_lf_terms": [list(t) for t in record.unknown_lf_terms],
+        "rank": record.rank,
+        "diagnostics": {
+            k: (list(v) if isinstance(v, tuple) else v) for k, v in record.diagnostics.items()
+        },
+    }
+
+
+def _record_from_json(data: dict) -> NormalFormRecord:
+    """Inverse of :func:`_record_to_json` (labels back to tuples, samples back to Fractions)."""
+    coeffs = {tuple(lab): int(c) for lab, c in data["coeffs"]}
+    diagnostics = dict(data.get("diagnostics") or {})
+    if isinstance(diagnostics.get("pivot_label"), list):
+        diagnostics["pivot_label"] = tuple(diagnostics["pivot_label"])
+    return NormalFormRecord(
+        prime=int(data["prime"]),
+        sample={name: Fraction(value) for name, value in data["sample"].items()},
+        target_label=tuple(data["target_label"]),
+        status=data["status"],
+        formal_success=bool(data["formal_success"]),
+        coeffs=coeffs,
+        support=tuple(sorted(coeffs)),
+        all_terms_lf=data.get("all_terms_lf"),
+        non_lf_terms=tuple(tuple(t) for t in data.get("non_lf_terms", [])),
+        unknown_lf_terms=tuple(tuple(t) for t in data.get("unknown_lf_terms", [])),
+        rank=int(data["rank"]),
+        diagnostics=diagnostics,
+    )
+
+
+def _load_record_cache(path: Path, target_label) -> dict[str, NormalFormRecord]:
+    """Load a JSONL record cache; key/target integrity mismatches are hard stops.
+
+    Duplicate keys are allowed (idempotent append-mode re-runs); the last line wins. The cache
+    is scoped to this runner's fixed system + target, so a foreign target is corruption, not
+    data to be filtered.
+    """
+    cache: dict[str, NormalFormRecord] = {}
+    if not path.exists():
+        return cache
+    with path.open("r", encoding="utf-8") as fh:
+        for lineno, line in enumerate(fh, start=1):
+            line = line.strip()
+            if not line:
+                continue
+            data = json.loads(line)
+            record = _record_from_json(data)
+            key = sample_prime_key(record.sample, record.prime)
+            if data.get("key") != key:
+                raise SystemExit(f"record cache corrupt at {path}:{lineno}: key mismatch")
+            if record.target_label != tuple(target_label):
+                raise SystemExit(
+                    f"record cache corrupt at {path}:{lineno}: foreign target {record.target_label}"
+                )
+            cache[key] = record
+    return cache
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--input", type=Path, default=T2.DEFAULT_INPUT)
@@ -225,6 +300,18 @@ def main(argv=None) -> int:
         "--ignore-rows-mismatch",
         action="store_true",
         help="proceed past a failed Method.10 row-count crosscheck (diagnosis only)",
+    )
+    parser.add_argument(
+        "--record-cache",
+        type=Path,
+        default=DEFAULT_RECORD_CACHE,
+        help="JSONL cache of (sample, prime) normal-form records; hits skip the per-point "
+        "RREF, new records are appended as they finish (crash-safe incremental persistence)",
+    )
+    parser.add_argument(
+        "--no-record-cache",
+        action="store_true",
+        help="disable the record cache entirely (recompute everything, persist nothing)",
     )
     args = parser.parse_args(argv)
 
@@ -303,25 +390,56 @@ def main(argv=None) -> int:
         return 0
 
     samples = default_scattered_samples(family.parameters, args.n_samples)
+    record_cache = None
+    on_record = None
+    cache_fh = None
+    n_cache_hits = 0
+    n_grid_points = len(samples) * len(primes)
+    if not args.no_record_cache:
+        record_cache = _load_record_cache(args.record_cache, target_label)
+        n_cache_hits = sum(
+            1
+            for sample in samples
+            for p in primes
+            if sample_prime_key(dict(sample), p) in record_cache
+        )
+        args.record_cache.parent.mkdir(parents=True, exist_ok=True)
+        cache_fh = args.record_cache.open("a", encoding="utf-8")
+
+        def on_record(key: str, record: NormalFormRecord) -> None:
+            cache_fh.write(json.dumps(_record_to_json(key, record), separators=(",", ":")) + "\n")
+            cache_fh.flush()
+
+        print(
+            f"[m11] record cache: {len(record_cache)} on disk, "
+            f"{n_cache_hits}/{n_grid_points} grid hits -> {args.record_cache}",
+            flush=True,
+        )
     print(
         f"[m11] certified solve: {len(samples)} samples x {len(primes)} primes, "
         f"jobs={args.jobs}, rref_backend={args.rref_backend or 'default'}",
         flush=True,
     )
     t_solve = time.time()
-    result = reduce_rows_once(
-        family,
-        target_label,
-        labels,
-        asm["merged"],
-        primes,
-        samples,
-        min_valid_records=args.min_valid_records,
-        require_certificate_for_success=True,
-        min_certificate_points=args.min_certificate_points,
-        jobs=args.jobs,
-        rref_backend=args.rref_backend,
-    )
+    try:
+        result = reduce_rows_once(
+            family,
+            target_label,
+            labels,
+            asm["merged"],
+            primes,
+            samples,
+            min_valid_records=args.min_valid_records,
+            require_certificate_for_success=True,
+            min_certificate_points=args.min_certificate_points,
+            jobs=args.jobs,
+            rref_backend=args.rref_backend,
+            record_cache=record_cache,
+            on_record=on_record,
+        )
+    finally:
+        if cache_fh is not None:
+            cache_fh.close()
     solve_seconds = round(time.time() - t_solve, 3)
     verdict = "Success(certified)" if result.success else f"Failure({result.status})"
 
@@ -333,6 +451,12 @@ def main(argv=None) -> int:
         "min_certificate_points": args.min_certificate_points,
         "jobs": args.jobs,
         "rref_backend": args.rref_backend,
+        "record_cache": {
+            "enabled": not args.no_record_cache,
+            "path": None if args.no_record_cache else str(args.record_cache),
+            "grid_points": n_grid_points,
+            "grid_hits_on_start": n_cache_hits,
+        },
         "solve_seconds": solve_seconds,
     }
     report["reduce"] = result_payload(result)

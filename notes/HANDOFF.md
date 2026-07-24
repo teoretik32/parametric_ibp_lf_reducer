@@ -856,8 +856,29 @@ Status: **complete, verified**.
   match/mismatch/not-comparable + пин записанного 49439; JSON-готовность
   payload; CLI-гейты до любой тяжёлой работы; scope-note guard). Полный fast
   suite + `ruff check`/`format` (на тронутых файлах) зелёные.
-- Тяжёлый сертифицированный прогон ещё НЕ выполнялся — артефакта Method.11
-  нет; заявок нет. Следующее: фоновой запуск `--allow-heavy` (ориентир
-  Method.10: один (sample, prime) solve ~400-460 s => 36 записей ~4-5 ч
-  serial, меньше с `--jobs`), затем Phase C — сверка per-term LF export
-  против аналитического Laurent-оракула.
+- Тяжёлый сертифицированный прогон ВЫПОЛНЕН (12 samples x 3 простых
+  `[2147483647, 2147483629, 2147483587]`, `--jobs 3`): solve 6869.135 s,
+  всего 7338.514 s. Все 36/36 grid-записей собраны (0 bad specializations,
+  0 skipped, 0 empty); rank-фильтр оставил 33/36 записей на ранге 26984
+  (гистограмма `{23206: 3, 26984: 33}`). Реконструкция коэффициентов НЕ
+  провалидировалась: честный вердикт `Failure(InterpolationFailed)` записан
+  в `validation/external_int2_method11.json` (formal_success=True,
+  reconstruction_verified=False, certificate NotRun, n_terms=0). Вероятная
+  причина — недостаточно точек сэмплирования для рациональной
+  реконструкции на этом chamber; НЕ math-баг: записи взаимно согласованы
+  по рангу, специализации чистые.
+- Perf.12 (входит в этот коммит): персистентный record-кэш
+  per-(sample, prime): `collect_normal_form_records(..., record_cache=...)`
+  (сквозной параметр через `reduce_rows_once`/`_reduce_core`), JSONL-кэш
+  `validation/external_int2_method11_records.jsonl` (append-only; добавлен
+  в `.gitignore`), CLI `--record-cache`/`--no-record-cache`; cache-hit
+  пропускает весь mod-p проход точки (records_total 6863 s wall при
+  `--jobs 3`, т.е. ~190 s/точку wall). ВНИМАНИЕ: тяжёлый прогон шёл ДО
+  Perf.12 — кэш-файла ещё нет, записи прогона в кэш не попали (артефакт
+  хранит только диагностику, не сами записи). Тесты: `TestRecordCacheJson`,
+  `TestCollectRecordCacheSeam` (+194 строки в
+  `tests/test_external_int2_method11.py`); полный fast suite зелёный.
+- Следующее: повторный тяжёлый прогон с бОльшим числом сэмплов (12 -> 24-36)
+  и/или дополнительными простыми — теперь с включённым кэшем, чтобы новые
+  точки накапливались, а рестарты были дёшевы; затем Phase C — сверка
+  per-term LF export против аналитического Laurent-оракула.
