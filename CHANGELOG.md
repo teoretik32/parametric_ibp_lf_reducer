@@ -3,6 +3,26 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.11 Phase B: certified-solve runner (scaffold).**
+  New runner `scripts/run_external_int2_method11.py`: assembles the full
+  Level-0 system (baseline blocks + the `(3, 3)` extra tangent block) under
+  `SurfacePolicy.chamber({"ep": -3/5})` through the first-class core API (no
+  monkey-patching; the extra block gets the policy forwarded explicitly), then
+  runs one fixed certified pass via `reduce_rows_once` with
+  `require_certificate_for_success=True` (no opt-out flag by design). Heavy
+  work is gated on `--allow-heavy` (otherwise an assembly-only artifact with
+  verdict `NotRun(assembly-only)`); a comparable Method.10 artifact with a
+  different chamber row total is an integrity stop
+  (`Aborted(rows-mismatch)`, exit 2, bypass only via
+  `--ignore-rows-mismatch`). Runner defaults: 3 packaged 31-bit primes, 12
+  scattered samples (the `ep = 3` special sample stays in — the
+  rank-consistency record filter is the authoritative discard),
+  `--min-valid-records 6`, `--min-certificate-points 2`, `--jobs`,
+  `--rref-backend`. Artifact `validation/external_int2_method11.json` (scope
+  note, policy diagnostics, per-kind row counts, crosscheck, full result
+  payload with per-term LF flags); Wolfram-style reduction text exported only
+  on certified Success. Tests `tests/test_external_int2_method11.py` (20).
+  The heavy certified run has NOT been executed yet — no Method.11 claims.
 - **External Int2 Method.11 Phase A: explicit `SurfacePolicy` API (core).**
   New immutable `SurfacePolicy` (`surface.py`, exported at package level) with
   constructors `SurfacePolicy.limit(direction)` (the historical

@@ -824,3 +824,40 @@ Status: **complete, verified**.
   артефакты не тронуты. Следующие фазы Method.11: реконструкция + row-span
   сертификат + per-term LF export под `SurfacePolicy.chamber({"ep": -3/5})` с
   обязательной сверкой против аналитического Laurent-оракула.
+
+## External Int2 Method.11 Phase B: certified-solve runner (scaffold)
+
+- Сделано: `scripts/run_external_int2_method11.py` — сборка полной Level-0
+  системы (baseline-блоки + экстра tangent-блок `(3, 3)`) под
+  `SurfacePolicy.chamber({"ep": -3/5})` ЧЕРЕЗ первоклассный core-API
+  (`ReducerConfig.surface_policy`; экстра-блоку политика прокидывается явно —
+  T2-сборка старше API и фильтрует экстра-блок только лимитом), затем один
+  фиксированный сертифицированный проход `reduce_rows_once` c
+  `require_certificate_for_success=True` (без флага отключения — намеренно).
+- Гейты запуска: тяжёлая часть только под `--allow-heavy`; без него —
+  assembly-only артефакт с вердиктом `NotRun(assembly-only)`. Integrity-stop:
+  при сравнимом Method.10 артефакте (`level 0`, `ep = -3/5`) несовпадение
+  chamber-строк (записано 49439) = `Aborted(rows-mismatch)`, exit 2 (обход
+  только явным `--ignore-rows-mismatch` для диагностики). Дефолты runner-а:
+  primes = (2147483647, 2147483629, 2147483587), 12 samples (спец-точка
+  `ep=3` НЕ исключается — её отбрасывает rank-consistency фильтр записей,
+  счётчики в артефакте), `--min-valid-records 6` (пол runner-а, строже
+  пакетного 1), `--min-certificate-points 2`, `--jobs`, `--rref-backend`.
+- Артефакт `validation/external_int2_method11.json`: scope note (Success =
+  сертифицированное тождество редукции в записанных точках; НЕ аналитическое
+  Laurent-значение), политика из row diagnostics, счётчики строк по kind,
+  crosscheck-блок, `result_payload` (термы + per-term LF флаги + полные
+  диагностики). На Success дополнительно Wolfram-текст редукции в
+  `validation/external_int2_method11_reduction.txt`.
+- Гейт: `tests/test_external_int2_method11.py` (20 тестов: точная
+  chamber-точка/отказ float; лимит-эквивалентность сборки с
+  `T2.assemble_level_rows` (контракт Phase A); запись политики в диагностику;
+  расхождение строк при далёкой chamber-точке `ep=-3/2`; crosscheck
+  match/mismatch/not-comparable + пин записанного 49439; JSON-готовность
+  payload; CLI-гейты до любой тяжёлой работы; scope-note guard). Полный fast
+  suite + `ruff check`/`format` (на тронутых файлах) зелёные.
+- Тяжёлый сертифицированный прогон ещё НЕ выполнялся — артефакта Method.11
+  нет; заявок нет. Следующее: фоновой запуск `--allow-heavy` (ориентир
+  Method.10: один (sample, prime) solve ~400-460 s => 36 записей ~4-5 ч
+  serial, меньше с `--jobs`), затем Phase C — сверка per-term LF export
+  против аналитического Laurent-оракула.
