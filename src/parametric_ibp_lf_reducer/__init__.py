@@ -93,7 +93,11 @@ from .records import (
 from .reconstruction import (
     RANK_POLICY_ALL,
     RANK_POLICY_MAX_RANK,
+    SUPPORT_SPECIAL_ZERO,
+    SUPPORT_STABLE,
+    SUPPORT_UNSTABLE,
     InterpolationFailed,
+    classify_sample_supports,
     collect_value_table,
     interpolate_multivariate,
     interpolate_univariate,
@@ -276,6 +280,11 @@ __all__ = [
     "select_records_for_reconstruction",
     "RANK_POLICY_MAX_RANK",
     "RANK_POLICY_ALL",
+    # Method.11b: special-zero vs unstable support classification
+    "classify_sample_supports",
+    "SUPPORT_STABLE",
+    "SUPPORT_SPECIAL_ZERO",
+    "SUPPORT_UNSTABLE",
     # modular row-span certificate (Pass D4.4)
     "verify_reduction_relation_mod_p",
     "CertificateResult",

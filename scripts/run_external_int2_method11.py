@@ -18,6 +18,7 @@ a script-local sign swap). A mismatch is an integrity stop, not a warning.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import sys
@@ -216,24 +217,119 @@ def _record_from_json(data: dict) -> NormalFormRecord:
     )
 
 
-def _load_record_cache(path: Path, target_label) -> dict[str, NormalFormRecord]:
-    """Load a JSONL record cache; key/target integrity mismatches are hard stops.
+CACHE_SCHEMA = "m11-record-cache/v2"
 
-    Duplicate keys are allowed (idempotent append-mode re-runs); the last line wins. The cache
-    is scoped to this runner's fixed system + target, so a foreign target is corruption, not
-    data to be filtered.
+
+def _fingerprint_json(fingerprint: dict) -> str:
+    """Canonical JSON form used for fingerprint equality (survives a JSON round-trip)."""
+    return json.dumps(fingerprint, sort_keys=True, separators=(",", ":"), default=str)
+
+
+def _cache_fingerprint(family_text: str, ep_value, labels, target_label, asm) -> dict:
+    """System-shape fingerprint scoping the record cache (Method.11a hardening).
+
+    Covers everything a cached record depends on: family source, chamber point, label box,
+    row-system counts/kinds (max IBP degree and tangent blocks are deterministic functions of
+    these plus the family source, which is hashed) and the recorded surface-policy values.
+    ``rref_backend`` is deliberately EXCLUDED: the exact rational RREF of a fixed row system
+    is backend-invariant, so records remain reusable across backends.
+    """
+    return {
+        "family_sha256": hashlib.sha256(family_text.encode("utf-8")).hexdigest(),
+        "chamber_ep": str(ep_value),
+        "level": 0,
+        "n_labels": len(labels),
+        "target_label": list(target_label),
+        "rows": {k: v for k, v in asm.items() if k not in ("merged", "row_diagnostics")},
+        "surface_policy": asm["row_diagnostics"].get("surface_policy"),
+    }
+
+
+def _open_record_cache_append(path: Path, fingerprint: dict):
+    """Open the cache for append; a new/empty file gets the schema header as line 1."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fresh = not path.exists() or path.stat().st_size == 0
+    fh = path.open("a", encoding="utf-8")
+    if fresh:
+        header = {"schema": CACHE_SCHEMA, "fingerprint": fingerprint}
+        fh.write(json.dumps(header, sort_keys=True, default=str) + "\n")
+        fh.flush()
+    return fh
+
+
+def _load_samples_file(path: Path, parameters) -> list[dict]:
+    """Load an explicit stage schedule: JSON list of {param: "p/q"} exact-fraction dicts.
+
+    Used by staged Method.11a reconstruction runs; entries must match the family parameters
+    exactly and be pairwise distinct (stale/duplicate points would silently bias the
+    interpolation point count).
+    """
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, list) or not data:
+        raise SystemExit(f"samples file {path}: expected a non-empty JSON list")
+    want = set(parameters)
+    out: list[dict] = []
+    seen: set[tuple] = set()
+    for i, entry in enumerate(data):
+        if not isinstance(entry, dict) or set(entry) != want:
+            raise SystemExit(
+                f"samples file {path}: entry {i} keys != family parameters {sorted(want)}"
+            )
+        sample = {name: Fraction(str(entry[name])) for name in parameters}
+        tup = tuple(sample[name] for name in parameters)
+        if tup in seen:
+            raise SystemExit(f"samples file {path}: duplicate sample at entry {i}")
+        seen.add(tup)
+        out.append(sample)
+    return out
+
+
+def _load_record_cache(path: Path, target_label, fingerprint: dict) -> dict[str, NormalFormRecord]:
+    """Load a JSONL record cache; any integrity mismatch is a hard stop, never a stale hit.
+
+    Line 1 must be a ``{"schema": ..., "fingerprint": ...}`` header. A missing header, foreign
+    schema, or fingerprint mismatch (changed family / chamber point / label box / row system /
+    surface policy) refuses the whole file: stale records are never served — use a fresh
+    --record-cache path or --no-record-cache. Changed prime/sample are ordinary key-level
+    misses, not errors. Duplicate keys are allowed (idempotent append-mode re-runs); the last
+    line wins. Corrupt or incomplete lines abort with their line number.
     """
     cache: dict[str, NormalFormRecord] = {}
     if not path.exists():
         return cache
+    expected = _fingerprint_json(fingerprint)
+    saw_header = False
     with path.open("r", encoding="utf-8") as fh:
         for lineno, line in enumerate(fh, start=1):
             line = line.strip()
             if not line:
                 continue
-            data = json.loads(line)
-            record = _record_from_json(data)
-            key = sample_prime_key(record.sample, record.prime)
+            try:
+                data = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise SystemExit(f"record cache corrupt at {path}:{lineno}: {exc}") from exc
+            if not saw_header:
+                if not isinstance(data, dict) or "schema" not in data:
+                    raise SystemExit(
+                        f"record cache corrupt at {path}:{lineno}: missing schema header"
+                    )
+                if data["schema"] != CACHE_SCHEMA:
+                    raise SystemExit(
+                        f"record cache {path}: schema {data['schema']!r} != {CACHE_SCHEMA!r}"
+                    )
+                if _fingerprint_json(data.get("fingerprint", {})) != expected:
+                    raise SystemExit(
+                        f"record cache {path}: system fingerprint mismatch (family/chamber/"
+                        "label box/rows/surface policy changed); refusing stale records — "
+                        "use a fresh --record-cache path or --no-record-cache"
+                    )
+                saw_header = True
+                continue
+            try:
+                record = _record_from_json(data)
+                key = sample_prime_key(record.sample, record.prime)
+            except (KeyError, ValueError, TypeError) as exc:
+                raise SystemExit(f"record cache corrupt at {path}:{lineno}: {exc}") from exc
             if data.get("key") != key:
                 raise SystemExit(f"record cache corrupt at {path}:{lineno}: key mismatch")
             if record.target_label != tuple(target_label):
@@ -313,6 +409,13 @@ def main(argv=None) -> int:
         action="store_true",
         help="disable the record cache entirely (recompute everything, persist nothing)",
     )
+    parser.add_argument(
+        "--samples-file",
+        type=Path,
+        default=None,
+        help="JSON list of exact-fraction sample dicts (staged Method.11a schedules); "
+        "overrides --n-samples/default_scattered_samples",
+    )
     args = parser.parse_args(argv)
 
     primes = tuple(int(p) for p in args.primes.split(",") if p.strip())
@@ -389,22 +492,30 @@ def main(argv=None) -> int:
         )
         return 0
 
-    samples = default_scattered_samples(family.parameters, args.n_samples)
+    if args.samples_file is not None:
+        samples = _load_samples_file(args.samples_file, family.parameters)
+        print(
+            f"[m11] samples file: {len(samples)} explicit points <- {args.samples_file}", flush=True
+        )
+    else:
+        samples = default_scattered_samples(family.parameters, args.n_samples)
     record_cache = None
     on_record = None
     cache_fh = None
     n_cache_hits = 0
     n_grid_points = len(samples) * len(primes)
     if not args.no_record_cache:
-        record_cache = _load_record_cache(args.record_cache, target_label)
+        fingerprint = _cache_fingerprint(
+            args.input.read_text(encoding="utf-8"), ep_value, labels, target_label, asm
+        )
+        record_cache = _load_record_cache(args.record_cache, target_label, fingerprint)
         n_cache_hits = sum(
             1
             for sample in samples
             for p in primes
             if sample_prime_key(dict(sample), p) in record_cache
         )
-        args.record_cache.parent.mkdir(parents=True, exist_ok=True)
-        cache_fh = args.record_cache.open("a", encoding="utf-8")
+        cache_fh = _open_record_cache_append(args.record_cache, fingerprint)
 
         def on_record(key: str, record: NormalFormRecord) -> None:
             cache_fh.write(json.dumps(_record_to_json(key, record), separators=(",", ":")) + "\n")
@@ -460,6 +571,13 @@ def main(argv=None) -> int:
         "solve_seconds": solve_seconds,
     }
     report["reduce"] = result_payload(result)
+    reduce_diag = report["reduce"]["diagnostics"]
+    report["reconstruction"] = {  # Method.11b: first-class section for the stage gate
+        "formal_success": bool(reduce_diag.get("reconstruction_verified")),
+        "independent_validation_passed": bool(reduce_diag.get("independent_validation_passed")),
+        "n_terms": len(result.terms),
+        "detail": (reduce_diag.get("extra") or {}).get("reconstruction_diagnostics", {}),
+    }
     report["verdict"] = verdict
     report["elapsed_seconds"] = round(time.time() - t0, 3)
     _write_report(args.out, report)

@@ -882,3 +882,73 @@ Status: **complete, verified**.
   и/или дополнительными простыми — теперь с включённым кэшем, чтобы новые
   точки накапливались, а рестарты были дёшевы; затем Phase C — сверка
   per-term LF export против аналитического Laurent-оракула.
+
+## External Int2 Method.11a: ступенчатая лесенка точек (Phases A–C, 2026-07-24)
+
+- Мотивация: тяжёлый прогон Method.11 (12 sample × 3 prime, 36/36 записей) кончился честным
+  `InterpolationFailed` — это ёмкостный барьер, не (обязательно) ошибка модели: точка №2 `ep=3`
+  спецализуется (rank 23206 vs 26984) → всего 11 генерических точек, а при fit=9/holdout=2
+  достижимы только пары степеней с суммарной ≤ 3. Таблица минимумов точек:
+  (3,2)/(2,3)→17, (3,3)→21, (4,3)→26, (4,4)→31 — отсюда ступени 18/24/30/36.
+- Phase A (аудит, закрыт): `validation/external_int2_method11a_audit.json` — все 12 сэмплов
+  детерминированно восстановлены (`('ep','r')`, k=0..11), спец-точка исключена. Честные пробелы
+  зафиксированы: per-record supports и per-label rank/nullity в тяжёлом артефакте НЕ сохранялись,
+  коэффициентов нет → сидировать кэш из артефакта невозможно; 11 старых точек пересчитываются
+  один раз и навсегда оседают в кэше.
+- Phase B (кэш v2, закрыт): формат `m11-record-cache/v2` — первая строка JSONL = заголовок с
+  fingerprint системы (sha256 семейства, chamber ep, label box, счётчики строк по видам,
+  surface policy, target). Несовпадение fingerprint = жёсткий стоп (протухшая запись никогда
+  не отдаётся); смена prime/sample — обычный key-miss. `rref_backend` НАМЕРЕННО исключён из
+  fingerprint (точный рациональный RREF бэкенд-инвариантен; решение задокументировано в
+  docstring). Битая строка → `SystemExit` с номером строки; дубликаты — last-wins; заголовок
+  пишется ровно один раз. Тесты: `TestRecordCacheFingerprint` (10) + `TestSamplesFile`;
+  43 зелёных в `tests/test_external_int2_method11.py`, ruff чист.
+- Phase C (запущено): в раннер добавлен `--samples-file`. Расписания
+  `validation/method11a_samples_stage{1,2,3,4}.json` = 18/24/30/36 точек, кумулятивные
+  надмножества (Stage N+1 пересчитывает только +6 точек × 3 prime, остальное отдаёт кэш).
+  Stage 1: 11 старых генерических + 7 новых `ep=51/7..69/7`, без `ep=3`, r>0, попарно различны.
+  Прогон в фоне: `jobs=2` (память: прошлый прогон при jobs=3 держал ≥5.5 GB из 15.9),
+  отдельный `--out` — зафиксированный отказ Method.11 не затирается. Лог подтвердил интеграцию:
+  49439 строк, Method.10 crosscheck match, `samples file: 18 explicit points`,
+  `record cache: 0 on disk, 0/54 grid hits`, v2-заголовок записан.
+- Гейт Stage-N → Stage-N+1: `scripts/method11a_stage_gate.py` (analysis-only; схему записи
+  импортирует из раннера: `NormalFormRecord`/`_record_from_json`/`sample_prime_key`).
+  Вердикты: DONE (реконструкция удалась) / PROCEED (честный ёмкостный отказ: support стабилен
+  на всех max-rank записях, полное покрытие точек простыми, ранговых провалов нет) /
+  STOP (exit 2: нестабильный support, провал ранга, дырка в покрытии, не-ёмкостная причина).
+  Тесты: `tests/test_method11a_stage_gate.py` (13, зелёные). Запуск по завершении Stage 1:
+  `python scripts/method11a_stage_gate.py --artifact <stage1 out> --expected-points 18`.
+- Статус: Stage 1 завершён, гейт = STOP (`validation/method11a_stage1_gate.json`:
+  `artifact lacks a reconstruction section` + `unstable support on 3 max-rank record(s)`) —
+  диагноз и лечение см. секцию Method.11b ниже.
+
+## External Int2 Method.11b: support-классификация + Stage-2 (2026-07-25)
+
+- Диагноз STOP Stage-1: все 3 «нестабильные» записи — одна точка `ep=6,r=57/11`, у которой
+  на всех трёх простых в support отсутствует ровно один лейбл `(0,0,1,-1,0,0,-1)`.
+  Согласие всех primes — это не modular-артефакт, а честный структурный нуль
+  коэффициента в этой точке (special zero), не нестабильность.
+- Лечение (Method.11b): `classify_sample_supports()` в `reconstruction.py` —
+  per-sample классификация: `SUPPORT_STABLE` / `SUPPORT_SPECIAL_ZERO` (все primes
+  согласованно теряют один и тот же поднабор лейблов; записи сохраняются, пропуски
+  zero-филлятся) / `SUPPORT_UNSTABLE` (разногласие primes или провал ранга — отбраковка).
+  Гейт обновлён: special-zero не валит PROCEED (retained, zero-filled). Тесты:
+  `tests/test_method11b_support_classification.py` (special-zero zero-filled;
+  rank-drop → unstable; prime-разногласие → unstable; stable без изменений;
+  end-to-end реконструкция сквозь special zero; отчёт о дефиците точек).
+- Stage-2 (21 точка × 3 prime, `validation/method11b_samples_stage2.json`;
+  `--min-valid-records 6 --min-certificate-points 2`, `jobs=2`, cache-warm):
+  54/63 grid-hits из кэша v2, досчитаны 9 новых записей; 49439 chamber-строк,
+  Method.10 crosscheck match; итог 3234 s. Вердикт раннера:
+  `Failure(InterpolationFailed)`, n_terms=0 — честный ёмкостный отказ.
+- Гейт Stage-2 = PROCEED (`validation/method11b_stage2_gate.json`): 63/63 записей
+  formal_success, единый ранг 26984 (0 провалов), support size 4, 20 stable +
+  1 special-zero (`ep=6,r=57/11`), полное покрытие точек простыми, v2-заголовок
+  на месте. Причины PROCEED: capacity-bound failure + special-zero (retained).
+- Phase D (экспорт reduction text + сверка с аналитическим Laurent-оракулом
+  `validation/external_int2_full_laurent_audit.json`, numeric fingerprints
+  `F_-4..F_0`): на Stage-2 НЕ выполнима — `--export-text` пишет Wolfram-текст
+  только на certified Success, которого нет. Оракульная сверка остаётся
+  обязательным закрывающим шагом первой успешной ступени (Stage-3+).
+- Полный fast suite зелёный, ruff чист (запущены после освобождения CPU);
+  закоммичено одним коммитом (см. CHANGELOG).

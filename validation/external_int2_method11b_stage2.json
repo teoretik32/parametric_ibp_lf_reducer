@@ -1,0 +1,1058 @@
+{
+  "script": "scripts/run_external_int2_method11.py",
+  "method": "External Int2 Method.11: certified LF reconstruction under an explicit chamber surface policy",
+  "scope_note": "Method.11 Phase B: one fixed Level-0 reduction pass under the explicit exact chamber surface policy (policy is part of ReducerConfig; no monkey-patch). 'Success' claims only the row-span-certified reduction identity at the recorded (sample, prime) points, with per-term LF flags as reported. It does NOT claim the analytic Laurent value; the cross-check against the analytic Laurent oracle is a separate later phase. The package default surface policy (limit, eps -> 0^-) is unchanged.",
+  "chamber_ep": "-3/5",
+  "level": 0,
+  "n_labels": 3072,
+  "target_label": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "rows": {
+    "n_base_rows": 41076,
+    "n_extra_offered": 10895,
+    "n_extra_new": 8363,
+    "n_extra_duplicate": 2532,
+    "n_rows_total": 49439,
+    "by_kind": {
+      "algebraic": 12288,
+      "coordinate_ibp": 26256,
+      "tangent_ibp": 10895
+    },
+    "richer_row_rejections": {
+      "surface_not_free": 27705
+    }
+  },
+  "surface_policy": {
+    "mode": "chamber",
+    "point": {
+      "ep": "-3/5"
+    }
+  },
+  "method10_crosscheck": {
+    "artifact": "B:\\Soft\\math_scratch\\validation\\external_int2_method10.json",
+    "available": true,
+    "comparable": true,
+    "recorded_n_chamber": 49439,
+    "recorded_ep": "-3/5",
+    "matches": true
+  },
+  "phase": "certified-solve",
+  "solve": {
+    "primes": [
+      2147483647,
+      2147483629,
+      2147483587
+    ],
+    "n_samples": 21,
+    "min_valid_records": 6,
+    "min_certificate_points": 2,
+    "jobs": 2,
+    "rref_backend": null,
+    "record_cache": {
+      "enabled": true,
+      "path": "B:\\Soft\\math_scratch\\validation\\external_int2_method11_records.jsonl",
+      "grid_points": 63,
+      "grid_hits_on_start": 54
+    },
+    "solve_seconds": 2759.232
+  },
+  "reduce": {
+    "status": "InterpolationFailed",
+    "all_locally_finite": "Unknown",
+    "formal_success": true,
+    "error": "coefficient reconstruction/interpolation did not validate",
+    "n_terms": 0,
+    "terms": [],
+    "diagnostics": {
+      "formal_success": true,
+      "reconstruction_verified": false,
+      "independent_validation_passed": false,
+      "n_terms": 0,
+      "non_lf_terms": [],
+      "unknown_lf_terms": [],
+      "n_records": 63,
+      "n_skipped_records": 0,
+      "zero_reduction": false,
+      "messages": [
+        "special-zero support at 1 sample(s) ['ep=6,r=57/11']: retained, missing labels zero-filled",
+        "reconstruction failed: multivariate rational interpolation did not validate"
+      ],
+      "extra": {
+        "n_labels": 3072,
+        "n_rows": 49439,
+        "n_records": 63,
+        "n_reduced_records": 63,
+        "n_selected_records": 63,
+        "n_bad_specializations": 0,
+        "n_target_not_pivot": 0,
+        "n_empty_system": 0,
+        "n_skipped_records": 0,
+        "row_diagnostics": {
+          "provided_rows": 49439
+        },
+        "record_selection": {
+          "rank_policy": "max_rank",
+          "n_records": 63,
+          "n_valid_records_before_rank_filter": 63,
+          "selected_rank": 26984,
+          "n_selected_records": 63,
+          "n_rank_filtered_records": 0,
+          "rank_histogram": {
+            "26984": 63
+          },
+          "support_after_rank_filter": [
+            [
+              -1,
+              0,
+              0,
+              -1,
+              -1,
+              0,
+              0
+            ],
+            [
+              -1,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              -1
+            ],
+            [
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              -1
+            ],
+            [
+              0,
+              0,
+              1,
+              -1,
+              0,
+              0,
+              -1
+            ]
+          ]
+        },
+        "reconstruction_diagnostics": {
+          "verified": false,
+          "n_coefficients": 0,
+          "support_classification": {
+            "generic_rank": 26984,
+            "reference_support_size": 4,
+            "n_samples": 21,
+            "n_stable": 20,
+            "n_special_zero": 1,
+            "n_unstable": 0,
+            "special_zero_samples": [
+              "ep=6,r=57/11"
+            ],
+            "unstable_samples": []
+          },
+          "coefficients": {
+            "(-1, 0, 0, -1, -1, 0, 0)": {
+              "n_points": 21,
+              "n_fit": 19,
+              "n_hold": 2,
+              "attempts": [
+                {
+                  "num_deg": 0,
+                  "den_deg": 0,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 0,
+                  "den_deg": 1,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 1,
+                  "den_deg": 0,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 0,
+                  "den_deg": 2,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 1,
+                  "den_deg": 1,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 2,
+                  "den_deg": 0,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 0,
+                  "den_deg": 3,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 1,
+                  "den_deg": 2,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 2,
+                  "den_deg": 1,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 3,
+                  "den_deg": 0,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 0,
+                  "den_deg": 4,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 1,
+                  "den_deg": 3,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 2,
+                  "den_deg": 2,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 3,
+                  "den_deg": 1,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 4,
+                  "den_deg": 0,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 0,
+                  "den_deg": 5,
+                  "status": "underdetermined (needs 21 fit points, have 19)"
+                },
+                {
+                  "num_deg": 1,
+                  "den_deg": 4,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 2,
+                  "den_deg": 3,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 3,
+                  "den_deg": 2,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 4,
+                  "den_deg": 1,
+                  "status": "no unique nullspace solution (dim 0)"
+                },
+                {
+                  "num_deg": 5,
+                  "den_deg": 0,
+                  "status": "underdetermined (needs 21 fit points, have 19)"
+                },
+                {
+                  "num_deg": 0,
+                  "den_deg": 6,
+                  "status": "underdetermined (needs 28 fit points, have 19)"
+                },
+                {
+                  "num_deg": 1,
+                  "den_deg": 5,
+                  "status": "underdetermined (needs 23 fit points, have 19)"
+                },
+                {
+                  "num_deg": 2,
+                  "den_deg": 4,
+                  "status": "underdetermined (needs 20 fit points, have 19)"
+                },
+                {
+                  "num_deg": 3,
+                  "den_deg": 3,
+                  "status": "no unique nullspace solution (dim 2)"
+                },
+                {
+                  "num_deg": 4,
+                  "den_deg": 2,
+                  "status": "underdetermined (needs 20 fit points, have 19)"
+                },
+                {
+                  "num_deg": 5,
+                  "den_deg": 1,
+                  "status": "underdetermined (needs 23 fit points, have 19)"
+                },
+                {
+                  "num_deg": 6,
+                  "den_deg": 0,
+                  "status": "underdetermined (needs 28 fit points, have 19)"
+                },
+                {
+                  "num_deg": 1,
+                  "den_deg": 6,
+                  "status": "underdetermined (needs 30 fit points, have 19)"
+                },
+                {
+                  "num_deg": 2,
+                  "den_deg": 5,
+                  "status": "underdetermined (needs 26 fit points, have 19)"
+                },
+                {
+                  "num_deg": 3,
+                  "den_deg": 4,
+                  "status": "underdetermined (needs 24 fit points, have 19)"
+                },
+                {
+                  "num_deg": 4,
+                  "den_deg": 3,
+                  "status": "underdetermined (needs 24 fit points, have 19)"
+                },
+                {
+                  "num_deg": 5,
+                  "den_deg": 2,
+                  "status": "underdetermined (needs 26 fit points, have 19)"
+                },
+                {
+                  "num_deg": 6,
+                  "den_deg": 1,
+                  "status": "underdetermined (needs 30 fit points, have 19)"
+                },
+                {
+                  "num_deg": 2,
+                  "den_deg": 6,
+                  "status": "underdetermined (needs 33 fit points, have 19)"
+                },
+                {
+                  "num_deg": 3,
+                  "den_deg": 5,
+                  "status": "underdetermined (needs 30 fit points, have 19)"
+                },
+                {
+                  "num_deg": 4,
+                  "den_deg": 4,
+                  "status": "underdetermined (needs 29 fit points, have 19)"
+                },
+                {
+                  "num_deg": 5,
+                  "den_deg": 3,
+                  "status": "underdetermined (needs 30 fit points, have 19)"
+                },
+                {
+                  "num_deg": 6,
+                  "den_deg": 2,
+                  "status": "underdetermined (needs 33 fit points, have 19)"
+                },
+                {
+                  "num_deg": 3,
+                  "den_deg": 6,
+                  "status": "underdetermined (needs 37 fit points, have 19)"
+                },
+                {
+                  "num_deg": 4,
+                  "den_deg": 5,
+                  "status": "underdetermined (needs 35 fit points, have 19)"
+                },
+                {
+                  "num_deg": 5,
+                  "den_deg": 4,
+                  "status": "underdetermined (needs 35 fit points, have 19)"
+                },
+                {
+                  "num_deg": 6,
+                  "den_deg": 3,
+                  "status": "underdetermined (needs 37 fit points, have 19)"
+                },
+                {
+                  "num_deg": 4,
+                  "den_deg": 6,
+                  "status": "underdetermined (needs 42 fit points, have 19)"
+                },
+                {
+                  "num_deg": 5,
+                  "den_deg": 5,
+                  "status": "underdetermined (needs 41 fit points, have 19)"
+                },
+                {
+                  "num_deg": 6,
+                  "den_deg": 4,
+                  "status": "underdetermined (needs 42 fit points, have 19)"
+                },
+                {
+                  "num_deg": 5,
+                  "den_deg": 6,
+                  "status": "underdetermined (needs 48 fit points, have 19)"
+                },
+                {
+                  "num_deg": 6,
+                  "den_deg": 5,
+                  "status": "underdetermined (needs 48 fit points, have 19)"
+                },
+                {
+                  "num_deg": 6,
+                  "den_deg": 6,
+                  "status": "underdetermined (needs 55 fit points, have 19)"
+                }
+              ],
+              "status": "failed"
+            }
+          }
+        },
+        "certificate": {
+          "certificate_status": "NotRun"
+        },
+        "timings": {
+          "row_generation_total": 0.0,
+          "algebraic_rows": 0.0,
+          "coordinate_rows": 0.0,
+          "tangent_fields": 0.0,
+          "tangent_rows": 0.0,
+          "lf_flags": 5.757480400032364,
+          "records_total": 2752.987540400005,
+          "ranking_once": 46.38063179998426,
+          "assemble_rows_mod_p": 0.0,
+          "ranking": 0.0,
+          "rref_mod_p": 0.0,
+          "extract_normal_form": 0.0,
+          "reconstruction": 0.4839026000117883,
+          "certificate_total": 0.0,
+          "certificate_points_total": 0.0
+        },
+        "run": {
+          "n_labels": 3072,
+          "n_rows": 49439,
+          "n_records": 63,
+          "n_reduced_records": 63,
+          "n_selected_records": 63,
+          "n_bad_specializations": 0,
+          "n_target_not_pivot": 0,
+          "n_empty_system": 0,
+          "n_skipped_records": 0,
+          "row_diagnostics": {
+            "provided_rows": 49439
+          },
+          "record_selection": {
+            "rank_policy": "max_rank",
+            "n_records": 63,
+            "n_valid_records_before_rank_filter": 63,
+            "selected_rank": 26984,
+            "n_selected_records": 63,
+            "n_rank_filtered_records": 0,
+            "rank_histogram": {
+              "26984": 63
+            },
+            "support_after_rank_filter": [
+              [
+                -1,
+                0,
+                0,
+                -1,
+                -1,
+                0,
+                0
+              ],
+              [
+                -1,
+                0,
+                0,
+                0,
+                -1,
+                0,
+                -1
+              ],
+              [
+                0,
+                0,
+                0,
+                -1,
+                0,
+                0,
+                -1
+              ],
+              [
+                0,
+                0,
+                1,
+                -1,
+                0,
+                0,
+                -1
+              ]
+            ]
+          },
+          "reconstruction_diagnostics": {
+            "verified": false,
+            "n_coefficients": 0,
+            "support_classification": {
+              "generic_rank": 26984,
+              "reference_support_size": 4,
+              "n_samples": 21,
+              "n_stable": 20,
+              "n_special_zero": 1,
+              "n_unstable": 0,
+              "special_zero_samples": [
+                "ep=6,r=57/11"
+              ],
+              "unstable_samples": []
+            },
+            "coefficients": {
+              "(-1, 0, 0, -1, -1, 0, 0)": {
+                "n_points": 21,
+                "n_fit": 19,
+                "n_hold": 2,
+                "attempts": [
+                  {
+                    "num_deg": 0,
+                    "den_deg": 0,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 0,
+                    "den_deg": 1,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 1,
+                    "den_deg": 0,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 0,
+                    "den_deg": 2,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 1,
+                    "den_deg": 1,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 2,
+                    "den_deg": 0,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 0,
+                    "den_deg": 3,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 1,
+                    "den_deg": 2,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 2,
+                    "den_deg": 1,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 3,
+                    "den_deg": 0,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 0,
+                    "den_deg": 4,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 1,
+                    "den_deg": 3,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 2,
+                    "den_deg": 2,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 3,
+                    "den_deg": 1,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 4,
+                    "den_deg": 0,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 0,
+                    "den_deg": 5,
+                    "status": "underdetermined (needs 21 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 1,
+                    "den_deg": 4,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 2,
+                    "den_deg": 3,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 3,
+                    "den_deg": 2,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 4,
+                    "den_deg": 1,
+                    "status": "no unique nullspace solution (dim 0)"
+                  },
+                  {
+                    "num_deg": 5,
+                    "den_deg": 0,
+                    "status": "underdetermined (needs 21 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 0,
+                    "den_deg": 6,
+                    "status": "underdetermined (needs 28 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 1,
+                    "den_deg": 5,
+                    "status": "underdetermined (needs 23 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 2,
+                    "den_deg": 4,
+                    "status": "underdetermined (needs 20 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 3,
+                    "den_deg": 3,
+                    "status": "no unique nullspace solution (dim 2)"
+                  },
+                  {
+                    "num_deg": 4,
+                    "den_deg": 2,
+                    "status": "underdetermined (needs 20 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 5,
+                    "den_deg": 1,
+                    "status": "underdetermined (needs 23 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 6,
+                    "den_deg": 0,
+                    "status": "underdetermined (needs 28 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 1,
+                    "den_deg": 6,
+                    "status": "underdetermined (needs 30 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 2,
+                    "den_deg": 5,
+                    "status": "underdetermined (needs 26 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 3,
+                    "den_deg": 4,
+                    "status": "underdetermined (needs 24 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 4,
+                    "den_deg": 3,
+                    "status": "underdetermined (needs 24 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 5,
+                    "den_deg": 2,
+                    "status": "underdetermined (needs 26 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 6,
+                    "den_deg": 1,
+                    "status": "underdetermined (needs 30 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 2,
+                    "den_deg": 6,
+                    "status": "underdetermined (needs 33 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 3,
+                    "den_deg": 5,
+                    "status": "underdetermined (needs 30 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 4,
+                    "den_deg": 4,
+                    "status": "underdetermined (needs 29 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 5,
+                    "den_deg": 3,
+                    "status": "underdetermined (needs 30 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 6,
+                    "den_deg": 2,
+                    "status": "underdetermined (needs 33 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 3,
+                    "den_deg": 6,
+                    "status": "underdetermined (needs 37 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 4,
+                    "den_deg": 5,
+                    "status": "underdetermined (needs 35 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 5,
+                    "den_deg": 4,
+                    "status": "underdetermined (needs 35 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 6,
+                    "den_deg": 3,
+                    "status": "underdetermined (needs 37 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 4,
+                    "den_deg": 6,
+                    "status": "underdetermined (needs 42 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 5,
+                    "den_deg": 5,
+                    "status": "underdetermined (needs 41 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 6,
+                    "den_deg": 4,
+                    "status": "underdetermined (needs 42 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 5,
+                    "den_deg": 6,
+                    "status": "underdetermined (needs 48 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 6,
+                    "den_deg": 5,
+                    "status": "underdetermined (needs 48 fit points, have 19)"
+                  },
+                  {
+                    "num_deg": 6,
+                    "den_deg": 6,
+                    "status": "underdetermined (needs 55 fit points, have 19)"
+                  }
+                ],
+                "status": "failed"
+              }
+            }
+          },
+          "certificate": {
+            "certificate_status": "NotRun"
+          }
+        }
+      }
+    }
+  },
+  "reconstruction": {
+    "formal_success": false,
+    "independent_validation_passed": false,
+    "n_terms": 0,
+    "detail": {
+      "verified": false,
+      "n_coefficients": 0,
+      "support_classification": {
+        "generic_rank": 26984,
+        "reference_support_size": 4,
+        "n_samples": 21,
+        "n_stable": 20,
+        "n_special_zero": 1,
+        "n_unstable": 0,
+        "special_zero_samples": [
+          "ep=6,r=57/11"
+        ],
+        "unstable_samples": []
+      },
+      "coefficients": {
+        "(-1, 0, 0, -1, -1, 0, 0)": {
+          "n_points": 21,
+          "n_fit": 19,
+          "n_hold": 2,
+          "attempts": [
+            {
+              "num_deg": 0,
+              "den_deg": 0,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 0,
+              "den_deg": 1,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 1,
+              "den_deg": 0,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 0,
+              "den_deg": 2,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 1,
+              "den_deg": 1,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 2,
+              "den_deg": 0,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 0,
+              "den_deg": 3,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 1,
+              "den_deg": 2,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 2,
+              "den_deg": 1,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 3,
+              "den_deg": 0,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 0,
+              "den_deg": 4,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 1,
+              "den_deg": 3,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 2,
+              "den_deg": 2,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 3,
+              "den_deg": 1,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 4,
+              "den_deg": 0,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 0,
+              "den_deg": 5,
+              "status": "underdetermined (needs 21 fit points, have 19)"
+            },
+            {
+              "num_deg": 1,
+              "den_deg": 4,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 2,
+              "den_deg": 3,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 3,
+              "den_deg": 2,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 4,
+              "den_deg": 1,
+              "status": "no unique nullspace solution (dim 0)"
+            },
+            {
+              "num_deg": 5,
+              "den_deg": 0,
+              "status": "underdetermined (needs 21 fit points, have 19)"
+            },
+            {
+              "num_deg": 0,
+              "den_deg": 6,
+              "status": "underdetermined (needs 28 fit points, have 19)"
+            },
+            {
+              "num_deg": 1,
+              "den_deg": 5,
+              "status": "underdetermined (needs 23 fit points, have 19)"
+            },
+            {
+              "num_deg": 2,
+              "den_deg": 4,
+              "status": "underdetermined (needs 20 fit points, have 19)"
+            },
+            {
+              "num_deg": 3,
+              "den_deg": 3,
+              "status": "no unique nullspace solution (dim 2)"
+            },
+            {
+              "num_deg": 4,
+              "den_deg": 2,
+              "status": "underdetermined (needs 20 fit points, have 19)"
+            },
+            {
+              "num_deg": 5,
+              "den_deg": 1,
+              "status": "underdetermined (needs 23 fit points, have 19)"
+            },
+            {
+              "num_deg": 6,
+              "den_deg": 0,
+              "status": "underdetermined (needs 28 fit points, have 19)"
+            },
+            {
+              "num_deg": 1,
+              "den_deg": 6,
+              "status": "underdetermined (needs 30 fit points, have 19)"
+            },
+            {
+              "num_deg": 2,
+              "den_deg": 5,
+              "status": "underdetermined (needs 26 fit points, have 19)"
+            },
+            {
+              "num_deg": 3,
+              "den_deg": 4,
+              "status": "underdetermined (needs 24 fit points, have 19)"
+            },
+            {
+              "num_deg": 4,
+              "den_deg": 3,
+              "status": "underdetermined (needs 24 fit points, have 19)"
+            },
+            {
+              "num_deg": 5,
+              "den_deg": 2,
+              "status": "underdetermined (needs 26 fit points, have 19)"
+            },
+            {
+              "num_deg": 6,
+              "den_deg": 1,
+              "status": "underdetermined (needs 30 fit points, have 19)"
+            },
+            {
+              "num_deg": 2,
+              "den_deg": 6,
+              "status": "underdetermined (needs 33 fit points, have 19)"
+            },
+            {
+              "num_deg": 3,
+              "den_deg": 5,
+              "status": "underdetermined (needs 30 fit points, have 19)"
+            },
+            {
+              "num_deg": 4,
+              "den_deg": 4,
+              "status": "underdetermined (needs 29 fit points, have 19)"
+            },
+            {
+              "num_deg": 5,
+              "den_deg": 3,
+              "status": "underdetermined (needs 30 fit points, have 19)"
+            },
+            {
+              "num_deg": 6,
+              "den_deg": 2,
+              "status": "underdetermined (needs 33 fit points, have 19)"
+            },
+            {
+              "num_deg": 3,
+              "den_deg": 6,
+              "status": "underdetermined (needs 37 fit points, have 19)"
+            },
+            {
+              "num_deg": 4,
+              "den_deg": 5,
+              "status": "underdetermined (needs 35 fit points, have 19)"
+            },
+            {
+              "num_deg": 5,
+              "den_deg": 4,
+              "status": "underdetermined (needs 35 fit points, have 19)"
+            },
+            {
+              "num_deg": 6,
+              "den_deg": 3,
+              "status": "underdetermined (needs 37 fit points, have 19)"
+            },
+            {
+              "num_deg": 4,
+              "den_deg": 6,
+              "status": "underdetermined (needs 42 fit points, have 19)"
+            },
+            {
+              "num_deg": 5,
+              "den_deg": 5,
+              "status": "underdetermined (needs 41 fit points, have 19)"
+            },
+            {
+              "num_deg": 6,
+              "den_deg": 4,
+              "status": "underdetermined (needs 42 fit points, have 19)"
+            },
+            {
+              "num_deg": 5,
+              "den_deg": 6,
+              "status": "underdetermined (needs 48 fit points, have 19)"
+            },
+            {
+              "num_deg": 6,
+              "den_deg": 5,
+              "status": "underdetermined (needs 48 fit points, have 19)"
+            },
+            {
+              "num_deg": 6,
+              "den_deg": 6,
+              "status": "underdetermined (needs 55 fit points, have 19)"
+            }
+          ],
+          "status": "failed"
+        }
+      }
+    }
+  },
+  "verdict": "Failure(InterpolationFailed)",
+  "elapsed_seconds": 3234.133
+}

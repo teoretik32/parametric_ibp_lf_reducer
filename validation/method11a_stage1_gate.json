@@ -1,0 +1,67 @@
+{
+ "n_records": 54,
+ "n_formal_success": 54,
+ "rank_histogram": {
+  "26984": 54
+ },
+ "max_rank": 26984,
+ "n_max_rank_records": 54,
+ "n_rank_drops": 0,
+ "support_size": 4,
+ "support_deviations": [
+  {
+   "key": "p=2147483647;ep=6,r=57/11",
+   "missing": [
+    [
+     0,
+     0,
+     1,
+     -1,
+     0,
+     0,
+     -1
+    ]
+   ],
+   "extra": []
+  },
+  {
+   "key": "p=2147483629;ep=6,r=57/11",
+   "missing": [
+    [
+     0,
+     0,
+     1,
+     -1,
+     0,
+     0,
+     -1
+    ]
+   ],
+   "extra": []
+  },
+  {
+   "key": "p=2147483587;ep=6,r=57/11",
+   "missing": [
+    [
+     0,
+     0,
+     1,
+     -1,
+     0,
+     0,
+     -1
+    ]
+   ],
+   "extra": []
+  }
+ ],
+ "n_points_seen": 18,
+ "expected_points": 18,
+ "points_incomplete_primes": [],
+ "cache_has_v2_header": true,
+ "verdict": "STOP",
+ "reasons": [
+  "artifact lacks a reconstruction section",
+  "unstable support on 3 max-rank record(s)"
+ ]
+}

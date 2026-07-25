@@ -258,7 +258,15 @@ def test_multivariate_bad_and_nonpivot_records_skipped_not_patched():
         NormalFormResult(status="BadSpecialization", target_label=(0,), prime=PRIMES[0],
                          sample={"ep": Fraction(3), "r": Fraction(3)}, formal_success=False)
     )
-    _, _, _, n_skipped = collect_value_table(records)
-    assert n_skipped == 2  # both counted as skipped, never consumed
+    _, table, samples, n_skipped = collect_value_table(records)
+    # Method.11b: a non-reduced record marks its sample unstable, so the whole sample is
+    # rejected -- the 2 injected records plus 3 primes x 2 poisoned samples = 8 skipped.
+    assert n_skipped == 8
+    poisoned = {  # keys in _sample_key format: sorted (name, Fraction) pairs
+        (("ep", Fraction(2)), ("r", Fraction(2))),
+        (("ep", Fraction(3)), ("r", Fraction(3))),
+    }
+    assert not poisoned & set(samples)  # rejected samples never consumed
+    assert all(not poisoned & set(vals) for vals in table.values())  # ... nor zero-patched
     coeffs = reconstruct_coefficients(records, ["ep", "r"])
-    assert sp.simplify(coeffs[(1, 0)] - functions[(1, 0)]) == 0  # unaffected by injected records
+    assert sp.simplify(coeffs[(1, 0)] - functions[(1, 0)]) == 0  # recovered from clean samples

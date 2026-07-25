@@ -232,19 +232,27 @@ class TestRecordCacheJson:
         assert k({"a": 1, "b": Fraction(1, 2)}, 7) == k({"b": Fraction(1, 2), "a": 1}, 7)
         assert k({"ep": 1}, 7) != k({"ep": 1}, 11)
 
+    FP = {"family_sha256": "abc", "chamber_ep": "-3/5", "rows": {"n_rows_total": 9}}
+
+    def _header(self, m11, fp=None):
+        return json.dumps(
+            {"schema": m11.CACHE_SCHEMA, "fingerprint": self.FP if fp is None else fp}
+        )
+
     def test_load_missing_file_is_empty(self, m11, tmp_path):
-        assert m11._load_record_cache(tmp_path / "none.jsonl", (0, 0, 0)) == {}
+        assert m11._load_record_cache(tmp_path / "none.jsonl", (0, 0, 0), self.FP) == {}
 
     def test_load_roundtrip_and_duplicate_last_wins(self, m11, tmp_path):
         rec = self._record(m11)
         key = m11.sample_prime_key(rec.sample, rec.prime)
         path = tmp_path / "cache.jsonl"
         lines = [
+            self._header(m11),
             json.dumps(m11._record_to_json(key, rec)),
             json.dumps(m11._record_to_json(key, replace(rec, rank=6))),
         ]
         path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        cache = m11._load_record_cache(path, (0, 0, 0))
+        cache = m11._load_record_cache(path, (0, 0, 0), self.FP)
         assert set(cache) == {key}
         assert cache[key].rank == 6
 
@@ -252,18 +260,171 @@ class TestRecordCacheJson:
         rec = self._record(m11)
         path = tmp_path / "cache.jsonl"
         path.write_text(
-            json.dumps(m11._record_to_json("p=999;ep=-3/5", rec)) + "\n", encoding="utf-8"
+            self._header(m11) + "\n" + json.dumps(m11._record_to_json("p=999;ep=-3/5", rec)) + "\n",
+            encoding="utf-8",
         )
         with pytest.raises(SystemExit, match="key mismatch"):
-            m11._load_record_cache(path, (0, 0, 0))
+            m11._load_record_cache(path, (0, 0, 0), self.FP)
 
     def test_load_rejects_foreign_target(self, m11, tmp_path):
         rec = self._record(m11)
         key = m11.sample_prime_key(rec.sample, rec.prime)
         path = tmp_path / "cache.jsonl"
-        path.write_text(json.dumps(m11._record_to_json(key, rec)) + "\n", encoding="utf-8")
+        path.write_text(
+            self._header(m11) + "\n" + json.dumps(m11._record_to_json(key, rec)) + "\n",
+            encoding="utf-8",
+        )
         with pytest.raises(SystemExit, match="foreign target"):
-            m11._load_record_cache(path, (9, 9, 9))
+            m11._load_record_cache(path, (9, 9, 9), self.FP)
+
+
+class TestRecordCacheFingerprint:
+    """Method.11a: the cache is fingerprint-scoped; stale records are never served."""
+
+    FP = {
+        "family_sha256": "abc",
+        "chamber_ep": "-3/5",
+        "n_labels": 4,
+        "rows": {"n_rows_total": 9, "by_kind": {"ibp": 9}},
+        "surface_policy": {"mode": "chamber"},
+    }
+
+    def _record(self, m11):
+        return TestRecordCacheJson._record(self, m11)
+
+    def _write(self, m11, path, fp, rec_lines, schema=None):
+        header = json.dumps({"schema": schema or m11.CACHE_SCHEMA, "fingerprint": fp})
+        path.write_text("\n".join([header, *rec_lines]) + "\n", encoding="utf-8")
+
+    def test_exact_hit_roundtrip(self, m11, tmp_path):
+        rec = self._record(m11)
+        key = m11.sample_prime_key(rec.sample, rec.prime)
+        path = tmp_path / "cache.jsonl"
+        self._write(m11, path, self.FP, [json.dumps(m11._record_to_json(key, rec))])
+        assert m11._load_record_cache(path, (0, 0, 0), self.FP) == {key: rec}
+
+    def test_fingerprint_survives_json_round_trip(self, m11, tmp_path):
+        fp = {"n": 4, "s": "x", "nested": {"a": [1, 2]}}
+        path = tmp_path / "cache.jsonl"
+        self._write(m11, path, fp, [])
+        assert m11._load_record_cache(path, (0, 0, 0), fp) == {}
+
+    def test_missing_header_rejected(self, m11, tmp_path):
+        rec = self._record(m11)
+        key = m11.sample_prime_key(rec.sample, rec.prime)
+        path = tmp_path / "cache.jsonl"
+        path.write_text(json.dumps(m11._record_to_json(key, rec)) + "\n", encoding="utf-8")
+        with pytest.raises(SystemExit, match="missing schema header"):
+            m11._load_record_cache(path, (0, 0, 0), self.FP)
+
+    def test_foreign_schema_rejected(self, m11, tmp_path):
+        path = tmp_path / "cache.jsonl"
+        self._write(m11, path, self.FP, [], schema="m11-record-cache/v1")
+        with pytest.raises(SystemExit, match="schema"):
+            m11._load_record_cache(path, (0, 0, 0), self.FP)
+
+    def test_changed_system_is_never_served(self, m11, tmp_path):
+        rec = self._record(m11)
+        key = m11.sample_prime_key(rec.sample, rec.prime)
+        for field, stale in [
+            ("surface_policy", {"mode": "limit"}),
+            ("rows", {"n_rows_total": 8, "by_kind": {"ibp": 8}}),
+            ("n_labels", 5),
+            ("chamber_ep", "-2/5"),
+            ("family_sha256", "def"),
+        ]:
+            path = tmp_path / f"cache_{field}.jsonl"
+            self._write(
+                m11, path, {**self.FP, field: stale}, [json.dumps(m11._record_to_json(key, rec))]
+            )
+            with pytest.raises(SystemExit, match="fingerprint mismatch"):
+                m11._load_record_cache(path, (0, 0, 0), self.FP)
+
+    def test_changed_prime_or_sample_is_ordinary_miss(self, m11, tmp_path):
+        rec = self._record(m11)
+        key = m11.sample_prime_key(rec.sample, rec.prime)
+        path = tmp_path / "cache.jsonl"
+        self._write(m11, path, self.FP, [json.dumps(m11._record_to_json(key, rec))])
+        cache = m11._load_record_cache(path, (0, 0, 0), self.FP)
+        assert m11.sample_prime_key(rec.sample, 103) not in cache
+        assert m11.sample_prime_key({"ep": Fraction(-2, 5)}, rec.prime) not in cache
+        assert key in cache
+
+    def test_corrupt_json_line_rejected(self, m11, tmp_path):
+        path = tmp_path / "cache.jsonl"
+        self._write(m11, path, self.FP, ["{not json"])
+        with pytest.raises(SystemExit, match=r"corrupt at .*:2"):
+            m11._load_record_cache(path, (0, 0, 0), self.FP)
+
+    def test_incomplete_entry_rejected(self, m11, tmp_path):
+        path = tmp_path / "cache.jsonl"
+        self._write(m11, path, self.FP, [json.dumps({"key": "p=101;ep=-3/5"})])
+        with pytest.raises(SystemExit, match="corrupt"):
+            m11._load_record_cache(path, (0, 0, 0), self.FP)
+
+    def test_append_writes_header_exactly_once(self, m11, tmp_path):
+        rec = self._record(m11)
+        key = m11.sample_prime_key(rec.sample, rec.prime)
+        path = tmp_path / "cache.jsonl"
+        fh = m11._open_record_cache_append(path, self.FP)
+        fh.write(json.dumps(m11._record_to_json(key, rec)) + "\n")
+        fh.close()
+        fh = m11._open_record_cache_append(path, self.FP)
+        fh.close()
+        lines = path.read_text(encoding="utf-8").splitlines()
+        assert len(lines) == 2 and "schema" in lines[0]
+        assert m11._load_record_cache(path, (0, 0, 0), self.FP) == {key: rec}
+
+    def test_rref_backend_excluded_from_fingerprint(self, m11):
+        asm = {
+            "n_rows_total": 9,
+            "by_kind": {"ibp": 9},
+            "merged": object(),
+            "row_diagnostics": {"surface_policy": {"mode": "chamber"}},
+        }
+        fp = m11._cache_fingerprint("family text", Fraction(-3, 5), ["a", "b"], (0, 0, 0), asm)
+        assert "rref" not in json.dumps(fp)
+        assert fp["rows"] == {"n_rows_total": 9, "by_kind": {"ibp": 9}}
+        assert fp["n_labels"] == 2
+        assert fp["chamber_ep"] == "-3/5"
+        assert fp["surface_policy"] == {"mode": "chamber"}
+        assert fp["target_label"] == [0, 0, 0]
+
+
+class TestSamplesFile:
+    """Method.11a: explicit stage schedules are exact, validated and duplicate-free."""
+
+    def test_round_trip(self, m11, tmp_path):
+        p = tmp_path / "s.json"
+        p.write_text(
+            json.dumps([{"ep": "15/7", "r": "32/11"}, {"ep": "18/7", "r": "43/11"}]),
+            encoding="utf-8",
+        )
+        assert m11._load_samples_file(p, ("ep", "r")) == [
+            {"ep": Fraction(15, 7), "r": Fraction(32, 11)},
+            {"ep": Fraction(18, 7), "r": Fraction(43, 11)},
+        ]
+
+    def test_duplicate_rejected(self, m11, tmp_path):
+        p = tmp_path / "s.json"
+        p.write_text(
+            json.dumps([{"ep": "15/7", "r": "32/11"}, {"ep": "15/7", "r": "32/11"}]),
+            encoding="utf-8",
+        )
+        with pytest.raises(SystemExit, match="duplicate sample"):
+            m11._load_samples_file(p, ("ep", "r"))
+
+    def test_wrong_keys_rejected(self, m11, tmp_path):
+        p = tmp_path / "s.json"
+        p.write_text(json.dumps([{"ep": "15/7"}]), encoding="utf-8")
+        with pytest.raises(SystemExit, match="keys != family parameters"):
+            m11._load_samples_file(p, ("ep", "r"))
+
+    def test_empty_rejected(self, m11, tmp_path):
+        p = tmp_path / "s.json"
+        p.write_text("[]", encoding="utf-8")
+        with pytest.raises(SystemExit, match="non-empty"):
+            m11._load_samples_file(p, ("ep", "r"))
 
 
 class TestCollectRecordCacheSeam:
@@ -379,7 +540,7 @@ class TestInterpolationFailureMessage:
             for p in (101, 103)
         ]
 
-        def boom(selected, parameters):
+        def boom(selected, parameters, report=None):
             raise reducer_mod.InterpolationFailed("boom-424242")
 
         monkeypatch.setattr(reducer_mod, "reconstruct_coefficients", boom)

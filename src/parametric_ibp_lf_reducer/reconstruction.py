@@ -92,6 +92,97 @@ def _record_coeffs(r) -> dict:
 RANK_POLICY_MAX_RANK = "max_rank"
 RANK_POLICY_ALL = "all"
 
+# --- Method.11b: special-zero vs unstable support classification ------------------------------
+SUPPORT_STABLE = "stable"
+SUPPORT_SPECIAL_ZERO = "special_zero"
+SUPPORT_UNSTABLE = "unstable"
+
+
+def _canonical_sample_str(sample: dict) -> str:
+    """Canonical ``'ep=6,r=57/11'``-style key for one exact parameter sample."""
+    return ",".join(
+        f"{k}={Fraction(v)}" for k, v in sorted(sample.items(), key=lambda kv: str(kv[0]))
+    )
+
+
+def classify_sample_supports(records: Iterable) -> dict:
+    """Classify per-sample support deviations of formally reduced records (Method.11b).
+
+    The generic rank is the maximal rank observed over valid (``Reduced`` +
+    ``formal_success``) records; the reference support is the union of coefficient labels
+    over generic-rank records. Per exact parameter sample:
+
+    - ``special_zero`` -- every record at the sample has the generic rank, the per-prime
+      supports agree, and the same non-empty label set is missing versus the reference
+      support: the coefficient functions vanish exactly at this sample (a joint accidental
+      zero mod k independent ~2^31 primes has probability ~2^-31k). Such samples are
+      retained and zero-filled by :func:`collect_value_table`.
+    - ``unstable`` -- ranks differ at the sample, per-prime supports disagree, a record is
+      not formally reduced, or labels outside the reference union appear; such samples must
+      never be zero-filled and are rejected by :func:`collect_value_table`.
+    - ``stable`` -- full reference support at every prime.
+
+    Returns ``{"by_sample": {canonical_sample: entry}, "summary": {...}}``.
+    """
+    records = list(records)
+    valid = [r for r in records if r.status == STATUS_REDUCED and r.formal_success]
+    summary: dict = {
+        "generic_rank": None,
+        "reference_support_size": 0,
+        "n_samples": 0,
+        "n_stable": 0,
+        "n_special_zero": 0,
+        "n_unstable": 0,
+        "special_zero_samples": [],
+        "unstable_samples": [],
+    }
+    if not valid:
+        return {"by_sample": {}, "summary": summary}
+    generic_rank = max(r.rank for r in valid)
+    ref_set = {lab for r in valid if r.rank == generic_rank for lab in _record_coeffs(r)}
+    summary["generic_rank"] = generic_rank
+    summary["reference_support_size"] = len(ref_set)
+
+    grouped: dict = {}
+    for r in records:
+        grouped.setdefault(_canonical_sample_str(r.sample), []).append(r)
+
+    by_sample: dict = {}
+    for key in sorted(grouped):
+        recs = grouped[key]
+        vrecs = [r for r in recs if r.status == STATUS_REDUCED and r.formal_success]
+        supports = {r.prime: frozenset(_record_coeffs(r)) for r in vrecs}
+        ranks = sorted({r.rank for r in vrecs})
+        seen = set().union(*supports.values()) if supports else set()
+        missing = sorted(ref_set - seen)
+        extra = sorted(seen - ref_set)
+        if len(vrecs) != len(recs) or not vrecs:
+            cls = SUPPORT_UNSTABLE  # target not pivot / bad specialization at this sample
+        elif ranks != [generic_rank]:
+            cls = SUPPORT_UNSTABLE  # rank drop: shrunken/shifted support, not a value zero
+        elif len(set(supports.values())) > 1:
+            cls = SUPPORT_UNSTABLE  # primes disagree on the missing-label pattern
+        elif extra:
+            cls = SUPPORT_UNSTABLE  # labels beyond the reference union (defensive)
+        elif missing:
+            cls = SUPPORT_SPECIAL_ZERO  # same labels absent for every prime -> exact zeros
+        else:
+            cls = SUPPORT_STABLE
+        by_sample[key] = {
+            "classification": cls,
+            "n_records": len(recs),
+            "n_valid_records": len(vrecs),
+            "ranks": ranks,
+            "missing_labels": [list(lab) for lab in missing],
+        }
+        summary["n_samples"] += 1
+        summary[f"n_{cls}"] += 1
+        if cls == SUPPORT_SPECIAL_ZERO:
+            summary["special_zero_samples"].append(key)
+        elif cls == SUPPORT_UNSTABLE:
+            summary["unstable_samples"].append(key)
+    return {"by_sample": by_sample, "summary": summary}
+
 
 def select_records_for_reconstruction(records: Iterable, rank_policy: str = RANK_POLICY_MAX_RANK):
     """Select the normal-form records that reconstruction may consume as coefficient records.
@@ -145,12 +236,23 @@ def collect_value_table(
 
     Records are first passed through :func:`select_records_for_reconstruction` (default:
     ``"max_rank"``), so rank-deficient specializations never contribute zero-filled coefficients.
-    Returns ``(labels, table, samples, n_skipped)`` where ``table[label][sample_key]`` is an
-    exact :class:`Fraction` and ``n_skipped`` counts records not consumed (non-reduced records
-    plus rank-filtered ones).
+    Under the ``"max_rank"`` policy, samples classified ``unstable`` by
+    :func:`classify_sample_supports` (rank drops, per-prime support disagreement) are rejected
+    entirely; ``special_zero`` samples are retained and their missing labels zero-fill to an
+    exact coefficient zero (Method.11b). Returns ``(labels, table, samples, n_skipped)`` where
+    ``table[label][sample_key]`` is an exact :class:`Fraction` and ``n_skipped`` counts records
+    not consumed (non-reduced records plus rank/stability-filtered ones).
     """
     results = list(results)
     reduced, _ = select_records_for_reconstruction(results, rank_policy=rank_policy)
+    if rank_policy == RANK_POLICY_MAX_RANK:
+        unstable = {
+            key
+            for key, entry in classify_sample_supports(results)["by_sample"].items()
+            if entry["classification"] == SUPPORT_UNSTABLE
+        }
+        if unstable:
+            reduced = [r for r in reduced if _canonical_sample_str(r.sample) not in unstable]
     n_skipped = len(results) - len(reduced)
 
     by_sample: dict = {}
@@ -221,11 +323,18 @@ def _monomials(syms: Sequence[sp.Symbol], max_deg: int) -> list[sp.Expr]:
 
 
 def _try_rational_fit(values, syms, fit, hold, num_deg, den_deg):
-    """Fit ``N/D`` with the given numerator/denominator degrees; return it iff it validates."""
+    """Fit ``N/D`` with the given numerator/denominator degrees.
+
+    Returns ``(expr, "validated")`` iff the (unique) fit validates on every held-out point,
+    else ``(None, reason)`` where ``reason`` explains the rejection (Method.11b Phase C:
+    ``"underdetermined (needs N fit points, have M)"`` reasons let callers compute the exact
+    point deficit for a capacity-bound failure report).
+    """
     num_mons = _monomials(syms, num_deg)
     den_mons = _monomials(syms, den_deg)
-    if len(fit) < len(num_mons) + len(den_mons) - 1:
-        return None  # underdetermined at this degree -> need more points
+    needed = len(num_mons) + len(den_mons) - 1
+    if len(fit) < needed:
+        return None, f"underdetermined (needs {needed} fit points, have {len(fit)})"
     matrix = []
     for pt in fit:
         subs = {s: c for s, c in zip(syms, pt)}
@@ -235,25 +344,29 @@ def _try_rational_fit(values, syms, fit, hold, num_deg, den_deg):
         matrix.append(row)
     nullspace = sp.Matrix(matrix).nullspace()
     if len(nullspace) != 1:  # ambiguous or overdetermined -> not this degree
-        return None
+        return None, f"no unique nullspace solution (dim {len(nullspace)})"
     vec = nullspace[0]
     na = len(num_mons)
     numer = sum(vec[i] * num_mons[i] for i in range(na))
     denom = sum(vec[na + j] * den_mons[j] for j in range(len(den_mons)))
     if denom == 0:
-        return None
+        return None, "identically zero denominator"
     expr = sp.cancel(numer / denom)
     for pt in hold:  # independent validation
         subs = {s: c for s, c in zip(syms, pt)}
         if denom.subs(subs) == 0:
-            return None
+            return None, "holdout point on denominator zero locus"
         if sp.simplify(expr.subs(subs) - _rat(values[pt])) != 0:
-            return None
-    return sp.simplify(expr)
+            return None, "holdout validation failed"
+    return sp.simplify(expr), "validated"
 
 
 def interpolate_multivariate(
-    values: dict[tuple, Fraction], params: Sequence[str], max_deg: int = 6, min_validation: int = 2
+    values: dict[tuple, Fraction],
+    params: Sequence[str],
+    max_deg: int = 6,
+    min_validation: int = 2,
+    info: dict | None = None,
 ) -> sp.Expr:
     """Reconstruct a multi-parameter rational function via a dense ansatz + degree search.
 
@@ -261,23 +374,36 @@ def interpolate_multivariate(
     denominator degrees are searched from low to high; the first degree pair whose (unique)
     nullspace solution validates on held-out points is returned. Raises :class:`InterpolationFailed`
     if nothing validates within ``max_deg``.
+
+    If ``info`` is given, it is filled in place with the fit/holdout split and the per-degree
+    attempt log (Method.11b Phase C), including the exact point deficits of underdetermined
+    degree pairs, so callers can report the minimum extra samples needed after a failure.
     """
     syms = [sp.Symbol(p) for p in params]
-    pts = sorted(values, key=lambda t: (tuple(map(_rat, t))))
+    pts = sorted(values, key=lambda t: tuple(map(_rat, t)))
     if len(pts) < min_validation + 2:
         raise InterpolationFailed("insufficient sample points for multivariate reconstruction")
     subs_pts = [tuple(_rat(c) for c in pt) for pt in pts]
     val_map = {sub: values[pt] for sub, pt in zip(subs_pts, pts)}
     hold = subs_pts[-min_validation:]
     fit = subs_pts[:-min_validation]
+    attempts: list = []
+    if info is not None:
+        info.update(n_points=len(pts), n_fit=len(fit), n_hold=len(hold), attempts=attempts)
     for total in range(0, 2 * max_deg + 1):  # simplest (lowest combined degree) first
         for num_deg in range(0, min(total, max_deg) + 1):
             den_deg = total - num_deg
             if den_deg > max_deg:
                 continue
-            expr = _try_rational_fit(val_map, syms, fit, hold, num_deg, den_deg)
+            expr, status = _try_rational_fit(val_map, syms, fit, hold, num_deg, den_deg)
+            if info is not None:
+                attempts.append({"num_deg": num_deg, "den_deg": den_deg, "status": status})
             if expr is not None:
+                if info is not None:
+                    info.update(status="validated", num_deg=num_deg, den_deg=den_deg)
                 return expr
+    if info is not None:
+        info.update(status="failed")
     raise InterpolationFailed("multivariate rational interpolation did not validate")
 
 
@@ -285,11 +411,16 @@ def reconstruct_coefficients(
     results: Iterable[NormalFormResult],
     param_names: Iterable[str],
     rank_policy: str = RANK_POLICY_MAX_RANK,
+    report: dict | None = None,
 ) -> dict:
     """Reconstruct ``{label: C_label(params)}`` from modular normal forms (uni- or multivariate).
 
     Consumes only the records selected by :func:`select_records_for_reconstruction` (default:
     max-rank records; pass ``rank_policy="all"`` to restore the pre-D4.3 behaviour).
+
+    If ``report`` is given, it is filled in place with a per-label interpolation report
+    (``{str(label): info}``; see :func:`interpolate_multivariate`), including the label being
+    processed when an :class:`InterpolationFailed` escapes (Method.11b Phase C).
     """
     param_names = list(param_names)
     labels, table, samples, _ = collect_value_table(results, rank_policy=rank_policy)
@@ -301,11 +432,17 @@ def reconstruct_coefficients(
         for lab in labels:
             point_values = {Fraction(samples[key][param]): val for key, val in table[lab].items()}
             coeffs[lab] = interpolate_univariate(point_values, param)
+            if report is not None:
+                report[str(lab)] = {"status": "validated", "mode": "univariate"}
     else:
         for lab in labels:
             point_values = {
                 tuple(Fraction(samples[key][p]) for p in param_names): val
                 for key, val in table[lab].items()
             }
-            coeffs[lab] = interpolate_multivariate(point_values, param_names)
+            info: dict | None = None
+            if report is not None:
+                info = {}
+                report[str(lab)] = info
+            coeffs[lab] = interpolate_multivariate(point_values, param_names, info=info)
     return coeffs

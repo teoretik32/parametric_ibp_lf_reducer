@@ -3,6 +3,32 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.11a/11b: ступенчатая лесенка со стейдж-гейтом и
+  support-классификацией; Stage-1 (STOP → диагноз) и Stage-2 (PROCEED) —
+  честные ёмкостные отказы.**
+  - Стейдж-гейт `scripts/method11a_stage_gate.py` (analysis-only; схему записи
+    импортирует из раннера, ничего не пересчитывает): вердикты
+    DONE/PROCEED/STOP + причины; артефакт `--artifact`/`--json-out`. Тесты
+    `tests/test_method11a_stage_gate.py`.
+  - Расписания лесенки `validation/method11a_samples_stage{1,2,3,4}.json`
+    (18/24/30/36 точек, кумулятивные надмножества) и
+    `validation/method11b_samples_stage2.json` (21 точка); раннер принимает
+    `--samples-file`.
+  - Stage-1 (18 точек, ~4.6 ч): гейт STOP — все 3 «нестабильные» записи суть
+    одна точка `ep=6,r=57/11`, теряющая лейбл `(0,0,1,-1,0,0,-1)` согласованно
+    на всех 3 primes → диагноз: структурный special zero, не нестабильность.
+  - Method.11b: `classify_sample_supports()` в `reconstruction.py`
+    (`SUPPORT_STABLE`/`SUPPORT_SPECIAL_ZERO`/`SUPPORT_UNSTABLE`) — special-zero
+    записи сохраняются и zero-филлятся, разногласие primes/провал ранга
+    отбраковываются; гейт различает классы. Тесты
+    `tests/test_method11b_support_classification.py`.
+  - Stage-2 (21 точка × 3 prime, cache-warm 54/63 hits, досчёт 9 записей,
+    3234 s): `Failure(InterpolationFailed)`, n_terms=0 (ёмкостный отказ);
+    гейт PROCEED — 63/63 formal_success, единый ранг 26984, 20 stable +
+    1 special-zero. Артефакты `validation/external_int2_method11b_stage2.json`,
+    `validation/method11b_stage2_gate.json`.
+  - Оракульная сверка (Phase D) отложена: `--export-text` пишет reduction text
+    только на certified Success — обязательный шаг первой успешной ступени.
 - **External Int2 Method.11: первый тяжёлый certified-solve прогон (честный
   `Failure(InterpolationFailed)`) + Perf.12 record-кэш.**
   - Тяжёлый прогон (12 samples x 3 простых `[2147483647, 2147483629,

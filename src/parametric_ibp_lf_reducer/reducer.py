@@ -46,6 +46,7 @@ from .modular_normal_form import (
     STATUS_TARGET_NOT_REDUCIBLE,
 )
 from .reconstruction import (
+    classify_sample_supports,
     InterpolationFailed,
     reconstruct_coefficients,
     select_records_for_reconstruction,
@@ -359,6 +360,8 @@ class _TargetState:
     formal_success: bool = False
     target_reducible: bool = False
     selected_rank: int | None = None
+    support_classification: dict = field(default_factory=dict)  # Method.11b summary
+    reconstruction_report: dict = field(default_factory=dict)  # per-label interpolation info
 
 
 def _select_and_reconstruct(
@@ -395,6 +398,20 @@ def _select_and_reconstruct(
     run.n_selected_records = len(selected)
     run.record_selection = selection
     st.selected_rank = selection["selected_rank"]
+
+    # Method.11b: classify per-sample support deviations (special zeros vs instability).
+    st.support_classification = classify_sample_supports(records)
+    _scls = st.support_classification["summary"]
+    if _scls["n_special_zero"]:
+        st.messages.append(
+            f"special-zero support at {_scls['n_special_zero']} sample(s) "
+            f"{_scls['special_zero_samples']}: retained, missing labels zero-filled"
+        )
+    if _scls["n_unstable"]:
+        st.messages.append(
+            f"unstable support at {_scls['n_unstable']} sample(s) "
+            f"{_scls['unstable_samples']}: rejected from the value table"
+        )
     if selection["n_rank_filtered_records"]:
         st.messages.append(
             "rank filter: kept {kept}/{valid} reduced records at rank {rank} "
@@ -416,7 +433,9 @@ def _select_and_reconstruct(
         else:
             try:
                 with timings.stage("reconstruction"):
-                    st.coeffs = reconstruct_coefficients(selected, family.parameters)
+                    st.coeffs = reconstruct_coefficients(
+                        selected, family.parameters, report=st.reconstruction_report
+                    )
                 st.verified = True  # reconstruction validated on independent holdout points
             except InterpolationFailed as exc:
                 st.coeffs = None
@@ -472,6 +491,8 @@ def _finalize_target(
     run.reconstruction_diagnostics = {
         "verified": st.verified,
         "n_coefficients": 0 if st.coeffs is None else len(st.coeffs),
+        "support_classification": st.support_classification.get("summary", {}),
+        "coefficients": st.reconstruction_report,
     }
 
     result = build_reduction_result_from_reconstruction(
