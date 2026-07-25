@@ -4,8 +4,8 @@
 
 ### Added
 - **External Int2 Method.11a/11b: ступенчатая лесенка со стейдж-гейтом и
-  support-классификацией; Stage-1 (STOP → диагноз) и Stage-2 (PROCEED) —
-  честные ёмкостные отказы.**
+  support-классификацией; Stage-1 (STOP → диагноз), Stage-2 и Stage-3
+  (PROCEED) — честные ёмкостные отказы.**
   - Стейдж-гейт `scripts/method11a_stage_gate.py` (analysis-only; схему записи
     импортирует из раннера, ничего не пересчитывает): вердикты
     DONE/PROCEED/STOP + причины; артефакт `--artifact`/`--json-out`. Тесты
@@ -27,6 +27,16 @@
     гейт PROCEED — 63/63 formal_success, единый ранг 26984, 20 stable +
     1 special-zero. Артефакты `validation/external_int2_method11b_stage2.json`,
     `validation/method11b_stage2_gate.json`.
+  - Stage-3 (30 точек × 3 prime, cache-warm 63/90 hits, досчёт 27 записей,
+    8259 s): снова `Failure(InterpolationFailed)`, n_terms=0; гейт PROCEED —
+    90/90 formal_success, единый ранг 26984, 29 stable + 1 special-zero,
+    покрытие 30/30 → степени коэффициентов выше (3,3). Артефакты
+    `validation/external_int2_method11b_stage3.json`,
+    `validation/method11b_stage3_gate.json`.
+  - Stage-4 (38 точек, суперсет Stage-3 + 8 генерических; покрывает ёмкостные
+    минимумы (4,4)=31 и (5,4)=36): расписание
+    `validation/method11b_samples_stage4.json`, прогон запущен
+    (кэш-тёплый 90/114).
   - Оракульная сверка (Phase D) отложена: `--export-text` пишет reduction text
     только на certified Success — обязательный шаг первой успешной ступени.
 - **External Int2 Method.11: первый тяжёлый certified-solve прогон (честный
