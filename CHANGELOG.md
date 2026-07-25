@@ -3,6 +3,17 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.11b Stage-4 (38 точек): гейт STOP + корневой диагноз —
+  ёмкость модуля (нужен 4-й prime), а не сэмплинг.**
+  - Stage-4 (cache-warm 90/114, досчитано 24 записи): 114/114 formal_success,
+    единый ранг 26984 (0 провалов), support 4 (37 stable + 1 special-zero), но
+    `Failure(InterpolationFailed)` → гейт STOP «non-capacity failure»
+    (`validation/method11b_stage4_gate.json`).
+  - Офлайн-диагноз из кэша (`validation/method11b_reconstruction_diag.json`):
+    `reconstruct_rational()` не стабилизируется на 3 primes — у лейбла
+    `(0,0,0,-1,0,0,-1)` в `ep=120/7, r=52/11` значение `346424213/1648857600`
+    имеет знаменатель выше 2-prime Wang-предела 1 518 500 221; правило
+    «кандидат по k совпадает с k−1» не срабатывает → нужен 4-й prime (2147483579).
 - **External Int2 Method.11a/11b: ступенчатая лесенка со стейдж-гейтом и
   support-классификацией; Stage-1 (STOP → диагноз), Stage-2 и Stage-3
   (PROCEED) — честные ёмкостные отказы.**

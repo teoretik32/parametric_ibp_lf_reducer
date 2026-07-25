@@ -1,0 +1,33 @@
+{
+ "context": "Method.11b Stage-4 STOP diagnosis (offline, from record cache; no new sampling)",
+ "verdict_gate": "STOP (non-capacity failure)",
+ "root_cause": "prime-modulus capacity: reconstruct_rational() requires the rational lift to stabilize (k-prime candidate must equal (k-1)-prime candidate). With 3 primes the 2-prime candidate is None because the true denominator exceeds the 2-prime Wang bound, so the correct 3-prime candidate has nothing to agree with -> 'never stabilized -> need more primes'.",
+ "failing_label": [
+  0,
+  0,
+  0,
+  -1,
+  0,
+  0,
+  -1
+ ],
+ "failing_point": {
+  "ep": "120/7",
+  "r": "52/11"
+ },
+ "residues": {
+  "2147483647": 825050885,
+  "2147483629": 2027427368,
+  "2147483587": 1012643020
+ },
+ "true_value_3prime": "346424213/1648857600",
+ "denominator_factorization": "2^9 * 3^3 * 5^2 * 13 * 367",
+ "pair_wang_bound": 1518500221,
+ "denominator": 1648857600,
+ "note_on_gate": "gate 'non-capacity' classification only covers rank/support axes; prime-count capacity is not measured by the gate. Sampling grid, ranks (26984, no drops) and support (4, 37 stable + 1 special_zero) are all healthy across 114 records.",
+ "recommended_next_step": "re-run Stage-4 with a 4th prime, e.g. --primes 2147483647,2147483629,2147483587,2147483563; record cache reuses all 114 existing (sample,prime) records, so only ~38 new reductions are needed.",
+ "code_refs": {
+  "stability_rule": "src/parametric_ibp_lf_reducer/reconstruction.py:67 reconstruct_rational",
+  "raise_site": "src/parametric_ibp_lf_reducer/reconstruction.py:277 collect_value_table"
+ }
+}
