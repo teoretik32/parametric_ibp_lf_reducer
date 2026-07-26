@@ -1,0 +1,232 @@
+{
+  "artifact": "external_int2_method11a_audit",
+  "phase": "A",
+  "source_run": "validation/external_int2_method11.json (Method.11 heavy run, InterpolationFailed)",
+  "sampling": {
+    "generator": "default_scattered_samples(('ep','r'), 12) \u2014 deterministic, non-lattice",
+    "n_samples": 12,
+    "primes_per_sample": 3,
+    "records_total": 36,
+    "special_sample": {
+      "index": 2,
+      "ep": "3",
+      "r": "54/11",
+      "note": "rank-deficient specialization, rank 23206 vs generic 26984; excluded by rank filter"
+    },
+    "distinct_generic_points": 11,
+    "samples": [
+      {
+        "k": 0,
+        "ep": "15/7",
+        "r": "32/11"
+      },
+      {
+        "k": 1,
+        "ep": "18/7",
+        "r": "43/11"
+      },
+      {
+        "k": 2,
+        "ep": "3",
+        "r": "54/11"
+      },
+      {
+        "k": 3,
+        "ep": "24/7",
+        "r": "28/11"
+      },
+      {
+        "k": 4,
+        "ep": "27/7",
+        "r": "39/11"
+      },
+      {
+        "k": 5,
+        "ep": "30/7",
+        "r": "50/11"
+      },
+      {
+        "k": 6,
+        "ep": "33/7",
+        "r": "24/11"
+      },
+      {
+        "k": 7,
+        "ep": "36/7",
+        "r": "35/11"
+      },
+      {
+        "k": 8,
+        "ep": "39/7",
+        "r": "46/11"
+      },
+      {
+        "k": 9,
+        "ep": "6",
+        "r": "57/11"
+      },
+      {
+        "k": 10,
+        "ep": "45/7",
+        "r": "31/11"
+      },
+      {
+        "k": 11,
+        "ep": "48/7",
+        "r": "42/11"
+      }
+    ]
+  },
+  "rank_filter": {
+    "max_rank": 26984,
+    "records_at_max_rank": 33,
+    "records_below": 3,
+    "n_bad_specializations": 0,
+    "union_support_labels_after_filter": 4
+  },
+  "support_stability": {
+    "verifiable_from_artifact": false,
+    "reason": "per-record supports were not persisted (records predate Perf.12 cache; artifact stores only the 4-label union; log has 5 lines)",
+    "action": "per-record support/rank now persisted via record cache JSONL; stability re-checked at each stage gate"
+  },
+  "reconstruction_capacity_heavy_run": {
+    "engine": "interpolate_multivariate(max_deg=6, min_validation=2), 2 parameters (ep, r)",
+    "points": 11,
+    "holdout_points": 2,
+    "fit_points": 9,
+    "feasible_degree_pairs": [
+      {
+        "num_deg": 0,
+        "den_deg": 0,
+        "fit_rows_needed": 1
+      },
+      {
+        "num_deg": 0,
+        "den_deg": 1,
+        "fit_rows_needed": 3
+      },
+      {
+        "num_deg": 0,
+        "den_deg": 2,
+        "fit_rows_needed": 6
+      },
+      {
+        "num_deg": 1,
+        "den_deg": 0,
+        "fit_rows_needed": 3
+      },
+      {
+        "num_deg": 1,
+        "den_deg": 1,
+        "fit_rows_needed": 5
+      },
+      {
+        "num_deg": 1,
+        "den_deg": 2,
+        "fit_rows_needed": 8
+      },
+      {
+        "num_deg": 2,
+        "den_deg": 0,
+        "fit_rows_needed": 6
+      },
+      {
+        "num_deg": 2,
+        "den_deg": 1,
+        "fit_rows_needed": 8
+      }
+    ],
+    "max_combined_degree_attempted": 3,
+    "per_label_failure_details": "NOT RECORDED in heavy run (first-failure raise; no per-pair rank/nullity persisted)",
+    "structural_failure_mode": "every feasible (num_deg, den_deg) pair is capped at combined degree 3 by 9 fit rows; all higher pairs skipped as underdetermined; final raise 'multivariate rational interpolation did not validate'",
+    "conclusion": "11 generic points cannot support any rational form beyond combined degree 3; failure is a capacity bound, not (necessarily) a modeling error"
+  },
+  "min_distinct_points_table": {
+    "(0,0)": 3,
+    "(0,1)": 5,
+    "(1,0)": 5,
+    "(1,1)": 7,
+    "(0,2)": 8,
+    "(2,0)": 8,
+    "(1,2)": 10,
+    "(2,1)": 10,
+    "(0,3)": 12,
+    "(3,0)": 12,
+    "(2,2)": 13,
+    "(1,3)": 14,
+    "(3,1)": 14,
+    "(0,4)": 17,
+    "(2,3)": 17,
+    "(3,2)": 17,
+    "(4,0)": 17,
+    "(1,4)": 19,
+    "(4,1)": 19,
+    "(3,3)": 21,
+    "(2,4)": 22,
+    "(4,2)": 22,
+    "(0,5)": 23,
+    "(5,0)": 23,
+    "(1,5)": 25,
+    "(5,1)": 25,
+    "(3,4)": 26,
+    "(4,3)": 26,
+    "(2,5)": 28,
+    "(5,2)": 28,
+    "(0,6)": 30,
+    "(6,0)": 30,
+    "(4,4)": 31,
+    "(1,6)": 32,
+    "(3,5)": 32,
+    "(5,3)": 32,
+    "(6,1)": 32,
+    "(2,6)": 35,
+    "(6,2)": 35,
+    "(4,5)": 37,
+    "(5,4)": 37,
+    "(3,6)": 39,
+    "(6,3)": 39,
+    "(5,5)": 43,
+    "(4,6)": 44,
+    "(6,4)": 44
+  },
+  "staged_plan_capacity": {
+    "18": {
+      "fit_points": 16,
+      "max_combined_degree_reachable": 5,
+      "n_feasible_pairs": 17
+    },
+    "24": {
+      "fit_points": 22,
+      "max_combined_degree_reachable": 6,
+      "n_feasible_pairs": 24
+    },
+    "30": {
+      "fit_points": 28,
+      "max_combined_degree_reachable": 7,
+      "n_feasible_pairs": 32
+    },
+    "36": {
+      "fit_points": 34,
+      "max_combined_degree_reachable": 8,
+      "n_feasible_pairs": 39
+    }
+  },
+  "seeding_from_prior_run": {
+    "possible": false,
+    "reason": "artifact contains no per-record coefficient payloads (reduce.terms empty on failure; records not persisted before Perf.12 cache existed)",
+    "consequence": "all 11 old generic points must be re-solved; they re-enter via the record cache and are never solved twice again"
+  },
+  "stage1_schedule": {
+    "points_total": 18,
+    "old_generic_resolved": 11,
+    "new_points": 7,
+    "generator_indices": "k in {0,1,3..18} of default_scattered_samples (ep=3 special excluded)",
+    "guarantees": [
+      "exact rationals",
+      "pairwise distinct",
+      "r>0 preserved",
+      "no product-grid structure",
+      "new points avoid all old sample coordinates"
+    ]
+  }
+}

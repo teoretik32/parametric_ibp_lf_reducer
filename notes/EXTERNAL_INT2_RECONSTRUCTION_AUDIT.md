@@ -1,5 +1,16 @@
 # External Int2 Method.11c: offline reconstruction audit
 
+> **Superseded by the Method.11c resolution.** The zero-fill interpretation of
+> `ep=6,r=57/11` below was wrong: the point is a basis/pivot specialization, not a
+> special zero, and the four generic LF coefficients *are* reconstructible from the
+> same 38x4 cache (see `notes/EXTERNAL_INT2_METHOD11_RECONSTRUCTION_AUDIT.md` and
+> `validation/external_int2_method11_reconstruction_audit.json`). The Phase B-D
+> conclusions below ("not reconstructed", the Stage-5 schedule) are historical.
+> The on-disk value table stays at schema `m11c-value-table/v1` as recorded history;
+> regenerating with `build_value_table` now emits `m11c-value-table/v2`, where the
+> deviating sample is never zero-filled and appears under
+> `verification["excluded_from_table"]`.
+
 Offline audit of the Method.11 record cache (38 samples x 4 primes); no new modular
 records, no RREF/reducer solve. Artifacts: `external_int2_method11_value_table.json`,
 `external_int2_method11_reconstruction_audit.json`.

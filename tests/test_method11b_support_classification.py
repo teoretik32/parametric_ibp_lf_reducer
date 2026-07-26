@@ -1,8 +1,9 @@
-"""Tests for Method.11b: special-zero vs unstable support classification (Phase A).
+"""Tests for Method.11b/11c support classification (Phase A + conservative fix).
 
-A ``special_zero`` sample (all primes at generic rank agree on the same missing label set)
-must be retained and zero-filled; an ``unstable`` sample (rank drop or per-prime support
-disagreement) must be rejected from the value table entirely.
+A ``support_deviation_pending_validation`` sample (all primes at generic rank agree on the
+same missing label set) is excluded from fitting and only re-admitted as a genuine special
+zero by ``validate_support_deviations`` after reconstruction (Method.11c); an ``unstable``
+sample (rank drop or per-prime support disagreement) is rejected from the value table.
 """
 
 from __future__ import annotations
@@ -20,7 +21,8 @@ if str(REPO_ROOT / "src") not in sys.path:
 import sympy as sp  # noqa: E402
 
 from parametric_ibp_lf_reducer import (  # noqa: E402
-    SUPPORT_SPECIAL_ZERO,
+    DEVIATION_GENUINE_SPECIAL_ZERO,
+    SUPPORT_DEVIATION_PENDING,
     SUPPORT_STABLE,
     SUPPORT_UNSTABLE,
     InterpolationFailed,
@@ -28,6 +30,7 @@ from parametric_ibp_lf_reducer import (  # noqa: E402
     collect_value_table,
     interpolate_multivariate,
     reconstruct_coefficients,
+    validate_support_deviations,
 )
 from parametric_ibp_lf_reducer.modular_normal_form import STATUS_REDUCED  # noqa: E402
 from parametric_ibp_lf_reducer.records import NormalFormRecord  # noqa: E402
@@ -91,7 +94,7 @@ def _key_of(samples: dict, ep: F) -> object:
     return key
 
 
-def test_special_zero_sample_classified_and_zero_filled():
+def test_support_deviation_pending_and_excluded_from_fitting():
     records = _base_records(GENERIC_POINTS + [SPECIAL_POINT])
     cls = classify_sample_supports(records)
     summary = cls["summary"]
@@ -99,20 +102,20 @@ def test_special_zero_sample_classified_and_zero_filled():
     assert summary["reference_support_size"] == 2
     assert summary["n_samples"] == 12
     assert summary["n_stable"] == 11
-    assert summary["n_special_zero"] == 1
+    assert summary["n_support_deviation_pending_validation"] == 1
     assert summary["n_unstable"] == 0
-    assert summary["special_zero_samples"] == ["ep=6,r=57/11"]
+    assert summary["support_deviation_samples"] == ["ep=6,r=57/11"]
     entry = cls["by_sample"]["ep=6,r=57/11"]
-    assert entry["classification"] == SUPPORT_SPECIAL_ZERO
+    assert entry["classification"] == SUPPORT_DEVIATION_PENDING
     assert entry["missing_labels"] == [list(LAB_A)]
     assert entry["ranks"] == [GENERIC_RANK]
 
+    # Method.11c: NEVER zero-filled -- the sample is excluded from the value table.
     labels, table, samples, n_skipped = collect_value_table(records)
-    assert n_skipped == 0  # special-zero sample is retained
-    assert len(samples) == 12
-    special_key = _key_of(samples, F(6))
-    assert table[LAB_A][special_key] == 0  # zero-filled exact zero
-    assert table[LAB_B][special_key] == _coeff_b(*SPECIAL_POINT)
+    assert n_skipped == len(PRIMES)
+    assert len(samples) == 11
+    assert all(F(s["ep"]) != 6 for s in samples.values())
+    assert all(key not in table[LAB_A] for key in table[LAB_A] if F(samples.get(key, {"ep": 0})["ep"]) == 6)
 
 
 def test_rank_drop_sample_rejected_as_unstable():
@@ -154,7 +157,7 @@ def test_all_stable_supports_unchanged():
     cls = classify_sample_supports(records)
     summary = cls["summary"]
     assert summary["n_stable"] == summary["n_samples"] == 11
-    assert summary["n_special_zero"] == 0 and summary["n_unstable"] == 0
+    assert summary["n_support_deviation_pending_validation"] == 0 and summary["n_unstable"] == 0
     assert all(e["classification"] == SUPPORT_STABLE for e in cls["by_sample"].values())
 
     labels, table, samples, n_skipped = collect_value_table(records)
@@ -164,19 +167,25 @@ def test_all_stable_supports_unchanged():
     assert table[LAB_A][key] == _coeff_a(F(1, 5), _r_of(1))
 
 
-def test_end_to_end_reconstruction_through_special_zero():
+def test_end_to_end_reconstruction_through_genuine_special_zero():
     records = _base_records(GENERIC_POINTS + [SPECIAL_POINT])
     report: dict = {}
+    # Method.11c: the deviating sample is excluded from fitting (11 fit points, not 12)...
     coeffs = reconstruct_coefficients(records, ["ep", "r"], report=report)
     ep, r = sp.symbols("ep r")
     assert sp.simplify(coeffs[LAB_A] - (ep - 6) / (r + 1)) == 0
     assert sp.simplify(coeffs[LAB_B] - 1 / (ep + r)) == 0
-    # The reconstructed coefficient honours the special zero exactly.
     assert coeffs[LAB_A].subs({ep: 6, r: sp.Rational(57, 11)}) == 0
     info = report[str(LAB_A)]
     assert info["status"] == "validated"
     assert (info["num_deg"], info["den_deg"]) == (1, 1)
-    assert info["n_fit"] + info["n_hold"] == 12
+    assert info["n_fit"] + info["n_hold"] == 11
+    # ...and only the post-reconstruction validation re-admits it as a genuine zero.
+    val = validate_support_deviations(coeffs, records)
+    entry = val["by_sample"]["ep=6,r=57/11"]
+    assert entry["verdict"] == DEVIATION_GENUINE_SPECIAL_ZERO
+    assert entry["n_present_mismatches"] == 0 and entry["missing_nonzero"] == []
+    assert val["summary"]["genuine_special_zero_samples"] == ["ep=6,r=57/11"]
 
 
 def test_underdetermined_failure_reports_point_deficit():

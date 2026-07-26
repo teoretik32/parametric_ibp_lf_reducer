@@ -125,18 +125,24 @@ def build_value_table(records, raw_rows):
 
     ranks_all = sorted({r.rank for r in records})
     problems: list[str] = []
-    if len(samples) != EXPECTED_SAMPLES:
-        problems.append(f"expected {EXPECTED_SAMPLES} samples, got {len(samples)}")
+    if len(by_sample) != EXPECTED_SAMPLES:
+        problems.append(f"expected {EXPECTED_SAMPLES} cached samples, got {len(by_sample)}")
     if ranks_all != [EXPECTED_RANK]:
         problems.append(f"rank set {ranks_all} != [{EXPECTED_RANK}]")
 
     canon_by_key = {key: _canon(samples[key]) for key in samples}
     key_by_canon = {v: k for k, v in canon_by_key.items()}
-    sz_entries = {
-        canon: e
-        for canon, e in classification["by_sample"].items()
-        if e["classification"] == "special_zero"
-    }
+    # Method.11c semantics: support-deviating samples are excluded from the value
+    # table by collect_value_table (never zero-filled).
+    excluded = sorted(set(by_sample) - set(key_by_canon))
+    if excluded != [SPECIAL_ZERO_CANONICAL]:
+        problems.append(
+            f"samples excluded from the value table {excluded} != [{SPECIAL_ZERO_CANONICAL}]"
+        )
+    if len(samples) != EXPECTED_SAMPLES - len(excluded):
+        problems.append(
+            f"expected {EXPECTED_SAMPLES - len(excluded)} table samples, got {len(samples)}"
+        )
 
     out_samples = []
     for canon in sorted(
@@ -151,6 +157,10 @@ def build_value_table(records, raw_rows):
             problems.append(f"{canon}: per-prime support disagreement")
         cls_entry = classification["by_sample"].get(canon, {})
         cls = cls_entry.get("classification")
+        if canon not in key_by_canon:
+            # Excluded from the table (support deviation); documented separately in
+            # verification["excluded_from_table"] — no zero-filling, no table row.
+            continue
         skey = key_by_canon[canon]
         coeffs_out = {}
         for lab in labels:
@@ -169,10 +179,6 @@ def build_value_table(records, raw_rows):
                 "zero_filled": zero_filled,
                 "value": _frac_str(value),
             }
-        if cls == "special_zero":
-            missing = {p: tuple(sorted(set(labels) - set(entry["byprime"][p]))) for p in primes}
-            if len(set(missing.values())) != 1:
-                problems.append(f"{canon}: special-zero missing labels differ across primes")
         out_samples.append(
             {
                 "sample": {k: _frac_str(v) for k, v in sorted(entry["sample"].items())},
@@ -185,26 +191,39 @@ def build_value_table(records, raw_rows):
             }
         )
 
-    if sorted(sz_entries) != [SPECIAL_ZERO_CANONICAL]:
-        problems.append(f"special-zero samples {sorted(sz_entries)} != [{SPECIAL_ZERO_CANONICAL}]")
+    excluded_out = []
+    for canon in excluded:
+        entry = by_sample[canon]
+        primes = sorted(entry["byprime"])
+        missing = {p: tuple(sorted(set(labels) - set(entry["byprime"][p]))) for p in primes}
+        if len(set(missing.values())) != 1:
+            problems.append(f"{canon}: missing labels differ across primes")
+        cls_entry = classification["by_sample"].get(canon, {})
+        excluded_out.append(
+            {
+                "sample": {k: _frac_str(v) for k, v in sorted(entry["sample"].items())},
+                "canonical": canon,
+                "classification": cls_entry.get("classification"),
+                "missing_labels": [_lab_str(t) for t in missing[primes[0]]],
+                "cache_keys": sorted(entry["keys"]),
+            }
+        )
 
     verification = {
         "n_samples": len(samples),
+        "n_cached_samples": len(by_sample),
         "n_records": len(records),
         "primes": list(EXPECTED_PRIMES),
         "selected_rank": ranks_all[0] if len(ranks_all) == 1 else ranks_all,
         "n_skipped_records": n_skipped,
         "support_size": len(labels),
         "classification_summary": classification["summary"],
-        "special_zero": {
-            canon: {"missing_labels": [_lab_str(t) for t in e.get("missing_labels", ())]}
-            for canon, e in sz_entries.items()
-        },
+        "excluded_from_table": excluded_out,
         "problems": problems,
         "ok": not problems,
     }
     doc = {
-        "schema": "m11c-value-table/v1",
+        "schema": "m11c-value-table/v2",
         "source": {"records": str(RECORDS_PATH.name), "fingerprint": header_fp},
         "labels": [_lab_str(lab) for lab in labels],
         "samples": out_samples,

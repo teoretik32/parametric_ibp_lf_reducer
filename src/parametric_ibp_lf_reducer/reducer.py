@@ -402,10 +402,11 @@ def _select_and_reconstruct(
     # Method.11b: classify per-sample support deviations (special zeros vs instability).
     st.support_classification = classify_sample_supports(records)
     _scls = st.support_classification["summary"]
-    if _scls["n_special_zero"]:
+    if _scls["n_support_deviation_pending_validation"]:
         st.messages.append(
-            f"special-zero support at {_scls['n_special_zero']} sample(s) "
-            f"{_scls['special_zero_samples']}: retained, missing labels zero-filled"
+            f"support deviation at {_scls['n_support_deviation_pending_validation']} sample(s) "
+            f"{_scls['support_deviation_samples']}: excluded from fitting pending validation "
+            f"(Method.11c; never zero-filled)"
         )
     if _scls["n_unstable"]:
         st.messages.append(

@@ -3,6 +3,40 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.11c (развязка): `ep=6,r=57/11` — базисная/pivot
+  специализация, а НЕ special zero; все 4 генерических LF-коэффициента
+  реконструированы из существующего кэша (без новых редукций) и валидированы.**
+  - `src/parametric_ibp_lf_reducer/reconstruction.py`: новая классификация
+    `SUPPORT_DEVIATION_PENDING` + `validate_support_deviations()`
+    (`DEVIATION_BASIS_SPECIALIZATION` / `DEVIATION_GENUINE_SPECIAL_ZERO`);
+    `collect_value_table` исключает девиантные сэмплы из таблицы — zero-fill
+    отменён; экспорт в `__init__`; сообщения `reducer.py` и
+    `scripts/method11a_stage_gate.py` переведены на новую семантику.
+  - `scripts/audit_external_int2_method11_reconstruction.py` → артефакт
+    `validation/external_int2_method11_reconstruction_audit.json`
+    (`external-int2-method11-reconstruction-audit/v1`): 152 записи, единый ранг
+    26984, modal support 148/152; реконструкция 4 коэффициентов (fit 35 +
+    hold-out 2, все `validated`); точный модульный кросс-чек: 0 расхождений на
+    37 стабильных сэмплах, 16/16 расхождений на девиантном (включая ненулевое
+    генерическое предсказание для «нулевого» коэффициента) — вердикт
+    `basis_specialization_not_special_zero`. Заметка:
+    `notes/EXTERNAL_INT2_METHOD11_RECONSTRUCTION_AUDIT.md`.
+  - `scripts/audit_external_int2_reconstruction.py::build_value_table` починен
+    под Method.11c: исключённый сэмпл документируется в
+    `verification["excluded_from_table"]` (схема `m11c-value-table/v2`);
+    дисковый v1-артефакт сохранён как история. Проверено: регенерация совпадает
+    с диском на всех 37 общих сэмплах (0 расхождений).
+  - `scripts/certify_external_int2_lf.py`: независимая сертификация
+    реконструированной LF-связи на свежих точках вне 38 сэмплов (InSpan-проверки
+    по 2 prime на точку; фоновый прогон, лог
+    `validation/method11_certificate_run.log`).
+  - Тесты: `tests/test_reconstruction_audit.py` переписан под Method.11c (17:
+    исторический v1-артефакт как история; v2-ребилд + roundtrip 37/37;
+    CRT-остатки; сверка аудит-коэффициентов с точной таблицей значений;
+    dense-диагностика — (2,2) теперь candidate после исключения отравленной
+    точки; Method.11c-артефакт; AST-гард no-RREF/reducer для обоих скриптов);
+    `tests/test_method11c_support_validation.py` — новый;
+    `tests/test_method11b_support_classification.py` обновлён.
 - **External Int2 Method.11c: офлайн-аудит реконструкции из кэша (38×4 записей,
   без RREF/новых редукций) — все структурные анзацы опровергнуты честно;
   минимальное Stage-5-расписание детерминировано.**

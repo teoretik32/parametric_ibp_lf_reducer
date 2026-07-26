@@ -1053,3 +1053,37 @@ Status: **complete, verified**.
   самый информативный следующий шаг — пакет из 8 точек (закрывает и dense
   (3,6)/(7,1)-фронтир первой точкой, и factor-aware deg-8 целиком). Тяжёлые
   прогоны — только после одобрения.
+- **[Superseded → Method.11c ниже]** зеро-филл `ep=6,r=57/11` был ошибкой;
+  выводы Phase B–D («не реконструируется», пакет из 8 точек) — история.
+
+### External Int2 Method.11c: развязка — базисная специализация, коэффициенты реконструированы
+
+- Диагноз пересмотрен: `ep=6,r=57/11` — НЕ special zero. Все 16 сравнений
+  (4 лейбла × 4 prime) расходятся с генерическими функциями, включая ненулевое
+  предсказание для «пропавшего» лейбла ⇒ базисная/pivot специализация; сэмпл
+  исключается из фиттинга (zero-fill отменён навсегда).
+- `reconstruction.py`: `SUPPORT_DEVIATION_PENDING` +
+  `validate_support_deviations` (`DEVIATION_BASIS_SPECIALIZATION` /
+  `DEVIATION_GENUINE_SPECIAL_ZERO`); `collect_value_table` отбрасывает
+  девиантные сэмплы (в таблице 37 точек, n_skipped=4). Экспорт в `__init__`;
+  сообщения reducer/stage-gate обновлены.
+- Все 4 генерических LF-коэффициента реконструированы из СУЩЕСТВУЮЩЕГО кэша
+  (fit 35 + hold-out 2, все validated), знаменатели `6r(3ep+1)`,
+  `6·ep·r(3ep+1)`, `6·ep²·r(3ep+1)`; точный модульный кросс-чек — 0 расхождений
+  на 37 стабильных сэмплах. Артефакт:
+  `validation/external_int2_method11_reconstruction_audit.json`
+  (`external-int2-method11-reconstruction-audit/v1`), вердикт
+  `basis_specialization_not_special_zero`; заметка:
+  `notes/EXTERNAL_INT2_METHOD11_RECONSTRUCTION_AUDIT.md`.
+- Старый аудит: `build_value_table` починен (схема `m11c-value-table/v2`,
+  блок `verification["excluded_from_table"]`); дисковый v1-артефакт — история;
+  регенерация совпадает с диском на 37/37 общих сэмплах. Dense-диагностика:
+  ячейка (2,2) теперь candidate (бидиграда C₀ = (2,2)) — прежние «честные
+  отказы» были следствием отравленной точки.
+- Сертификация на свежих точках: `scripts/certify_external_int2_lf.py`
+  (фон, лог `validation/method11_certificate_run.log`; InSpan на
+  (5/2,7/3) и (8/3,13/4) × 2 prime — положительно, прогон продолжается).
+- Тесты: `tests/test_reconstruction_audit.py` переписан (17 зелёных),
+  `tests/test_method11c_support_validation.py` новый; полный набор зелёный.
+- Итог: «38 точек недостаточно» снято — точек хватало, мешал zero-fill;
+  Stage-5-пакет из 8 точек не нужен.

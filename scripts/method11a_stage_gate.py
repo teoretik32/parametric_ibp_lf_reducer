@@ -133,9 +133,10 @@ def gate_verdict(report, artifact):
         if success is False and not capacity:
             reasons.append("reconstruction failed for a non-capacity reason")
     summary = report.get("support_summary", {})
-    if summary.get("n_special_zero"):
+    if summary.get("n_support_deviation_pending_validation") or summary.get("n_special_zero"):
+        n_dev = summary.get("n_support_deviation_pending_validation") or summary.get("n_special_zero")
         reasons.append(
-            f"special-zero support at {summary['n_special_zero']} sample(s) (retained, zero-filled)"
+            f"support deviation at {n_dev} sample(s) (excluded from fitting pending validation)"
         )
     if summary.get("n_unstable"):
         reasons.append(f"unstable support at {summary['n_unstable']} sample(s)")

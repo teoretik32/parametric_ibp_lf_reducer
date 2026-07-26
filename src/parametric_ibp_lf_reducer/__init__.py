@@ -91,14 +91,18 @@ from .records import (
     summarize_records,
 )
 from .reconstruction import (
+    DEVIATION_BASIS_SPECIALIZATION,
+    DEVIATION_GENUINE_SPECIAL_ZERO,
     RANK_POLICY_ALL,
     RANK_POLICY_MAX_RANK,
+    SUPPORT_DEVIATION_PENDING,
     SUPPORT_SPECIAL_ZERO,
     SUPPORT_STABLE,
     SUPPORT_UNSTABLE,
     InterpolationFailed,
     classify_sample_supports,
     collect_value_table,
+    validate_support_deviations,
     interpolate_multivariate,
     interpolate_univariate,
     rational_reconstruction,
@@ -280,11 +284,15 @@ __all__ = [
     "select_records_for_reconstruction",
     "RANK_POLICY_MAX_RANK",
     "RANK_POLICY_ALL",
-    # Method.11b: special-zero vs unstable support classification
+    # Method.11b/11c: support-deviation vs unstable classification + validation
     "classify_sample_supports",
+    "validate_support_deviations",
     "SUPPORT_STABLE",
     "SUPPORT_SPECIAL_ZERO",
+    "SUPPORT_DEVIATION_PENDING",
     "SUPPORT_UNSTABLE",
+    "DEVIATION_GENUINE_SPECIAL_ZERO",
+    "DEVIATION_BASIS_SPECIALIZATION",
     # modular row-span certificate (Pass D4.4)
     "verify_reduction_relation_mod_p",
     "CertificateResult",

@@ -92,10 +92,19 @@ def _record_coeffs(r) -> dict:
 RANK_POLICY_MAX_RANK = "max_rank"
 RANK_POLICY_ALL = "all"
 
-# --- Method.11b: special-zero vs unstable support classification ------------------------------
+# --- Method.11b/11c: support-deviation vs unstable classification -----------------------------
 SUPPORT_STABLE = "stable"
-SUPPORT_SPECIAL_ZERO = "special_zero"
+SUPPORT_DEVIATION_PENDING = "support_deviation_pending_validation"
 SUPPORT_UNSTABLE = "unstable"
+# Legacy Method.11b class name.  ``classify_sample_supports`` no longer emits it: a same-rank,
+# prime-consistent missing-label pattern is NOT proof of a coefficient zero.  The cache sample
+# ep=6, r=57/11 has the generic rank 26984, yet its three surviving coefficients all disagree
+# with the generic coefficient functions (basis/pivot specialization); zero-filling it poisoned
+# every dense interpolation in Stages 2..4.  Kept only for backward-compatible imports.
+SUPPORT_SPECIAL_ZERO = "special_zero"
+# Post-reconstruction verdicts for pending support deviations (Method.11c):
+DEVIATION_GENUINE_SPECIAL_ZERO = "GenuineSpecialZero"
+DEVIATION_BASIS_SPECIALIZATION = "BasisSpecialization"
 
 
 def _canonical_sample_str(sample: dict) -> str:
@@ -112,11 +121,13 @@ def classify_sample_supports(records: Iterable) -> dict:
     ``formal_success``) records; the reference support is the union of coefficient labels
     over generic-rank records. Per exact parameter sample:
 
-    - ``special_zero`` -- every record at the sample has the generic rank, the per-prime
-      supports agree, and the same non-empty label set is missing versus the reference
-      support: the coefficient functions vanish exactly at this sample (a joint accidental
-      zero mod k independent ~2^31 primes has probability ~2^-31k). Such samples are
-      retained and zero-filled by :func:`collect_value_table`.
+    - ``support_deviation_pending_validation`` -- every record at the sample has the generic
+      rank, the per-prime supports agree, and the same non-empty label set is missing versus
+      the reference support.  This is *not* proof of a coefficient zero: the normal-form
+      basis/pivot structure may specialize at the sample while keeping the generic rank
+      (Method.11c, ep=6, r=57/11).  Such samples are excluded from fitting by
+      :func:`collect_value_table` and must only be re-admitted as genuine special zeros by
+      :func:`validate_support_deviations` after a candidate reconstruction.
     - ``unstable`` -- ranks differ at the sample, per-prime supports disagree, a record is
       not formally reduced, or labels outside the reference union appear; such samples must
       never be zero-filled and are rejected by :func:`collect_value_table`.
@@ -131,9 +142,9 @@ def classify_sample_supports(records: Iterable) -> dict:
         "reference_support_size": 0,
         "n_samples": 0,
         "n_stable": 0,
-        "n_special_zero": 0,
+        "n_support_deviation_pending_validation": 0,
         "n_unstable": 0,
-        "special_zero_samples": [],
+        "support_deviation_samples": [],
         "unstable_samples": [],
     }
     if not valid:
@@ -165,7 +176,10 @@ def classify_sample_supports(records: Iterable) -> dict:
         elif extra:
             cls = SUPPORT_UNSTABLE  # labels beyond the reference union (defensive)
         elif missing:
-            cls = SUPPORT_SPECIAL_ZERO  # same labels absent for every prime -> exact zeros
+            # Same labels absent for every prime at the generic rank: a support deviation.
+            # NOT auto-classified as a special zero (Method.11c) -- the basis/pivot structure
+            # may specialize while keeping the rank; exclude from fitting pending validation.
+            cls = SUPPORT_DEVIATION_PENDING
         else:
             cls = SUPPORT_STABLE
         by_sample[key] = {
@@ -177,8 +191,8 @@ def classify_sample_supports(records: Iterable) -> dict:
         }
         summary["n_samples"] += 1
         summary[f"n_{cls}"] += 1
-        if cls == SUPPORT_SPECIAL_ZERO:
-            summary["special_zero_samples"].append(key)
+        if cls == SUPPORT_DEVIATION_PENDING:
+            summary["support_deviation_samples"].append(key)
         elif cls == SUPPORT_UNSTABLE:
             summary["unstable_samples"].append(key)
     return {"by_sample": by_sample, "summary": summary}
@@ -238,21 +252,23 @@ def collect_value_table(
     ``"max_rank"``), so rank-deficient specializations never contribute zero-filled coefficients.
     Under the ``"max_rank"`` policy, samples classified ``unstable`` by
     :func:`classify_sample_supports` (rank drops, per-prime support disagreement) are rejected
-    entirely; ``special_zero`` samples are retained and their missing labels zero-fill to an
-    exact coefficient zero (Method.11b). Returns ``(labels, table, samples, n_skipped)`` where
+    entirely, and ``support_deviation_pending_validation`` samples (same generic rank, agreed
+    non-empty missing-label set) are likewise excluded from the value table -- never zero-filled
+    (Method.11c); a genuine special zero can only be recognized *after* reconstruction via
+    :func:`validate_support_deviations`. Returns ``(labels, table, samples, n_skipped)`` where
     ``table[label][sample_key]`` is an exact :class:`Fraction` and ``n_skipped`` counts records
-    not consumed (non-reduced records plus rank/stability-filtered ones).
+    not consumed (non-reduced records plus rank/stability/deviation-filtered ones).
     """
     results = list(results)
     reduced, _ = select_records_for_reconstruction(results, rank_policy=rank_policy)
     if rank_policy == RANK_POLICY_MAX_RANK:
-        unstable = {
+        excluded = {
             key
             for key, entry in classify_sample_supports(results)["by_sample"].items()
-            if entry["classification"] == SUPPORT_UNSTABLE
+            if entry["classification"] in (SUPPORT_UNSTABLE, SUPPORT_DEVIATION_PENDING)
         }
-        if unstable:
-            reduced = [r for r in reduced if _canonical_sample_str(r.sample) not in unstable]
+        if excluded:
+            reduced = [r for r in reduced if _canonical_sample_str(r.sample) not in excluded]
     n_skipped = len(results) - len(reduced)
 
     by_sample: dict = {}
@@ -446,3 +462,122 @@ def reconstruct_coefficients(
                 report[str(lab)] = info
             coeffs[lab] = interpolate_multivariate(point_values, param_names, info=info)
     return coeffs
+
+
+# --- Method.11c: post-reconstruction validation of pending support deviations ------------------
+def _eval_coeff_exact(expr, sample: dict) -> Fraction | None:
+    """Exact rational value of a reconstructed coefficient at one sample.
+
+    Returns ``None`` when the expression has a pole at the sample (vanishing denominator).
+    """
+    subs = {
+        sp.Symbol(str(k)): sp.Rational(Fraction(v).numerator, Fraction(v).denominator)
+        for k, v in sample.items()
+    }
+    val = sp.cancel(sp.sympify(expr).subs(subs))
+    if not val.is_rational:
+        return None
+    val = sp.Rational(val)
+    return Fraction(int(val.p), int(val.q))
+
+
+def _eval_coeff_mod(expr, sample: dict, prime: int) -> int | None:
+    """``_eval_coeff_exact`` reduced mod ``prime`` (``None`` on pole or non-invertible denom)."""
+    v = _eval_coeff_exact(expr, sample)
+    if v is None or v.denominator % prime == 0:
+        return None
+    return v.numerator * pow(v.denominator, -1, prime) % prime
+
+
+def validate_support_deviations(
+    coeffs: dict, records: Iterable, classification: dict | None = None
+) -> dict:
+    """Verdict for every ``support_deviation_pending_validation`` sample (Method.11c).
+
+    Given a candidate reconstruction ``coeffs`` (``{label: C_label(params)}``) fitted on
+    stable samples only, evaluate every reconstructed coefficient at each pending sample:
+
+    - ``GenuineSpecialZero`` -- every label *present* in a record matches the recorded
+      residue mod that record's prime, and every *missing* label evaluates exactly to zero
+      at the sample: the deviation is an honest coefficient zero and nothing else changed;
+    - ``BasisSpecialization`` -- anything else (a present coefficient disagrees, a missing
+      label does not evaluate to zero, a pole, or support outside ``coeffs``): the
+      normal-form basis/pivot structure specializes at the sample; it must stay excluded
+      from fitting.
+
+    ``unstable`` samples are never upgraded (rank drops / prime disagreement stay unusable).
+    Returns ``{"by_sample": {key: entry}, "summary": {...}}``.
+    """
+    records = list(records)
+    cls = classification if classification is not None else classify_sample_supports(records)
+    pending = {
+        key
+        for key, entry in cls["by_sample"].items()
+        if entry["classification"] == SUPPORT_DEVIATION_PENDING
+    }
+    grouped: dict = {}
+    for r in records:
+        grouped.setdefault(_canonical_sample_str(r.sample), []).append(r)
+
+    exprs = {lab: sp.sympify(expr) for lab, expr in coeffs.items()}
+    by_sample: dict = {}
+    summary = {
+        "n_pending": len(pending),
+        "n_genuine_special_zero": 0,
+        "n_basis_specialization": 0,
+        "genuine_special_zero_samples": [],
+        "basis_specialization_samples": [],
+    }
+    for key in sorted(pending):
+        recs = [
+            r for r in grouped.get(key, []) if r.status == STATUS_REDUCED and r.formal_success
+        ]
+        sample = dict(recs[0].sample) if recs else {}
+        seen: set = set()
+        for r in recs:
+            seen.update(_record_coeffs(r))
+        present_mismatches: list = []
+        missing_nonzero: list = []
+        foreign_labels = sorted(lab for lab in seen if lab not in exprs)
+        for r in recs:
+            rc = _record_coeffs(r)
+            for lab, expr in exprs.items():
+                if lab not in rc:
+                    continue
+                pred = _eval_coeff_mod(expr, r.sample, r.prime)
+                if pred is None or pred != rc[lab] % r.prime:
+                    present_mismatches.append(
+                        {
+                            "label": list(lab),
+                            "prime": r.prime,
+                            "predicted": pred,
+                            "recorded": rc[lab] % r.prime,
+                        }
+                    )
+        for lab, expr in exprs.items():
+            if lab in seen:
+                continue
+            v = _eval_coeff_exact(expr, sample)
+            if v is None or v != 0:
+                missing_nonzero.append(
+                    {"label": list(lab), "value": None if v is None else str(v)}
+                )
+        genuine = bool(recs) and not (present_mismatches or missing_nonzero or foreign_labels)
+        verdict = (
+            DEVIATION_GENUINE_SPECIAL_ZERO if genuine else DEVIATION_BASIS_SPECIALIZATION
+        )
+        by_sample[key] = {
+            "verdict": verdict,
+            "n_records": len(recs),
+            "n_present_mismatches": len(present_mismatches),
+            "present_mismatches": present_mismatches,
+            "missing_nonzero": missing_nonzero,
+            "foreign_labels": [list(lab) for lab in foreign_labels],
+        }
+        if genuine:
+            summary["n_genuine_special_zero"] += 1
+            summary["genuine_special_zero_samples"].append(key)
+        else:
+            summary["n_basis_specialization"] += 1
+            summary["basis_specialization_samples"].append(key)
+    return {"by_sample": by_sample, "summary": summary}
