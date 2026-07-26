@@ -1,0 +1,6249 @@
+{
+ "schema": "m11c-reconstruction-audit/v1",
+ "inputs": {
+  "records": "external_int2_method11_records.jsonl",
+  "artifact": "external_int2_method11b_stage4p4.json",
+  "n_records": 152,
+  "n_samples": 38,
+  "primes": [
+   2147483579,
+   2147483587,
+   2147483629,
+   2147483647
+  ],
+  "selected_rank": 26984
+ },
+ "no_rref_or_reducer_solve": true,
+ "phase_a_verification": {
+  "n_samples": 38,
+  "n_records": 152,
+  "primes": [
+   2147483579,
+   2147483587,
+   2147483629,
+   2147483647
+  ],
+  "selected_rank": 26984,
+  "n_skipped_records": 0,
+  "support_size": 4,
+  "classification_summary": {
+   "generic_rank": 26984,
+   "reference_support_size": 4,
+   "n_samples": 38,
+   "n_stable": 37,
+   "n_special_zero": 1,
+   "n_unstable": 0,
+   "special_zero_samples": [
+    "ep=6,r=57/11"
+   ],
+   "unstable_samples": []
+  },
+  "special_zero": {
+   "ep=6,r=57/11": {
+    "missing_labels": [
+     "(0, 0, 1, -1, 0, 0, -1)"
+    ]
+   }
+  },
+  "problems": [],
+  "ok": true
+ },
+ "phase_b_degree_diagnostics": {
+  "(-1, 0, 0, -1, -1, 0, 0)": {
+   "ladder_cells": [
+    {
+     "num_deg": 0,
+     "den_deg": 0,
+     "n_num_monomials": 1,
+     "n_den_monomials": 1,
+     "unknowns": 2,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 1,
+     "n_num_monomials": 1,
+     "n_den_monomials": 3,
+     "unknowns": 4,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 0,
+     "n_num_monomials": 3,
+     "n_den_monomials": 1,
+     "unknowns": 4,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 2,
+     "n_num_monomials": 1,
+     "n_den_monomials": 6,
+     "unknowns": 7,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 1,
+     "n_num_monomials": 3,
+     "n_den_monomials": 3,
+     "unknowns": 6,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 0,
+     "n_num_monomials": 6,
+     "n_den_monomials": 1,
+     "unknowns": 7,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 3,
+     "n_num_monomials": 1,
+     "n_den_monomials": 10,
+     "unknowns": 11,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 2,
+     "n_num_monomials": 3,
+     "n_den_monomials": 6,
+     "unknowns": 9,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 1,
+     "n_num_monomials": 6,
+     "n_den_monomials": 3,
+     "unknowns": 9,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 0,
+     "n_num_monomials": 10,
+     "n_den_monomials": 1,
+     "unknowns": 11,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 4,
+     "n_num_monomials": 1,
+     "n_den_monomials": 15,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 3,
+     "n_num_monomials": 3,
+     "n_den_monomials": 10,
+     "unknowns": 13,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 2,
+     "n_num_monomials": 6,
+     "n_den_monomials": 6,
+     "unknowns": 12,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 1,
+     "n_num_monomials": 10,
+     "n_den_monomials": 3,
+     "unknowns": 13,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 0,
+     "n_num_monomials": 15,
+     "n_den_monomials": 1,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 5,
+     "n_num_monomials": 1,
+     "n_den_monomials": 21,
+     "unknowns": 22,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 4,
+     "n_num_monomials": 3,
+     "n_den_monomials": 15,
+     "unknowns": 18,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 3,
+     "n_num_monomials": 6,
+     "n_den_monomials": 10,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 2,
+     "n_num_monomials": 10,
+     "n_den_monomials": 6,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 1,
+     "n_num_monomials": 15,
+     "n_den_monomials": 3,
+     "unknowns": 18,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 0,
+     "n_num_monomials": 21,
+     "n_den_monomials": 1,
+     "unknowns": 22,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 6,
+     "n_num_monomials": 1,
+     "n_den_monomials": 28,
+     "unknowns": 29,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 5,
+     "n_num_monomials": 3,
+     "n_den_monomials": 21,
+     "unknowns": 24,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 4,
+     "n_num_monomials": 6,
+     "n_den_monomials": 15,
+     "unknowns": 21,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 3,
+     "n_num_monomials": 10,
+     "n_den_monomials": 10,
+     "unknowns": 20,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 2,
+     "nullspace_dims_by_prime": {
+      "2147483579": 2,
+      "2147483587": 2,
+      "2147483629": 2,
+      "2147483647": 2
+     },
+     "status": "ambiguous (dim 2): degenerate sample geometry for this cell",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 2,
+     "n_num_monomials": 15,
+     "n_den_monomials": 6,
+     "unknowns": 21,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 1,
+     "n_num_monomials": 21,
+     "n_den_monomials": 3,
+     "unknowns": 24,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 0,
+     "n_num_monomials": 28,
+     "n_den_monomials": 1,
+     "unknowns": 29,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 6,
+     "n_num_monomials": 3,
+     "n_den_monomials": 28,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 5,
+     "n_num_monomials": 6,
+     "n_den_monomials": 21,
+     "unknowns": 27,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 4,
+     "n_num_monomials": 10,
+     "n_den_monomials": 15,
+     "unknowns": 25,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 2,
+     "nullspace_dims_by_prime": {
+      "2147483579": 2,
+      "2147483587": 2,
+      "2147483629": 2,
+      "2147483647": 2
+     },
+     "status": "ambiguous (dim 2): degenerate sample geometry for this cell",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 3,
+     "n_num_monomials": 15,
+     "n_den_monomials": 10,
+     "unknowns": 25,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 2,
+     "nullspace_dims_by_prime": {
+      "2147483579": 2,
+      "2147483587": 2,
+      "2147483629": 2,
+      "2147483647": 2
+     },
+     "status": "ambiguous (dim 2): degenerate sample geometry for this cell",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 2,
+     "n_num_monomials": 21,
+     "n_den_monomials": 6,
+     "unknowns": 27,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 1,
+     "n_num_monomials": 28,
+     "n_den_monomials": 3,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 6,
+     "n_num_monomials": 6,
+     "n_den_monomials": 28,
+     "unknowns": 34,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 5,
+     "n_num_monomials": 10,
+     "n_den_monomials": 21,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 2,
+     "nullspace_dims_by_prime": {
+      "2147483579": 2,
+      "2147483587": 2,
+      "2147483629": 2,
+      "2147483647": 2
+     },
+     "status": "ambiguous (dim 2): degenerate sample geometry for this cell",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 4,
+     "n_num_monomials": 15,
+     "n_den_monomials": 15,
+     "unknowns": 30,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 5,
+     "nullspace_dims_by_prime": {
+      "2147483579": 5,
+      "2147483587": 5,
+      "2147483629": 5,
+      "2147483647": 5
+     },
+     "status": "ambiguous (dim 5): degenerate sample geometry for this cell",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 3,
+     "n_num_monomials": 21,
+     "n_den_monomials": 10,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 2,
+     "nullspace_dims_by_prime": {
+      "2147483579": 2,
+      "2147483587": 2,
+      "2147483629": 2,
+      "2147483647": 2
+     },
+     "status": "ambiguous (dim 2): degenerate sample geometry for this cell",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 2,
+     "n_num_monomials": 28,
+     "n_den_monomials": 6,
+     "unknowns": 34,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 6,
+     "n_num_monomials": 10,
+     "n_den_monomials": 28,
+     "unknowns": 38,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 37 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 5,
+     "n_num_monomials": 15,
+     "n_den_monomials": 21,
+     "unknowns": 36,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 5,
+     "nullspace_dims_by_prime": {
+      "2147483579": 5,
+      "2147483587": 5,
+      "2147483629": 5,
+      "2147483647": 5
+     },
+     "status": "ambiguous (dim 5): degenerate sample geometry for this cell",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 4,
+     "n_num_monomials": 21,
+     "n_den_monomials": 15,
+     "unknowns": 36,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 5,
+     "nullspace_dims_by_prime": {
+      "2147483579": 5,
+      "2147483587": 5,
+      "2147483629": 5,
+      "2147483647": 5
+     },
+     "status": "ambiguous (dim 5): degenerate sample geometry for this cell",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 3,
+     "n_num_monomials": 28,
+     "n_den_monomials": 10,
+     "unknowns": 38,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 37 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 6,
+     "n_num_monomials": 15,
+     "n_den_monomials": 28,
+     "unknowns": 43,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 42 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 5,
+     "n_num_monomials": 21,
+     "n_den_monomials": 21,
+     "unknowns": 42,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 41 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 4,
+     "n_num_monomials": 28,
+     "n_den_monomials": 15,
+     "unknowns": 43,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 42 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 6,
+     "n_num_monomials": 21,
+     "n_den_monomials": 28,
+     "unknowns": 49,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 48 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 5,
+     "n_num_monomials": 28,
+     "n_den_monomials": 21,
+     "unknowns": 49,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 48 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 6,
+     "n_num_monomials": 28,
+     "n_den_monomials": 28,
+     "unknowns": 56,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 55 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 7,
+     "n_num_monomials": 1,
+     "n_den_monomials": 36,
+     "unknowns": 37,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 1,
+     "nullspace_dims_by_prime": {
+      "2147483579": 1,
+      "2147483587": 1,
+      "2147483629": 1,
+      "2147483647": 1
+     },
+     "status": "candidate (dim 1)",
+     "extended": true,
+     "exact_validation": "exact candidate rejected: mismatch at (Fraction(135, 7), Fraction(59, 11))"
+    },
+    {
+     "num_deg": 7,
+     "den_deg": 0,
+     "n_num_monomials": 36,
+     "n_den_monomials": 1,
+     "unknowns": 37,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 1,
+     "nullspace_dims_by_prime": {
+      "2147483579": 1,
+      "2147483587": 1,
+      "2147483629": 1,
+      "2147483647": 1
+     },
+     "status": "candidate (dim 1)",
+     "extended": true,
+     "exact_validation": "exact candidate rejected: mismatch at (Fraction(135, 7), Fraction(59, 11))"
+    }
+   ],
+   "first_potentially_admissible_dense_cell": {
+    "num_deg": 3,
+    "den_deg": 6,
+    "unknowns": 38,
+    "status": "underdetermined (needs 37 fit points, have 36)"
+   },
+   "failure_explanation": "Through (6,6): 33 determined cells are inconsistent (nullspace dim 0 mod all 4 primes, which proves dim 0 over QQ -- the coefficient is not a rational function of those degrees); 8 cells ([(3, 3), (3, 4), (4, 3), (3, 5), (4, 4), (5, 3), (4, 5), (5, 4)]) have nullspace dim >= 2 because 36 scattered points with all-distinct ep and r are degenerate for these supports (no unique candidate, holdout cannot arbitrate); the remaining 8 cells need 37..55 fit points but only 36 exist. Hence no dense cell <= (6,6) can validate: the true rational form lies outside the dense (6,6) ladder reachable with 38 samples."
+  },
+  "(-1, 0, 0, 0, -1, 0, -1)": {
+   "ladder_cells": [
+    {
+     "num_deg": 0,
+     "den_deg": 0,
+     "n_num_monomials": 1,
+     "n_den_monomials": 1,
+     "unknowns": 2,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 1,
+     "n_num_monomials": 1,
+     "n_den_monomials": 3,
+     "unknowns": 4,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 0,
+     "n_num_monomials": 3,
+     "n_den_monomials": 1,
+     "unknowns": 4,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 2,
+     "n_num_monomials": 1,
+     "n_den_monomials": 6,
+     "unknowns": 7,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 1,
+     "n_num_monomials": 3,
+     "n_den_monomials": 3,
+     "unknowns": 6,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 0,
+     "n_num_monomials": 6,
+     "n_den_monomials": 1,
+     "unknowns": 7,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 3,
+     "n_num_monomials": 1,
+     "n_den_monomials": 10,
+     "unknowns": 11,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 2,
+     "n_num_monomials": 3,
+     "n_den_monomials": 6,
+     "unknowns": 9,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 1,
+     "n_num_monomials": 6,
+     "n_den_monomials": 3,
+     "unknowns": 9,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 0,
+     "n_num_monomials": 10,
+     "n_den_monomials": 1,
+     "unknowns": 11,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 4,
+     "n_num_monomials": 1,
+     "n_den_monomials": 15,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 3,
+     "n_num_monomials": 3,
+     "n_den_monomials": 10,
+     "unknowns": 13,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 2,
+     "n_num_monomials": 6,
+     "n_den_monomials": 6,
+     "unknowns": 12,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 1,
+     "n_num_monomials": 10,
+     "n_den_monomials": 3,
+     "unknowns": 13,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 0,
+     "n_num_monomials": 15,
+     "n_den_monomials": 1,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 5,
+     "n_num_monomials": 1,
+     "n_den_monomials": 21,
+     "unknowns": 22,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 4,
+     "n_num_monomials": 3,
+     "n_den_monomials": 15,
+     "unknowns": 18,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 3,
+     "n_num_monomials": 6,
+     "n_den_monomials": 10,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 2,
+     "n_num_monomials": 10,
+     "n_den_monomials": 6,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 1,
+     "n_num_monomials": 15,
+     "n_den_monomials": 3,
+     "unknowns": 18,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 0,
+     "n_num_monomials": 21,
+     "n_den_monomials": 1,
+     "unknowns": 22,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 6,
+     "n_num_monomials": 1,
+     "n_den_monomials": 28,
+     "unknowns": 29,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 5,
+     "n_num_monomials": 3,
+     "n_den_monomials": 21,
+     "unknowns": 24,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 4,
+     "n_num_monomials": 6,
+     "n_den_monomials": 15,
+     "unknowns": 21,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 3,
+     "n_num_monomials": 10,
+     "n_den_monomials": 10,
+     "unknowns": 20,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 2,
+     "n_num_monomials": 15,
+     "n_den_monomials": 6,
+     "unknowns": 21,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 1,
+     "n_num_monomials": 21,
+     "n_den_monomials": 3,
+     "unknowns": 24,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 0,
+     "n_num_monomials": 28,
+     "n_den_monomials": 1,
+     "unknowns": 29,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 6,
+     "n_num_monomials": 3,
+     "n_den_monomials": 28,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 5,
+     "n_num_monomials": 6,
+     "n_den_monomials": 21,
+     "unknowns": 27,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 4,
+     "n_num_monomials": 10,
+     "n_den_monomials": 15,
+     "unknowns": 25,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 3,
+     "n_num_monomials": 15,
+     "n_den_monomials": 10,
+     "unknowns": 25,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 2,
+     "n_num_monomials": 21,
+     "n_den_monomials": 6,
+     "unknowns": 27,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 1,
+     "n_num_monomials": 28,
+     "n_den_monomials": 3,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 6,
+     "n_num_monomials": 6,
+     "n_den_monomials": 28,
+     "unknowns": 34,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 5,
+     "n_num_monomials": 10,
+     "n_den_monomials": 21,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 4,
+     "n_num_monomials": 15,
+     "n_den_monomials": 15,
+     "unknowns": 30,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 2,
+     "nullspace_dims_by_prime": {
+      "2147483579": 2,
+      "2147483587": 2,
+      "2147483629": 2,
+      "2147483647": 2
+     },
+     "status": "ambiguous (dim 2): degenerate sample geometry for this cell",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 3,
+     "n_num_monomials": 21,
+     "n_den_monomials": 10,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 2,
+     "n_num_monomials": 28,
+     "n_den_monomials": 6,
+     "unknowns": 34,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 6,
+     "n_num_monomials": 10,
+     "n_den_monomials": 28,
+     "unknowns": 38,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 37 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 5,
+     "n_num_monomials": 15,
+     "n_den_monomials": 21,
+     "unknowns": 36,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 2,
+     "nullspace_dims_by_prime": {
+      "2147483579": 2,
+      "2147483587": 2,
+      "2147483629": 2,
+      "2147483647": 2
+     },
+     "status": "ambiguous (dim 2): degenerate sample geometry for this cell",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 4,
+     "n_num_monomials": 21,
+     "n_den_monomials": 15,
+     "unknowns": 36,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 2,
+     "nullspace_dims_by_prime": {
+      "2147483579": 2,
+      "2147483587": 2,
+      "2147483629": 2,
+      "2147483647": 2
+     },
+     "status": "ambiguous (dim 2): degenerate sample geometry for this cell",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 3,
+     "n_num_monomials": 28,
+     "n_den_monomials": 10,
+     "unknowns": 38,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 37 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 6,
+     "n_num_monomials": 15,
+     "n_den_monomials": 28,
+     "unknowns": 43,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 42 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 5,
+     "n_num_monomials": 21,
+     "n_den_monomials": 21,
+     "unknowns": 42,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 41 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 4,
+     "n_num_monomials": 28,
+     "n_den_monomials": 15,
+     "unknowns": 43,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 42 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 6,
+     "n_num_monomials": 21,
+     "n_den_monomials": 28,
+     "unknowns": 49,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 48 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 5,
+     "n_num_monomials": 28,
+     "n_den_monomials": 21,
+     "unknowns": 49,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 48 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 6,
+     "n_num_monomials": 28,
+     "n_den_monomials": 28,
+     "unknowns": 56,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 55 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 7,
+     "n_num_monomials": 1,
+     "n_den_monomials": 36,
+     "unknowns": 37,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 1,
+     "nullspace_dims_by_prime": {
+      "2147483579": 1,
+      "2147483587": 1,
+      "2147483629": 1,
+      "2147483647": 1
+     },
+     "status": "candidate (dim 1)",
+     "extended": true,
+     "exact_validation": "exact candidate rejected: mismatch at (Fraction(135, 7), Fraction(59, 11))"
+    },
+    {
+     "num_deg": 7,
+     "den_deg": 0,
+     "n_num_monomials": 36,
+     "n_den_monomials": 1,
+     "unknowns": 37,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 1,
+     "nullspace_dims_by_prime": {
+      "2147483579": 1,
+      "2147483587": 1,
+      "2147483629": 1,
+      "2147483647": 1
+     },
+     "status": "candidate (dim 1)",
+     "extended": true,
+     "exact_validation": "exact candidate rejected: mismatch at (Fraction(135, 7), Fraction(59, 11))"
+    }
+   ],
+   "first_potentially_admissible_dense_cell": {
+    "num_deg": 3,
+    "den_deg": 6,
+    "unknowns": 38,
+    "status": "underdetermined (needs 37 fit points, have 36)"
+   }
+  },
+  "(0, 0, 0, -1, 0, 0, -1)": {
+   "ladder_cells": [
+    {
+     "num_deg": 0,
+     "den_deg": 0,
+     "n_num_monomials": 1,
+     "n_den_monomials": 1,
+     "unknowns": 2,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 1,
+     "n_num_monomials": 1,
+     "n_den_monomials": 3,
+     "unknowns": 4,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 0,
+     "n_num_monomials": 3,
+     "n_den_monomials": 1,
+     "unknowns": 4,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 2,
+     "n_num_monomials": 1,
+     "n_den_monomials": 6,
+     "unknowns": 7,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 1,
+     "n_num_monomials": 3,
+     "n_den_monomials": 3,
+     "unknowns": 6,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 0,
+     "n_num_monomials": 6,
+     "n_den_monomials": 1,
+     "unknowns": 7,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 3,
+     "n_num_monomials": 1,
+     "n_den_monomials": 10,
+     "unknowns": 11,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 2,
+     "n_num_monomials": 3,
+     "n_den_monomials": 6,
+     "unknowns": 9,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 1,
+     "n_num_monomials": 6,
+     "n_den_monomials": 3,
+     "unknowns": 9,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 0,
+     "n_num_monomials": 10,
+     "n_den_monomials": 1,
+     "unknowns": 11,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 4,
+     "n_num_monomials": 1,
+     "n_den_monomials": 15,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 3,
+     "n_num_monomials": 3,
+     "n_den_monomials": 10,
+     "unknowns": 13,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 2,
+     "n_num_monomials": 6,
+     "n_den_monomials": 6,
+     "unknowns": 12,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 1,
+     "n_num_monomials": 10,
+     "n_den_monomials": 3,
+     "unknowns": 13,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 0,
+     "n_num_monomials": 15,
+     "n_den_monomials": 1,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 5,
+     "n_num_monomials": 1,
+     "n_den_monomials": 21,
+     "unknowns": 22,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 4,
+     "n_num_monomials": 3,
+     "n_den_monomials": 15,
+     "unknowns": 18,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 3,
+     "n_num_monomials": 6,
+     "n_den_monomials": 10,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 2,
+     "n_num_monomials": 10,
+     "n_den_monomials": 6,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 1,
+     "n_num_monomials": 15,
+     "n_den_monomials": 3,
+     "unknowns": 18,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 0,
+     "n_num_monomials": 21,
+     "n_den_monomials": 1,
+     "unknowns": 22,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 6,
+     "n_num_monomials": 1,
+     "n_den_monomials": 28,
+     "unknowns": 29,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 5,
+     "n_num_monomials": 3,
+     "n_den_monomials": 21,
+     "unknowns": 24,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 4,
+     "n_num_monomials": 6,
+     "n_den_monomials": 15,
+     "unknowns": 21,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 3,
+     "n_num_monomials": 10,
+     "n_den_monomials": 10,
+     "unknowns": 20,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 2,
+     "n_num_monomials": 15,
+     "n_den_monomials": 6,
+     "unknowns": 21,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 1,
+     "n_num_monomials": 21,
+     "n_den_monomials": 3,
+     "unknowns": 24,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 0,
+     "n_num_monomials": 28,
+     "n_den_monomials": 1,
+     "unknowns": 29,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 6,
+     "n_num_monomials": 3,
+     "n_den_monomials": 28,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 5,
+     "n_num_monomials": 6,
+     "n_den_monomials": 21,
+     "unknowns": 27,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 4,
+     "n_num_monomials": 10,
+     "n_den_monomials": 15,
+     "unknowns": 25,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 3,
+     "n_num_monomials": 15,
+     "n_den_monomials": 10,
+     "unknowns": 25,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 2,
+     "n_num_monomials": 21,
+     "n_den_monomials": 6,
+     "unknowns": 27,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 1,
+     "n_num_monomials": 28,
+     "n_den_monomials": 3,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 6,
+     "n_num_monomials": 6,
+     "n_den_monomials": 28,
+     "unknowns": 34,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 5,
+     "n_num_monomials": 10,
+     "n_den_monomials": 21,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 4,
+     "n_num_monomials": 15,
+     "n_den_monomials": 15,
+     "unknowns": 30,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 3,
+     "n_num_monomials": 21,
+     "n_den_monomials": 10,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 2,
+     "n_num_monomials": 28,
+     "n_den_monomials": 6,
+     "unknowns": 34,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 6,
+     "n_num_monomials": 10,
+     "n_den_monomials": 28,
+     "unknowns": 38,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 37 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 5,
+     "n_num_monomials": 15,
+     "n_den_monomials": 21,
+     "unknowns": 36,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 4,
+     "n_num_monomials": 21,
+     "n_den_monomials": 15,
+     "unknowns": 36,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 3,
+     "n_num_monomials": 28,
+     "n_den_monomials": 10,
+     "unknowns": 38,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 37 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 6,
+     "n_num_monomials": 15,
+     "n_den_monomials": 28,
+     "unknowns": 43,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 42 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 5,
+     "n_num_monomials": 21,
+     "n_den_monomials": 21,
+     "unknowns": 42,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 41 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 4,
+     "n_num_monomials": 28,
+     "n_den_monomials": 15,
+     "unknowns": 43,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 42 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 6,
+     "n_num_monomials": 21,
+     "n_den_monomials": 28,
+     "unknowns": 49,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 48 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 5,
+     "n_num_monomials": 28,
+     "n_den_monomials": 21,
+     "unknowns": 49,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 48 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 6,
+     "n_num_monomials": 28,
+     "n_den_monomials": 28,
+     "unknowns": 56,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 55 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 7,
+     "n_num_monomials": 1,
+     "n_den_monomials": 36,
+     "unknowns": 37,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 1,
+     "nullspace_dims_by_prime": {
+      "2147483579": 1,
+      "2147483587": 1,
+      "2147483629": 1,
+      "2147483647": 1
+     },
+     "status": "candidate (dim 1)",
+     "extended": true,
+     "exact_validation": "exact candidate rejected: mismatch at (Fraction(135, 7), Fraction(59, 11))"
+    },
+    {
+     "num_deg": 7,
+     "den_deg": 0,
+     "n_num_monomials": 36,
+     "n_den_monomials": 1,
+     "unknowns": 37,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 1,
+     "nullspace_dims_by_prime": {
+      "2147483579": 1,
+      "2147483587": 1,
+      "2147483629": 1,
+      "2147483647": 1
+     },
+     "status": "candidate (dim 1)",
+     "extended": true,
+     "exact_validation": "exact candidate rejected: mismatch at (Fraction(135, 7), Fraction(59, 11))"
+    }
+   ],
+   "first_potentially_admissible_dense_cell": {
+    "num_deg": 3,
+    "den_deg": 6,
+    "unknowns": 38,
+    "status": "underdetermined (needs 37 fit points, have 36)"
+   }
+  },
+  "(0, 0, 1, -1, 0, 0, -1)": {
+   "ladder_cells": [
+    {
+     "num_deg": 0,
+     "den_deg": 0,
+     "n_num_monomials": 1,
+     "n_den_monomials": 1,
+     "unknowns": 2,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 1,
+     "n_num_monomials": 1,
+     "n_den_monomials": 3,
+     "unknowns": 4,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 0,
+     "n_num_monomials": 3,
+     "n_den_monomials": 1,
+     "unknowns": 4,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 2,
+     "n_num_monomials": 1,
+     "n_den_monomials": 6,
+     "unknowns": 7,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 1,
+     "n_num_monomials": 3,
+     "n_den_monomials": 3,
+     "unknowns": 6,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 0,
+     "n_num_monomials": 6,
+     "n_den_monomials": 1,
+     "unknowns": 7,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 3,
+     "n_num_monomials": 1,
+     "n_den_monomials": 10,
+     "unknowns": 11,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 2,
+     "n_num_monomials": 3,
+     "n_den_monomials": 6,
+     "unknowns": 9,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 1,
+     "n_num_monomials": 6,
+     "n_den_monomials": 3,
+     "unknowns": 9,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 0,
+     "n_num_monomials": 10,
+     "n_den_monomials": 1,
+     "unknowns": 11,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 4,
+     "n_num_monomials": 1,
+     "n_den_monomials": 15,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 3,
+     "n_num_monomials": 3,
+     "n_den_monomials": 10,
+     "unknowns": 13,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 2,
+     "n_num_monomials": 6,
+     "n_den_monomials": 6,
+     "unknowns": 12,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 1,
+     "n_num_monomials": 10,
+     "n_den_monomials": 3,
+     "unknowns": 13,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 0,
+     "n_num_monomials": 15,
+     "n_den_monomials": 1,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 5,
+     "n_num_monomials": 1,
+     "n_den_monomials": 21,
+     "unknowns": 22,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 4,
+     "n_num_monomials": 3,
+     "n_den_monomials": 15,
+     "unknowns": 18,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 3,
+     "n_num_monomials": 6,
+     "n_den_monomials": 10,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 2,
+     "n_num_monomials": 10,
+     "n_den_monomials": 6,
+     "unknowns": 16,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 1,
+     "n_num_monomials": 15,
+     "n_den_monomials": 3,
+     "unknowns": 18,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 0,
+     "n_num_monomials": 21,
+     "n_den_monomials": 1,
+     "unknowns": 22,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 6,
+     "n_num_monomials": 1,
+     "n_den_monomials": 28,
+     "unknowns": 29,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 5,
+     "n_num_monomials": 3,
+     "n_den_monomials": 21,
+     "unknowns": 24,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 4,
+     "n_num_monomials": 6,
+     "n_den_monomials": 15,
+     "unknowns": 21,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 3,
+     "n_num_monomials": 10,
+     "n_den_monomials": 10,
+     "unknowns": 20,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 2,
+     "n_num_monomials": 15,
+     "n_den_monomials": 6,
+     "unknowns": 21,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 1,
+     "n_num_monomials": 21,
+     "n_den_monomials": 3,
+     "unknowns": 24,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 0,
+     "n_num_monomials": 28,
+     "n_den_monomials": 1,
+     "unknowns": 29,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 6,
+     "n_num_monomials": 3,
+     "n_den_monomials": 28,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 5,
+     "n_num_monomials": 6,
+     "n_den_monomials": 21,
+     "unknowns": 27,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 4,
+     "n_num_monomials": 10,
+     "n_den_monomials": 15,
+     "unknowns": 25,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 3,
+     "n_num_monomials": 15,
+     "n_den_monomials": 10,
+     "unknowns": 25,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 2,
+     "n_num_monomials": 21,
+     "n_den_monomials": 6,
+     "unknowns": 27,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 1,
+     "n_num_monomials": 28,
+     "n_den_monomials": 3,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 6,
+     "n_num_monomials": 6,
+     "n_den_monomials": 28,
+     "unknowns": 34,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 5,
+     "n_num_monomials": 10,
+     "n_den_monomials": 21,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 4,
+     "n_num_monomials": 15,
+     "n_den_monomials": 15,
+     "unknowns": 30,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 3,
+     "n_num_monomials": 21,
+     "n_den_monomials": 10,
+     "unknowns": 31,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 2,
+     "n_num_monomials": 28,
+     "n_den_monomials": 6,
+     "unknowns": 34,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 6,
+     "n_num_monomials": 10,
+     "n_den_monomials": 28,
+     "unknowns": 38,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 37 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 5,
+     "n_num_monomials": 15,
+     "n_den_monomials": 21,
+     "unknowns": 36,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 4,
+     "n_num_monomials": 21,
+     "n_den_monomials": 15,
+     "unknowns": 36,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 0,
+     "nullspace_dims_by_prime": {
+      "2147483579": 0,
+      "2147483587": 0,
+      "2147483629": 0,
+      "2147483647": 0
+     },
+     "status": "inconsistent (dim 0): no rational function of this cell fits",
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 3,
+     "n_num_monomials": 28,
+     "n_den_monomials": 10,
+     "unknowns": 38,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 37 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 6,
+     "n_num_monomials": 15,
+     "n_den_monomials": 28,
+     "unknowns": 43,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 42 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 5,
+     "n_num_monomials": 21,
+     "n_den_monomials": 21,
+     "unknowns": 42,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 41 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 4,
+     "n_num_monomials": 28,
+     "n_den_monomials": 15,
+     "unknowns": 43,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 42 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 6,
+     "n_num_monomials": 21,
+     "n_den_monomials": 28,
+     "unknowns": 49,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 48 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 5,
+     "n_num_monomials": 28,
+     "n_den_monomials": 21,
+     "unknowns": 49,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 48 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 6,
+     "n_num_monomials": 28,
+     "n_den_monomials": 28,
+     "unknowns": 56,
+     "n_fit": 36,
+     "n_hold": 2,
+     "status": "underdetermined (needs 55 fit points, have 36)",
+     "nullspace_dim": null,
+     "extended": false
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 7,
+     "n_num_monomials": 1,
+     "n_den_monomials": 36,
+     "unknowns": 37,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 1,
+     "nullspace_dims_by_prime": {
+      "2147483579": 1,
+      "2147483587": 1,
+      "2147483629": 1,
+      "2147483647": 1
+     },
+     "status": "candidate (dim 1)",
+     "extended": true,
+     "exact_validation": "exact candidate rejected: denominator vanishes at (Fraction(15, 7), Fraction(32, 11))"
+    },
+    {
+     "num_deg": 7,
+     "den_deg": 0,
+     "n_num_monomials": 36,
+     "n_den_monomials": 1,
+     "unknowns": 37,
+     "n_fit": 36,
+     "n_hold": 2,
+     "nullspace_dim": 1,
+     "nullspace_dims_by_prime": {
+      "2147483579": 1,
+      "2147483587": 1,
+      "2147483629": 1,
+      "2147483647": 1
+     },
+     "status": "candidate (dim 1)",
+     "extended": true,
+     "exact_validation": "exact candidate rejected: mismatch at (Fraction(135, 7), Fraction(59, 11))"
+    }
+   ],
+   "first_potentially_admissible_dense_cell": {
+    "num_deg": 3,
+    "den_deg": 6,
+    "unknowns": 38,
+    "status": "underdetermined (needs 37 fit points, have 36)"
+   }
+  },
+  "artifact_crosscheck": {
+   "available": true,
+   "n_attempts": 49,
+   "mismatches": [],
+   "matches": true
+  }
+ },
+ "phase_c_structured_experiments": {
+  "A_univariate_ep_on_fixed_r": {
+   "usable_fibers": {},
+   "statement": "no repeated-r fibers exist in the cached samples (all 38 r values are distinct); univariate interpolation in ep is impossible without new data"
+  },
+  "B_univariate_r_on_fixed_ep": {
+   "usable_fibers": {},
+   "statement": "no repeated-ep fibers exist in the cached samples (all 38 ep values are distinct); univariate interpolation in r is impossible without new data"
+  },
+  "C_sparse_tensor_supports": {
+   "(-1, 0, 0, -1, -1, 0, 0)": {
+    "cells_tried": 610,
+    "inconsistent": 418,
+    "ambiguous": 122,
+    "dim1_candidates": [
+     {
+      "support": [
+       1,
+       2,
+       1,
+       2
+      ],
+      "unknowns": 12,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       2,
+       1,
+       3
+      ],
+      "unknowns": 14,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       2,
+       1,
+       4
+      ],
+      "unknowns": 16,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       2,
+       2,
+       2
+      ],
+      "unknowns": 15,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       2,
+       2,
+       3
+      ],
+      "unknowns": 18,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       2,
+       2,
+       4
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       2,
+       3,
+       2
+      ],
+      "unknowns": 18,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       2,
+       3,
+       3
+      ],
+      "unknowns": 22,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       2,
+       3,
+       4
+      ],
+      "unknowns": 26,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       2,
+       4,
+       2
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       2,
+       4,
+       3
+      ],
+      "unknowns": 26,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       2,
+       4,
+       4
+      ],
+      "unknowns": 31,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       3,
+       1,
+       2
+      ],
+      "unknowns": 14,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       3,
+       2,
+       2
+      ],
+      "unknowns": 17,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       3,
+       3,
+       2
+      ],
+      "unknowns": 20,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       3,
+       4,
+       2
+      ],
+      "unknowns": 23,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       4,
+       1,
+       2
+      ],
+      "unknowns": 16,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       4,
+       2,
+       2
+      ],
+      "unknowns": 19,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       4,
+       3,
+       2
+      ],
+      "unknowns": 22,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       1,
+       4,
+       4,
+       2
+      ],
+      "unknowns": 25,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       2,
+       1
+      ],
+      "unknowns": 12,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       2,
+       2
+      ],
+      "unknowns": 15,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       2,
+       3
+      ],
+      "unknowns": 18,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       2,
+       4
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       3,
+       1
+      ],
+      "unknowns": 14,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       3,
+       2
+      ],
+      "unknowns": 18,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       3,
+       3
+      ],
+      "unknowns": 22,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       3,
+       4
+      ],
+      "unknowns": 26,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       4,
+       1
+      ],
+      "unknowns": 16,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       4,
+       2
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       4,
+       3
+      ],
+      "unknowns": 26,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       1,
+       4,
+       4
+      ],
+      "unknowns": 31,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       1,
+       2
+      ],
+      "unknowns": 15,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       1,
+       3
+      ],
+      "unknowns": 17,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       1,
+       4
+      ],
+      "unknowns": 19,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       2,
+       1
+      ],
+      "unknowns": 15,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       3,
+       1
+      ],
+      "unknowns": 17,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       4,
+       1
+      ],
+      "unknowns": 19,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       3,
+       1,
+       2
+      ],
+      "unknowns": 18,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       3,
+       2,
+       1
+      ],
+      "unknowns": 18,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       3,
+       3,
+       1
+      ],
+      "unknowns": 20,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       3,
+       4,
+       1
+      ],
+      "unknowns": 22,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       4,
+       1,
+       2
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       4,
+       2,
+       1
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       4,
+       3,
+       1
+      ],
+      "unknowns": 23,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       4,
+       4,
+       1
+      ],
+      "unknowns": 25,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       2,
+       1
+      ],
+      "unknowns": 14,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       2,
+       2
+      ],
+      "unknowns": 17,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       2,
+       3
+      ],
+      "unknowns": 20,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       2,
+       4
+      ],
+      "unknowns": 23,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       1,
+       2
+      ],
+      "unknowns": 18,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       1,
+       3
+      ],
+      "unknowns": 20,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       1,
+       4
+      ],
+      "unknowns": 22,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       2,
+       1
+      ],
+      "unknowns": 18,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       3,
+       1,
+       2
+      ],
+      "unknowns": 22,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       3,
+       2,
+       1
+      ],
+      "unknowns": 22,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       4,
+       1,
+       2
+      ],
+      "unknowns": 26,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       4,
+       2,
+       1
+      ],
+      "unknowns": 26,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       2,
+       1
+      ],
+      "unknowns": 16,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       2,
+       2
+      ],
+      "unknowns": 19,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       2,
+       3
+      ],
+      "unknowns": 22,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       2,
+       4
+      ],
+      "unknowns": 25,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       1,
+       2
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       1,
+       3
+      ],
+      "unknowns": 23,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       1,
+       4
+      ],
+      "unknowns": 25,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       2,
+       1
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       3,
+       1,
+       2
+      ],
+      "unknowns": 26,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       3,
+       2,
+       1
+      ],
+      "unknowns": 26,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       4,
+       1,
+       2
+      ],
+      "unknowns": 31,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       4,
+       2,
+       1
+      ],
+      "unknowns": 31,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     }
+    ],
+    "validated": []
+   },
+   "(-1, 0, 0, 0, -1, 0, -1)": {
+    "cells_tried": 610,
+    "inconsistent": 516,
+    "ambiguous": 48,
+    "dim1_candidates": [
+     {
+      "support": [
+       2,
+       2,
+       2,
+       2
+      ],
+      "unknowns": 18,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       2,
+       3
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       2,
+       4
+      ],
+      "unknowns": 24,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       3,
+       2
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       3,
+       3
+      ],
+      "unknowns": 25,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       3,
+       4
+      ],
+      "unknowns": 29,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       4,
+       2
+      ],
+      "unknowns": 24,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       4,
+       3
+      ],
+      "unknowns": 29,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       2,
+       4,
+       4
+      ],
+      "unknowns": 34,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       3,
+       2,
+       2
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       3,
+       3,
+       2
+      ],
+      "unknowns": 24,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       3,
+       4,
+       2
+      ],
+      "unknowns": 27,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       4,
+       2,
+       2
+      ],
+      "unknowns": 24,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       4,
+       3,
+       2
+      ],
+      "unknowns": 27,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       2,
+       4,
+       4,
+       2
+      ],
+      "unknowns": 30,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       3,
+       1
+      ],
+      "unknowns": 16,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       3,
+       2
+      ],
+      "unknowns": 20,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       3,
+       3
+      ],
+      "unknowns": 24,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       3,
+       4
+      ],
+      "unknowns": 28,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       4,
+       1
+      ],
+      "unknowns": 18,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       4,
+       2
+      ],
+      "unknowns": 23,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       4,
+       3
+      ],
+      "unknowns": 28,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       1,
+       4,
+       4
+      ],
+      "unknowns": 33,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       2,
+       2
+      ],
+      "unknowns": 21,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       2,
+       3
+      ],
+      "unknowns": 24,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       2,
+       4
+      ],
+      "unknowns": 27,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       3,
+       1
+      ],
+      "unknowns": 20,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       4,
+       1
+      ],
+      "unknowns": 22,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       3,
+       2,
+       2
+      ],
+      "unknowns": 25,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       3,
+       3,
+       1
+      ],
+      "unknowns": 24,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       3,
+       4,
+       1
+      ],
+      "unknowns": 26,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       4,
+       2,
+       2
+      ],
+      "unknowns": 29,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       4,
+       3,
+       1
+      ],
+      "unknowns": 28,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       4,
+       4,
+       1
+      ],
+      "unknowns": 30,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       3,
+       1
+      ],
+      "unknowns": 18,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       3,
+       2
+      ],
+      "unknowns": 22,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       3,
+       3
+      ],
+      "unknowns": 26,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       3,
+       4
+      ],
+      "unknowns": 30,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       2,
+       2
+      ],
+      "unknowns": 24,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       2,
+       3
+      ],
+      "unknowns": 27,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       2,
+       4
+      ],
+      "unknowns": 30,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       3,
+       1
+      ],
+      "unknowns": 23,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       3,
+       2,
+       2
+      ],
+      "unknowns": 29,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       3,
+       3,
+       1
+      ],
+      "unknowns": 28,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       4,
+       2,
+       2
+      ],
+      "unknowns": 34,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       4,
+       3,
+       1
+      ],
+      "unknowns": 33,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     }
+    ],
+    "validated": []
+   },
+   "(0, 0, 0, -1, 0, 0, -1)": {
+    "cells_tried": 610,
+    "inconsistent": 578,
+    "ambiguous": 8,
+    "dim1_candidates": [
+     {
+      "support": [
+       2,
+       3,
+       4,
+       4
+      ],
+      "unknowns": 37,
+      "exact": "exact candidate rejected: mismatch at (Fraction(135, 7), Fraction(59, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       3,
+       2
+      ],
+      "unknowns": 24,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       3,
+       3
+      ],
+      "unknowns": 28,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       3,
+       4
+      ],
+      "unknowns": 32,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       4,
+       2
+      ],
+      "unknowns": 27,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       4,
+       3
+      ],
+      "unknowns": 32,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       4,
+       4
+      ],
+      "unknowns": 37,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       3,
+       3,
+       2
+      ],
+      "unknowns": 28,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       3,
+       4,
+       2
+      ],
+      "unknowns": 31,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       4,
+       3,
+       2
+      ],
+      "unknowns": 32,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       4,
+       4,
+       2
+      ],
+      "unknowns": 35,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       4,
+       1
+      ],
+      "unknowns": 20,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       4,
+       2
+      ],
+      "unknowns": 25,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       4,
+       3
+      ],
+      "unknowns": 30,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       4,
+       4
+      ],
+      "unknowns": 35,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       3,
+       2
+      ],
+      "unknowns": 27,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       3,
+       3
+      ],
+      "unknowns": 31,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       3,
+       4
+      ],
+      "unknowns": 35,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       4,
+       1
+      ],
+      "unknowns": 25,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       3,
+       3,
+       2
+      ],
+      "unknowns": 32,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       3,
+       4,
+       1
+      ],
+      "unknowns": 30,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       4,
+       2,
+       3
+      ],
+      "unknowns": 37,
+      "exact": "exact candidate rejected: mismatch at (Fraction(135, 7), Fraction(59, 11))"
+     },
+     {
+      "support": [
+       4,
+       4,
+       3,
+       2
+      ],
+      "unknowns": 37,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       4,
+       4,
+       1
+      ],
+      "unknowns": 35,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     }
+    ],
+    "validated": []
+   },
+   "(0, 0, 1, -1, 0, 0, -1)": {
+    "cells_tried": 610,
+    "inconsistent": 578,
+    "ambiguous": 8,
+    "dim1_candidates": [
+     {
+      "support": [
+       2,
+       3,
+       4,
+       4
+      ],
+      "unknowns": 37,
+      "exact": "exact candidate rejected: mismatch at (Fraction(135, 7), Fraction(59, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       3,
+       2
+      ],
+      "unknowns": 24,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       3,
+       3
+      ],
+      "unknowns": 28,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       3,
+       4
+      ],
+      "unknowns": 32,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       4,
+       2
+      ],
+      "unknowns": 27,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       4,
+       3
+      ],
+      "unknowns": 32,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       2,
+       4,
+       4
+      ],
+      "unknowns": 37,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       3,
+       3,
+       2
+      ],
+      "unknowns": 28,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       3,
+       4,
+       2
+      ],
+      "unknowns": 31,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       4,
+       3,
+       2
+      ],
+      "unknowns": 32,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       3,
+       4,
+       4,
+       2
+      ],
+      "unknowns": 35,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       4,
+       1
+      ],
+      "unknowns": 20,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       4,
+       2
+      ],
+      "unknowns": 25,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       4,
+       3
+      ],
+      "unknowns": 30,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       1,
+       4,
+       4
+      ],
+      "unknowns": 35,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       3,
+       2
+      ],
+      "unknowns": 27,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       3,
+       3
+      ],
+      "unknowns": 31,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       3,
+       4
+      ],
+      "unknowns": 35,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       2,
+       4,
+       1
+      ],
+      "unknowns": 25,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       3,
+       3,
+       2
+      ],
+      "unknowns": 32,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       3,
+       4,
+       1
+      ],
+      "unknowns": 30,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       4,
+       2,
+       3
+      ],
+      "unknowns": 37,
+      "exact": "exact candidate rejected: mismatch at (Fraction(135, 7), Fraction(59, 11))"
+     },
+     {
+      "support": [
+       4,
+       4,
+       3,
+       2
+      ],
+      "unknowns": 37,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     },
+     {
+      "support": [
+       4,
+       4,
+       4,
+       1
+      ],
+      "unknowns": 35,
+      "exact": "exact candidate rejected: denominator vanishes at (Fraction(6, 1), Fraction(57, 11))"
+     }
+    ],
+    "validated": []
+   }
+  },
+  "D_factor_aware": {
+   "(-1, 0, 0, -1, -1, 0, 0)": {
+    "denominator_forms": [
+     {
+      "form": "(3*(7*ep) + 0*(11*r) + 7)",
+      "alpha_beta_gamma": [
+       3,
+       0,
+       7
+      ]
+     },
+     {
+      "form": "(0*(7*ep) + 1*(11*r) + 0)",
+      "alpha_beta_gamma": [
+       0,
+       1,
+       0
+      ]
+     },
+     {
+      "form": "(0*(7*ep) + 2*(11*r) + 1)",
+      "alpha_beta_gamma": [
+       0,
+       2,
+       1
+      ]
+     },
+     {
+      "form": "(3*(7*ep) + 3*(11*r) + -1)",
+      "alpha_beta_gamma": [
+       3,
+       3,
+       -1
+      ]
+     }
+    ],
+    "full_cover": true,
+    "uncovered_prime_hits": 0,
+    "minimal_exponents": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "attempts": [
+     {
+      "exponents": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "ok": false,
+      "status": "no polynomial of total degree <= 7 matches (36 fit points)"
+     },
+     {
+      "exponents": [
+       2,
+       2,
+       2,
+       2
+      ],
+      "ok": false,
+      "status": "no polynomial of total degree <= 7 matches (36 fit points)"
+     },
+     {
+      "exponents": [
+       3,
+       3,
+       3,
+       3
+      ],
+      "ok": false,
+      "status": "no polynomial of total degree <= 7 matches (36 fit points)"
+     }
+    ],
+    "statement": "denominator forms found, but value*denominator is not a polynomial of total degree <= 7 (the maximum determinable from 36 fit points)"
+   },
+   "(-1, 0, 0, 0, -1, 0, -1)": {
+    "denominator_forms": [
+     {
+      "form": "(3*(7*ep) + 0*(11*r) + 7)",
+      "alpha_beta_gamma": [
+       3,
+       0,
+       7
+      ]
+     },
+     {
+      "form": "(0*(7*ep) + 1*(11*r) + 0)",
+      "alpha_beta_gamma": [
+       0,
+       1,
+       0
+      ]
+     },
+     {
+      "form": "(1*(7*ep) + 0*(11*r) + 0)",
+      "alpha_beta_gamma": [
+       1,
+       0,
+       0
+      ]
+     },
+     {
+      "form": "(1*(7*ep) + 1*(11*r) + 0)",
+      "alpha_beta_gamma": [
+       1,
+       1,
+       0
+      ]
+     }
+    ],
+    "full_cover": true,
+    "uncovered_prime_hits": 0,
+    "minimal_exponents": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "attempts": [
+     {
+      "exponents": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "ok": false,
+      "status": "no polynomial of total degree <= 7 matches (36 fit points)"
+     },
+     {
+      "exponents": [
+       2,
+       2,
+       2,
+       2
+      ],
+      "ok": false,
+      "status": "no polynomial of total degree <= 7 matches (36 fit points)"
+     },
+     {
+      "exponents": [
+       3,
+       3,
+       3,
+       3
+      ],
+      "ok": false,
+      "status": "no polynomial of total degree <= 7 matches (36 fit points)"
+     }
+    ],
+    "statement": "denominator forms found, but value*denominator is not a polynomial of total degree <= 7 (the maximum determinable from 36 fit points)"
+   },
+   "(0, 0, 0, -1, 0, 0, -1)": {
+    "denominator_forms": [
+     {
+      "form": "(3*(7*ep) + 0*(11*r) + 7)",
+      "alpha_beta_gamma": [
+       3,
+       0,
+       7
+      ]
+     },
+     {
+      "form": "(1*(7*ep) + 0*(11*r) + 0)",
+      "alpha_beta_gamma": [
+       1,
+       0,
+       0
+      ]
+     },
+     {
+      "form": "(0*(7*ep) + 1*(11*r) + 0)",
+      "alpha_beta_gamma": [
+       0,
+       1,
+       0
+      ]
+     },
+     {
+      "form": "(2*(7*ep) + 3*(11*r) + -2)",
+      "alpha_beta_gamma": [
+       2,
+       3,
+       -2
+      ]
+     }
+    ],
+    "full_cover": false,
+    "uncovered_prime_hits": 1,
+    "statement": "no product of small linear forms in (7*ep, 11*r) covers all denominator primes; factor-aware ansatz refuted within the searched form family"
+   },
+   "(0, 0, 1, -1, 0, 0, -1)": {
+    "denominator_forms": [
+     {
+      "form": "(3*(7*ep) + 0*(11*r) + 7)",
+      "alpha_beta_gamma": [
+       3,
+       0,
+       7
+      ]
+     },
+     {
+      "form": "(1*(7*ep) + 0*(11*r) + 0)",
+      "alpha_beta_gamma": [
+       1,
+       0,
+       0
+      ]
+     },
+     {
+      "form": "(0*(7*ep) + 1*(11*r) + 0)",
+      "alpha_beta_gamma": [
+       0,
+       1,
+       0
+      ]
+     }
+    ],
+    "full_cover": true,
+    "uncovered_prime_hits": 0,
+    "minimal_exponents": [
+     1,
+     2,
+     1
+    ],
+    "attempts": [
+     {
+      "exponents": [
+       1,
+       2,
+       1
+      ],
+      "ok": false,
+      "status": "no polynomial of total degree <= 7 matches (36 fit points)"
+     },
+     {
+      "exponents": [
+       2,
+       3,
+       2
+      ],
+      "ok": false,
+      "status": "no polynomial of total degree <= 7 matches (36 fit points)"
+     },
+     {
+      "exponents": [
+       3,
+       4,
+       3
+      ],
+      "ok": false,
+      "status": "no polynomial of total degree <= 7 matches (36 fit points)"
+     }
+    ],
+    "statement": "denominator forms found, but value*denominator is not a polynomial of total degree <= 7 (the maximum determinable from 36 fit points)"
+   }
+  },
+  "E_shared_denominator": {
+   "cells": [
+    {
+     "num_deg": 0,
+     "den_deg": 0,
+     "unknowns": 5,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 1,
+     "unknowns": 7,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 2,
+     "unknowns": 10,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 3,
+     "unknowns": 14,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 4,
+     "unknowns": 19,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 5,
+     "unknowns": 25,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 6,
+     "unknowns": 32,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 7,
+     "unknowns": 40,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 8,
+     "unknowns": 49,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 9
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 9,
+     "unknowns": 59,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 19
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 10,
+     "unknowns": 70,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 30
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 11,
+     "unknowns": 82,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 42
+    },
+    {
+     "num_deg": 0,
+     "den_deg": 12,
+     "unknowns": 95,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 55
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 0,
+     "unknowns": 13,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 1,
+     "unknowns": 15,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 2,
+     "unknowns": 18,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 3,
+     "unknowns": 22,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 4,
+     "unknowns": 27,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 5,
+     "unknowns": 33,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 6,
+     "unknowns": 40,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 7,
+     "unknowns": 48,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 8,
+     "unknowns": 57,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 9
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 9,
+     "unknowns": 67,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 19
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 10,
+     "unknowns": 78,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 30
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 11,
+     "unknowns": 90,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 42
+    },
+    {
+     "num_deg": 1,
+     "den_deg": 12,
+     "unknowns": 103,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 55
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 0,
+     "unknowns": 25,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 1,
+     "unknowns": 27,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 2,
+     "unknowns": 30,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 3,
+     "unknowns": 34,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 4,
+     "unknowns": 39,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 5,
+     "unknowns": 45,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 6,
+     "unknowns": 52,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 7,
+     "unknowns": 60,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 8,
+     "unknowns": 69,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 9
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 9,
+     "unknowns": 79,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 19
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 10,
+     "unknowns": 90,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 30
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 11,
+     "unknowns": 102,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 42
+    },
+    {
+     "num_deg": 2,
+     "den_deg": 12,
+     "unknowns": 115,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 55
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 0,
+     "unknowns": 41,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 1,
+     "unknowns": 43,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 2,
+     "unknowns": 46,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 3,
+     "unknowns": 50,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 4,
+     "unknowns": 55,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 5,
+     "unknowns": 61,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 6,
+     "unknowns": 68,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 7,
+     "unknowns": 76,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 8,
+     "unknowns": 85,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 9
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 9,
+     "unknowns": 95,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 19
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 10,
+     "unknowns": 106,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 30
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 11,
+     "unknowns": 118,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 42
+    },
+    {
+     "num_deg": 3,
+     "den_deg": 12,
+     "unknowns": 131,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 55
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 0,
+     "unknowns": 61,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 1,
+     "unknowns": 63,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 2,
+     "unknowns": 66,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 3,
+     "unknowns": 70,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 4,
+     "unknowns": 75,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 5,
+     "unknowns": 81,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 6,
+     "unknowns": 88,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 7,
+     "unknowns": 96,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 8,
+     "unknowns": 105,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 9
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 9,
+     "unknowns": 115,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 19
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 10,
+     "unknowns": 126,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 30
+    },
+    {
+     "num_deg": 4,
+     "den_deg": 11,
+     "unknowns": 138,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 42
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 0,
+     "unknowns": 85,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 1,
+     "unknowns": 87,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 2,
+     "unknowns": 90,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 3,
+     "unknowns": 94,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 4,
+     "unknowns": 99,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 5,
+     "unknowns": 105,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 2
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 6,
+     "unknowns": 112,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 2
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 7,
+     "unknowns": 120,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 2
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 8,
+     "unknowns": 129,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 11
+    },
+    {
+     "num_deg": 5,
+     "den_deg": 9,
+     "unknowns": 139,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 21
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 0,
+     "unknowns": 113,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 1,
+     "unknowns": 115,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 2,
+     "unknowns": 118,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 3,
+     "unknowns": 122,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 4,
+     "unknowns": 127,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 0
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 5,
+     "unknowns": 133,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 2
+    },
+    {
+     "num_deg": 6,
+     "den_deg": 6,
+     "unknowns": 140,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 5
+    },
+    {
+     "num_deg": 7,
+     "den_deg": 0,
+     "unknowns": 145,
+     "n_equations": 144,
+     "nullspace_dim_mod_p": 1,
+     "lift": "CRT lift not stabilized at coordinate 1 (needs more primes)"
+    }
+   ],
+   "validated": null,
+   "statement": "no validated shared-denominator cell within scanned degrees"
+  },
+  "G_piecewise_chamber_split": {
+   "boundaries_tried": 32,
+   "splits_with_enough_points": 17,
+   "validated": null,
+   "near_misses": [],
+   "statement": "no tested linear chamber boundary yields exact low-degree rational fits on both sides for all four coefficients"
+  },
+  "F_dense_baseline": {
+   "statement": "dense total-degree ladder results are Phase B (all cells <= (6,6) plus extended (7,0)/(0,7) refuted or underdetermined per label)"
+  }
+ },
+ "reconstructed_coefficients": {
+  "(-1, 0, 0, -1, -1, 0, 0)": null,
+  "(-1, 0, 0, 0, -1, 0, -1)": null,
+  "(0, 0, 0, -1, 0, 0, -1)": null,
+  "(0, 0, 1, -1, 0, 0, -1)": null
+ },
+ "phase_d_schedule": {
+  "reconstructed_from_existing_data": false,
+  "viable_ansatz_costs": [
+   {
+    "ansatz": "dense (3,6) for (-1, 0, 0, -1, -1, 0, 0)",
+    "equations_per_sample": 1,
+    "additional_samples": 1,
+    "total_samples": 39
+   },
+   {
+    "ansatz": "dense (3,6) for (-1, 0, 0, 0, -1, 0, -1)",
+    "equations_per_sample": 1,
+    "additional_samples": 1,
+    "total_samples": 39
+   },
+   {
+    "ansatz": "dense (3,6) for (0, 0, 0, -1, 0, 0, -1)",
+    "equations_per_sample": 1,
+    "additional_samples": 1,
+    "total_samples": 39
+   },
+   {
+    "ansatz": "dense (3,6) for (0, 0, 1, -1, 0, 0, -1)",
+    "equations_per_sample": 1,
+    "additional_samples": 1,
+    "total_samples": 39
+   },
+   {
+    "ansatz": "shared-denominator frontier cell (7,1) beyond current data",
+    "equations_per_sample": 4,
+    "additional_samples": 1,
+    "total_samples": 39
+   },
+   {
+    "ansatz": "factor-aware poly degree 8 for (-1, 0, 0, -1, -1, 0, 0)",
+    "equations_per_sample": 1,
+    "additional_samples": 8,
+    "total_samples": 46
+   },
+   {
+    "ansatz": "factor-aware poly degree 8 for (-1, 0, 0, 0, -1, 0, -1)",
+    "equations_per_sample": 1,
+    "additional_samples": 8,
+    "total_samples": 46
+   },
+   {
+    "ansatz": "factor-aware poly degree 8 for (0, 0, 1, -1, 0, 0, -1)",
+    "equations_per_sample": 1,
+    "additional_samples": 8,
+    "total_samples": 46
+   }
+  ],
+  "minimum": {
+   "ansatz": "dense (3,6) for (-1, 0, 0, -1, -1, 0, 0)",
+   "equations_per_sample": 1,
+   "additional_samples": 1,
+   "total_samples": 39
+  },
+  "schedule_target": {
+   "ansatz": "factor-aware poly degree 8 for (-1, 0, 0, -1, -1, 0, 0)",
+   "equations_per_sample": 1,
+   "additional_samples": 8,
+   "total_samples": 46
+  },
+  "recommended_new_samples": [
+   {
+    "ep": "15/7",
+    "r": "61/11",
+    "reason": "fixed-ep fiber ep=15/7",
+    "design_rank_after": 37
+   },
+   {
+    "ep": "15/7",
+    "r": "62/11",
+    "reason": "fixed-ep fiber ep=15/7",
+    "design_rank_after": 38
+   },
+   {
+    "ep": "15/7",
+    "r": "63/11",
+    "reason": "fixed-ep fiber ep=15/7",
+    "design_rank_after": 39
+   },
+   {
+    "ep": "15/7",
+    "r": "64/11",
+    "reason": "fixed-ep fiber ep=15/7",
+    "design_rank_after": 40
+   },
+   {
+    "ep": "15/7",
+    "r": "65/11",
+    "reason": "fixed-ep fiber ep=15/7",
+    "design_rank_after": 41
+   },
+   {
+    "ep": "18/7",
+    "r": "6",
+    "reason": "fixed-ep fiber ep=18/7",
+    "design_rank_after": 42
+   },
+   {
+    "ep": "18/7",
+    "r": "67/11",
+    "reason": "fixed-ep fiber ep=18/7",
+    "design_rank_after": 43
+   },
+   {
+    "ep": "18/7",
+    "r": "68/11",
+    "reason": "fixed-ep fiber ep=18/7",
+    "design_rank_after": 44
+   }
+  ],
+  "notes": [
+   "candidate points avoid ep=3, ep=6, r=57/11 and all existing samples",
+   "fiber points additionally enable univariate cross-checks (phases C.A/C.B)",
+   "greedy rank growth uses seeded random residues as generic-position proxies (seed 20260726); ordering is fully deterministic"
+  ]
+ }
+}

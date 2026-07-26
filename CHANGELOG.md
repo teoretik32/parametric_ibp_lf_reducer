@@ -3,6 +3,30 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.11c: офлайн-аудит реконструкции из кэша (38×4 записей,
+  без RREF/новых редукций) — все структурные анзацы опровергнуты честно;
+  минимальное Stage-5-расписание детерминировано.**
+  - `scripts/audit_external_int2_reconstruction.py`: Phase A — точная таблица
+    значений (`validation/external_int2_method11_value_table.json`: CRT-подъёмы,
+    остатки по 4 primes, special-zero zero-fill, ключи кэша; верификация OK);
+    Phase B — офлайн-диагностика степеней воспроизводит лестницу Stage-4
+    1-в-1 (`artifact_crosscheck.matches=true`) + расширенные ячейки (7,0)/(0,7);
+    dim-0 mod p доказывает несовместность над QQ.
+  - Phase C: (A/B) унивариатные фибры невозможны — все 38 ep и все 38 r
+    различны; (C) 610 tensor-ячеек/лейбл — 0 валидных (все dim-1 кандидаты
+    отвергнуты точной проверкой); (D) factor-aware — знаменатели покрываются
+    малыми формами `(3·7ep+7)`, `11r`, … , но value·D не полином степени ≤7;
+    (E) shared-denominator — 50 определённых ячеек dim 0 до фронтира
+    (a≤7,b≤12); (G) кусочная/chamber гипотеза — 32 линейные границы, ни одна
+    не даёт точных фитов ≤(3,3) с обеих сторон.
+  - Phase D: минимумы по семействам (dense (3,6): +1; shared-frontier (7,1):
+    +1; factor-aware deg-8: +8); рекомендованный детерминированный пакет из
+    8 точек (fixed-ep фибры 15/7, 18/7; исключены ep∈{3,6}, r=57/11; seed
+    20260726) — артефакт
+    `validation/external_int2_method11_reconstruction_audit.json`, заметка
+    `notes/EXTERNAL_INT2_RECONSTRUCTION_AUDIT.md`; тесты
+    `tests/test_reconstruction_audit.py` (13: roundtrip, CRT-остатки,
+    special-zero, счётчики степеней, детерминизм расписания, no-RREF).
 - **External Int2 Method.11b Stage-4 + 4-й prime (2147483579): гипотеза
   «ёмкость модуля» опровергнута — отказ ёмкостный по точкам (гейт PROCEED).**
   - Кэш-тёплый прогон (114 записей переиспользованы, +38 редукций нового
