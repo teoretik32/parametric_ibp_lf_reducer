@@ -1080,9 +1080,13 @@ Status: **complete, verified**.
   регенерация совпадает с диском на 37/37 общих сэмплах. Dense-диагностика:
   ячейка (2,2) теперь candidate (бидиграда C₀ = (2,2)) — прежние «честные
   отказы» были следствием отравленной точки.
-- Сертификация на свежих точках: `scripts/certify_external_int2_lf.py`
-  (фон, лог `validation/method11_certificate_run.log`; InSpan на
-  (5/2,7/3) и (8/3,13/4) × 2 prime — положительно, прогон продолжается).
+- Сертификация на свежих точках ЗАВЕРШЕНА: `scripts/certify_external_int2_lf.py`
+  → вердикт `certified` — 4/4 точки generic-ранга, InSpan 8/8 (2 prime/точку),
+  все точки вне 38 сэмплов; артефакт
+  `validation/external_int2_lf_certificate.json`
+  (`external-int2-lf-certificate/v1`; лог
+  `validation/method11_certificate_run.log`). Реконструированная LF-связь
+  подтверждена независимо от fit/hold-out разбиения.
 - Тесты: `tests/test_reconstruction_audit.py` переписан (17 зелёных),
   `tests/test_method11c_support_validation.py` новый; полный набор зелёный.
 - Итог: «38 точек недостаточно» снято — точек хватало, мешал zero-fill;

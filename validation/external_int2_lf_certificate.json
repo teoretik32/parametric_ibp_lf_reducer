@@ -1,0 +1,153 @@
+{
+ "chamber_ep": "-3/5",
+ "checks": [
+  {
+   "elapsed_seconds": 334.6,
+   "ep": "8/3",
+   "in_span": true,
+   "n_residual_terms": 0,
+   "nrows": 49439,
+   "prime": 2147483647,
+   "r": "13/4",
+   "rank": 26984,
+   "rank_matches_generic": true,
+   "status": "InSpan"
+  },
+  {
+   "elapsed_seconds": 399.6,
+   "ep": "8/3",
+   "in_span": true,
+   "n_residual_terms": 0,
+   "nrows": 49439,
+   "prime": 2147483629,
+   "r": "13/4",
+   "rank": 26984,
+   "rank_matches_generic": true,
+   "status": "InSpan"
+  },
+  {
+   "elapsed_seconds": 353.5,
+   "ep": "11/4",
+   "in_span": true,
+   "n_residual_terms": 0,
+   "nrows": 49439,
+   "prime": 2147483647,
+   "r": "17/5",
+   "rank": 26984,
+   "rank_matches_generic": true,
+   "status": "InSpan"
+  },
+  {
+   "elapsed_seconds": 354.0,
+   "ep": "11/4",
+   "in_span": true,
+   "n_residual_terms": 0,
+   "nrows": 49439,
+   "prime": 2147483629,
+   "r": "17/5",
+   "rank": 26984,
+   "rank_matches_generic": true,
+   "status": "InSpan"
+  },
+  {
+   "elapsed_seconds": 311.3,
+   "ep": "13/6",
+   "in_span": true,
+   "n_residual_terms": 0,
+   "nrows": 49439,
+   "prime": 2147483647,
+   "r": "23/9",
+   "rank": 26984,
+   "rank_matches_generic": true,
+   "status": "InSpan"
+  },
+  {
+   "elapsed_seconds": 329.3,
+   "ep": "13/6",
+   "in_span": true,
+   "n_residual_terms": 0,
+   "nrows": 49439,
+   "prime": 2147483629,
+   "r": "23/9",
+   "rank": 26984,
+   "rank_matches_generic": true,
+   "status": "InSpan"
+  },
+  {
+   "elapsed_seconds": 362.5,
+   "ep": "19/7",
+   "in_span": true,
+   "n_residual_terms": 0,
+   "nrows": 49439,
+   "prime": 2147483647,
+   "r": "29/11",
+   "rank": 26984,
+   "rank_matches_generic": true,
+   "status": "InSpan"
+  },
+  {
+   "elapsed_seconds": 328.5,
+   "ep": "19/7",
+   "in_span": true,
+   "n_residual_terms": 0,
+   "nrows": 49439,
+   "prime": 2147483629,
+   "r": "29/11",
+   "rank": 26984,
+   "rank_matches_generic": true,
+   "status": "InSpan"
+  }
+ ],
+ "claimed_coefficients": {
+  "[-1, 0, 0, -1, -1, 0, 0]": "-(2*ep*r - ep + 1)/(6*r*(3*ep + 1))",
+  "[-1, 0, 0, 0, -1, 0, -1]": "-(ep - 1)**2*(r + 1)/(6*ep*r*(3*ep + 1))",
+  "[0, 0, 0, -1, 0, 0, -1]": "(ep - 1)*(4*ep**2*r + ep**2 - 2*ep*r - 1)/(6*ep**2*r*(3*ep + 1))",
+  "[0, 0, 1, -1, 0, 0, -1]": "(ep - 1)*(2*ep - 1)*(2*ep*r + ep + 1)/(6*ep**2*r*(3*ep + 1))"
+ },
+ "coefficient_source": "B:\\Soft\\math_scratch\\validation\\external_int2_method11_reconstruction_audit.json",
+ "elapsed_seconds": 3284.2,
+ "generic_rank_expected": 26984,
+ "level": 0,
+ "min_points": 3,
+ "n_bad_specialization": 0,
+ "n_certified_points": 4,
+ "n_checks": 8,
+ "n_in_span": 8,
+ "n_labels": 3072,
+ "off_sample_guard": {
+  "points_disjoint": true,
+  "recorded_samples": 38
+ },
+ "primes": [
+  2147483647,
+  2147483629
+ ],
+ "rows": {
+  "by_kind": {
+   "algebraic": 12288,
+   "coordinate_ibp": 26256,
+   "tangent_ibp": 10895
+  },
+  "n_base_rows": 41076,
+  "n_extra_duplicate": 2532,
+  "n_extra_new": 8363,
+  "n_extra_offered": 10895,
+  "n_rows_total": 49439,
+  "richer_row_rejections": {
+   "surface_not_free": 27705
+  }
+ },
+ "schema": "external-int2-lf-certificate/v1",
+ "scope_note": "Method.11 Phase C: independent row-span certificate for the reconstructed four-term LF reduction relation at NEW off-sample (ep, r) points. 'Certified' claims only that the claimed relation vector lies in the chamber-policy row span at the listed exact rational points modulo the listed primes, with the generic rank reproduced. It does NOT claim the analytic Laurent value; that cross-check is a separate later phase.",
+ "script": "scripts/certify_external_int2_lf.py",
+ "target_label": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "verdict": "certified"
+}

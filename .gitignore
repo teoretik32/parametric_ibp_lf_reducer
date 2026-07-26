@@ -12,3 +12,5 @@ outputs/
 *.7z
 validation/*.log
 validation/*_records.jsonl
+*_run.log
+external_int2_method11c_patch/

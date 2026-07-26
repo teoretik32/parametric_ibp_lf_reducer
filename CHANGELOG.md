@@ -27,9 +27,12 @@
     дисковый v1-артефакт сохранён как история. Проверено: регенерация совпадает
     с диском на всех 37 общих сэмплах (0 расхождений).
   - `scripts/certify_external_int2_lf.py`: независимая сертификация
-    реконструированной LF-связи на свежих точках вне 38 сэмплов (InSpan-проверки
-    по 2 prime на точку; фоновый прогон, лог
-    `validation/method11_certificate_run.log`).
+    реконструированной LF-связи на свежих точках вне 38 сэмплов — **вердикт
+    `certified`**: 4/4 точки generic-ранга, InSpan 8/8 (по 2 prime на точку),
+    все точки дизъюнктны от записанных сэмплов; артефакт
+    `validation/external_int2_lf_certificate.json`
+    (`external-int2-lf-certificate/v1`), лог
+    `validation/method11_certificate_run.log`.
   - Тесты: `tests/test_reconstruction_audit.py` переписан под Method.11c (17:
     исторический v1-артефакт как история; v2-ребилд + roundtrip 37/37;
     CRT-остатки; сверка аудит-коэффициентов с точной таблицей значений;
