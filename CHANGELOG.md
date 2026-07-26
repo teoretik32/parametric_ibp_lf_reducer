@@ -3,6 +3,21 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.11b Stage-4 + 4-й prime (2147483579): гипотеза
+  «ёмкость модуля» опровергнута — отказ ёмкостный по точкам (гейт PROCEED).**
+  - Кэш-тёплый прогон (114 записей переиспользованы, +38 редукций нового
+    prime, 11071.5 s): 152/152 formal_success, единый ранг 26984, покрытие
+    38/38 × 4 prime, incomplete_primes=[]
+    (`validation/external_int2_method11b_stage4p4.json`), но снова
+    `Failure(InterpolationFailed)`, n_terms=0.
+  - CRT-ось закрыта: подъём значений стабилизировался; денс-интерполяция
+    лейбла `(-1,0,0,-1,-1,0,0)` (36 fit + 2 holdout) — 49 ячеек лестницы до
+    (6,6): 33× nullspace dim 0 (несовместно), 8× dim 2/5, прочие
+    underdetermined (нужно 37..55 fit-точек, есть 36) → истинные степени выше;
+    для (6,6) нужно ≥55 fit-точек (≥57 сэмплов).
+  - Гейт `validation/method11b_stage4p4_gate.json`: PROCEED («capacity-bound
+    failure», special-zero 1 retained/zero-filled). Phase D не выполнялся (нет
+    Success). Stage-5 (≥57 точек) — только после одобрения.
 - **External Int2 Method.11b Stage-4 (38 точек): гейт STOP + корневой диагноз —
   ёмкость модуля (нужен 4-й prime), а не сэмплинг.**
   - Stage-4 (cache-warm 90/114, досчитано 24 записи): 114/114 formal_success,

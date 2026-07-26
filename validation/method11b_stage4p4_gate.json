@@ -1,0 +1,448 @@
+{
+ "n_records": 152,
+ "n_formal_success": 152,
+ "rank_histogram": {
+  "26984": 152
+ },
+ "max_rank": 26984,
+ "n_max_rank_records": 152,
+ "n_rank_drops": 0,
+ "support_size": 4,
+ "support_deviations": [
+  {
+   "key": "p=2147483647;ep=6,r=57/11",
+   "missing": [
+    [
+     0,
+     0,
+     1,
+     -1,
+     0,
+     0,
+     -1
+    ]
+   ],
+   "extra": []
+  },
+  {
+   "key": "p=2147483629;ep=6,r=57/11",
+   "missing": [
+    [
+     0,
+     0,
+     1,
+     -1,
+     0,
+     0,
+     -1
+    ]
+   ],
+   "extra": []
+  },
+  {
+   "key": "p=2147483587;ep=6,r=57/11",
+   "missing": [
+    [
+     0,
+     0,
+     1,
+     -1,
+     0,
+     0,
+     -1
+    ]
+   ],
+   "extra": []
+  },
+  {
+   "key": "p=2147483579;ep=6,r=57/11",
+   "missing": [
+    [
+     0,
+     0,
+     1,
+     -1,
+     0,
+     0,
+     -1
+    ]
+   ],
+   "extra": []
+  }
+ ],
+ "support_classification": {
+  "ep=102/7,r=29/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=108/7,r=40/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=111/7,r=51/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=114/7,r=3": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=117/7,r=4": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=120/7,r=52/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=123/7,r=54/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=129/7,r=5": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=132/7,r=58/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=135/7,r=59/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=138/7,r=60/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=15/7,r=32/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=18/7,r=43/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=24/7,r=28/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=27/7,r=39/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=30/7,r=50/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=33/7,r=24/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=36/7,r=35/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=39/7,r=46/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=45/7,r=31/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=48/7,r=42/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=51/7,r=53/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=54/7,r=27/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=57/7,r=38/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=6,r=57/11": {
+   "classification": "special_zero",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": [
+    [
+     0,
+     0,
+     1,
+     -1,
+     0,
+     0,
+     -1
+    ]
+   ]
+  },
+  "ep=60/7,r=49/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=66/7,r=34/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=69/7,r=45/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=72/7,r=56/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=75/7,r=30/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=78/7,r=41/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=81/7,r=25/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=87/7,r=36/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=9,r=23/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=90/7,r=47/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=93/7,r=26/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=96/7,r=37/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  },
+  "ep=99/7,r=48/11": {
+   "classification": "stable",
+   "n_records": 4,
+   "n_valid_records": 4,
+   "ranks": [
+    26984
+   ],
+   "missing_labels": []
+  }
+ },
+ "support_summary": {
+  "generic_rank": 26984,
+  "reference_support_size": 4,
+  "n_samples": 38,
+  "n_stable": 37,
+  "n_special_zero": 1,
+  "n_unstable": 0,
+  "special_zero_samples": [
+   "ep=6,r=57/11"
+  ],
+  "unstable_samples": []
+ },
+ "n_points_seen": 38,
+ "expected_points": 38,
+ "points_incomplete_primes": [],
+ "cache_has_v2_header": true,
+ "verdict": "PROCEED",
+ "reasons": [
+  "capacity-bound failure",
+  "special-zero support at 1 sample(s) (retained, zero-filled)"
+ ]
+}
