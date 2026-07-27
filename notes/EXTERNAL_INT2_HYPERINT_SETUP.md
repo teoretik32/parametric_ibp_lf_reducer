@@ -1,79 +1,147 @@
-# External Int2 Method.12B — Phase 0 runtime audit (HyperInt/Maple setup report)
+# External Int2 HyperInt runtime status
 
-Date: 2026-07-27. Host: Windows 10 Pro 10.0.19044, working copy `B:\Soft\math_scratch`,
-branch `feature/external-int2-hyperint-integration` (created from `main` @ `4f84c6a`).
+Chronological record. It merges the Method.12B Phase 0 runtime audit (when no
+Maple was present) with the later successful runtime installation, and states
+the safety status that Method.12R/13 imposes on the External Int2 masters.
 
-## Verdict
+Machine-readable runtime summary: `validation/hyperint/hyperint_smoke.json`.
 
-**BLOCKED: Maple is not installed on this machine; the HyperInt package is not present.**
-Per the Method.12B gate, no integration was attempted, no results were faked or
-substituted. Phases 1-5 have not been started.
+## Historical Method.12B Phase 0
 
-## Probes performed (all negative unless stated)
+Date: 2026-07-27. Host: Windows 10 Pro 10.0.19044, working copy
+`B:\Soft\math_scratch`, branch `feature/external-int2-hyperint-integration`
+(created from `main` @ `4f84c6a`).
 
-1. Executables on PATH: `maple`, `cmaple`, `maple.exe`, `cmaple.exe`, `wmaple`,
-   `maple2023`, `maple2024`, `maple2025` — none found (`command -v`, PowerShell
-   `Get-Command '*maple*'`).
-2. Install directories: `C:\Program Files\Maple*`, `C:\Program Files (x86)\Maple*`,
-   `B:\soft\Maple*`, root-level `Maple*` on drives C:, D:, E:, B: — none found.
-3. Registry: `HKLM:\SOFTWARE\Maplesoft` — key absent.
+**Verdict at that time: BLOCKED — Maple was not installed on this machine and
+the HyperInt package was not present.** Per the Method.12B gate no integration
+was attempted, and no result was faked or substituted.
+
+Probes performed, all negative:
+
+1. Executables on PATH (`maple`, `cmaple`, `maple.exe`, `cmaple.exe`, `wmaple`,
+   `maple2023/2024/2025`) — none found.
+2. Install directories (`C:\Program Files\Maple*`, `C:\Program Files (x86)\Maple*`,
+   `B:\soft\Maple*`, root-level `Maple*` on C:, D:, E:, B:) — none found.
+3. Registry `HKLM:\SOFTWARE\Maplesoft` — key absent.
 4. Environment variables matching `maple|hyperint` — none set.
-5. WSL: no Linux distributions installed (`wsl -l -q` returns usage text only),
-   so no Linux-side Maple either.
-6. HyperInt package files (`HyperInt*.mpl`) under `B:\soft`, `C:\Users\Teoretik`,
-   repo tree — none found (only our four prepared *input* files exist, see below).
+5. WSL — no Linux distributions installed, so no Linux-side Maple either.
+6. `HyperInt*.mpl` under `B:\soft`, `C:\Users\Teoretik` and the repo tree —
+   none found; only the four prepared *input* files existed.
 
-## What is required to unblock
+**This remains a true historical record** of the host at that date. It was
+superseded by the installation below, not retracted.
 
-1. **Maple** (command-line `cmaple`/`maple` is sufficient; GUI not needed).
-   HyperInt is pure Maple code; any reasonably recent Maple (>= 2016) works.
-2. **HyperInt** by E. Panzer: `HyperInt.mpl` (+ optional `periodLookups.m` tables)
-   from the author's public repository (bitbucket: PanzerErik/hyperint).
-   Place `HyperInt.mpl` where the inputs can `read` it (repo root or
-   `validation/hyperint/`, or patch the `read` path in the inputs).
-3. Smoke test (item 1.4 of Phase 0), to be run before the L1 pilot:
-   `read "HyperInt.mpl": hyperInt(1/(1+x)^2, [x]);` must return `1`, and
-   `fibrationBasis(hyperInt(1/((1+x)*(x+y)), [x]), [y]);` must return a
-   `-ln(y)/(y-1)`-equivalent expression, both without errors.
-4. Invocation pattern planned for the pilot (deterministic, logged):
-   `cmaple -q scripts/hyperint/run_L1.mpl > outputs/external_int2_hyperint_L1.log`
-   where the runner `read`s the certified input, uncomments nothing by hand
-   (activation happens in the runner, not by editing the certified input),
-   `save`s the exact result to `validation/hyperint/external_int2_lf_L1_result.m`
-   and writes `..._L1_meta.json` (wall time via `time[real]()`, `kernelopts(bytesalloc)`
-   peak, integration order, epsOrder, alphabet, output size, completion flag).
+The Method.12B static audit of the four prepared `.mpl` inputs (integrand text,
+`intOrder := [x2, x5, x7]`, epsilon orders L1→ep^2, L2→ep^3, L3/L4→ep^4, `r`
+kept symbolic) also stands as a description of those files — but see the safety
+status below: the basis they encode has since been revoked.
 
-## Phase 0 item 3 — static audit of the four prepared inputs (PASS with noted gaps)
+## Runtime installation completed later
 
-Files: `validation/hyperint/external_int2_lf_L{1,2,3,4}.mpl` (12 lines each).
+| Item | Value |
+|------|-------|
+| Maple version | Maple 2025.1, X86 64 WINDOWS, Jun 12 2025, Build ID 1932578 |
+| `MAPLE_HOME` | `K:\_TOOLS\Maple2025` |
+| cmaple | `K:\_TOOLS\Maple2025\bin.X86_64_WINDOWS\cmaple.exe` |
+| HyperInt path | `K:\_TOOLS\HyperInt` (outside the repo, **not committed**) |
+| HyperInt origin | `https://bitbucket.org/PanzerErik/hyperint.git` (Erik Panzer, official) |
+| HyperInt revision | `ce15b287022e698d3e3b884d5c827620d20499bd` (2023-07-31) |
+| Reported version | HyperInt, version 1.0 |
+| `HYPERINT_HOME` | `K:\_TOOLS\HyperInt` |
 
-Checks that PASS for all four:
-- full master integrand is defined inline, exactly matching the certified basis
-  (G0=x2+1, G1=x5+1, G2=x7+1, G3=r*x2*x5+x2*x7+x7+1):
-  - L1 `[-1,0,0,-1,-1,0,0]`: `x2^ep*(x2+1)^(ep-1)*(x5+1)^(ep-1)*(x7+1)^(-ep-1)*G3^(ep-1)`
-  - L2 `[-1,0,0,0,-1,0,-1]`: `x2^ep*(x2+1)^ep*(x5+1)^(ep-1)*(x7+1)^(-ep-1)*G3^(ep-2)`
-  - L3 `[0,0,0,-1,0,0,-1]`: `x2^(ep+1)*(x2+1)^(ep-1)*(x5+1)^ep*(x7+1)^(-ep-1)*G3^(ep-2)`
-  - L4 `[0,0,1,-1,0,0,-1]`: as L3 with extra `x7` factor;
-- intended variable order `intOrder := [x2, x5, x7]` (from the certified
-  linear-reducibility audit, 6/6 orders valid — fallback orders available);
-- correct epsilon orders: L1 -> ep^2, L2 -> ep^3, L3 -> ep^4, L4 -> ep^4
-  (`series(f, ep=0, epsOrder+1)` keeps through ep^epsOrder inclusive);
-- `r` stays symbolic; no numeric substitution anywhere (regex-checked).
+Smoke results:
 
-Gaps to close in the runner (NOT in the certified inputs) once Maple exists:
-- `hyperInt`/`fibrationBasis` calls are commented out by design ("audit artifact
-  only; review before running") — activation belongs to the Phase 1 runner;
-- no deterministic output file is written yet (no `save`/`writeto`) — the runner
-  must add `..._Lk_result.m` + `..._Lk_meta.json`;
-- no logging/checkpointing yet — the runner must tee to `outputs/` (not committed).
+- **Maple smoke = 2** — `kernelopts(version); printf("MAPLE_SMOKE=%d\n",1+1)`.
+- **HyperInt smoke integral = 1** — `hyperInt(1/(1+x)^2, x=0..infinity)`,
+  after `fibrationBasis`, exactly the expected value. The documented API needed
+  no adaptation for this revision.
 
-## Cost projection
+Located files: `HyperInt.mpl`, `periodLookups.m` (4.8 MB MZV/alternating-sum
+lookups), `HyperTests.mpl`, documentation in `doc/` plus `Manual.mw`, `README.md`.
 
-Not possible honestly before the L1 pilot. Qualitative expectation only: all
-letters are linear with roots in {0, -1, r}; L1 (weight <= 3, 5 factors) should
-be the cheapest; L3/L4 (through ep^4, weight <= 5) dominate.
+Loading through an absolute path — `HyperInt.mpl` guards its period table with
+`if not assigned(...)`, so the table can be redirected before the read:
 
-## Oracle isolation statement
+```maple
+_hyper_autoload_periods := ["K:/_TOOLS/HyperInt/periodLookups.m"]:
+read "K:/_TOOLS/HyperInt/HyperInt.mpl":
+```
 
-The Laurent oracle (`validation/external_int2_full_laurent_audit.json`, AnsvInt2)
-was NOT read during this phase and remains comparison-only for Phase 4.
+Environment variables are set **process-local** per command; nothing is written
+to the user profile, and no license file, license-server address or activation
+data is copied into the repository.
+
+A driver probe (no integration) confirmed the runner's absolute-path loading
+against the L1 input with the `hyperInt` call omitted: `epsOrder = 2`,
+`intOrder = [x2, x5, x7]`, `fser` 21 terms, `hyperInt`/`fibrationBasis` defined.
+That validates the runtime plumbing only — it says nothing about the validity of
+the L1 integrand.
+
+## Current safety status after Method.12R/13
+
+- The **Method.11c four-master LF basis was revoked**. The four-term relation
+  `J[Target] == C1 J[L1] + ... + C4 J[L4]` is not a valid integral identity:
+  the RHS carries an `ep^-3` pole `-1/(6 r^2)` the target cannot have, and in
+  the convergence chamber `ep=-3/5, r=1` target `3.9267` vs RHS `-0.2891`.
+- **L4 `[0,0,1,-1,0,0,-1]` fails on the mixed infinity ray `(0,-1,-1)`**
+  (`base_score == 0`; `x5, x7 -> Infinity` at fixed `x2`) — it is not locally
+  finite. Method.13 then showed the defect was systemic in the surface filters
+  and corrected them to the complete toric criteria.
+- **Prepared L1–L4 inputs are historical/setup fixtures only.** They are not a
+  runnable workload, and the Method.12A linear-reducibility audit attached to
+  them describes now-revoked integrands.
+- **No real master integration may run** unless a new basis artifact explicitly
+  has all four of:
+
+  | Field | Required |
+  |-------|----------|
+  | `Status` | `Success` |
+  | `AllLocallyFinite` | `True` |
+  | `IntegralIdentityStatus` | valid / not revoked |
+  | `SurfaceValidationStatus` | `Passed` |
+
+The repository's current `validation/external_int2_lf_result.m` records
+`Status -> "Revoked(Method.12R)"`, `AllLocallyFinite -> False`,
+`IntegralIdentityStatus -> "Revoked"`, `SurfaceValidationStatus -> "Failed"`,
+with `FormalRowSpanCertificate -> "Passed"` retained (the modular row-span
+certificate remains true as a formal statement).
+
+## Available setup infrastructure
+
+- **The generic Maple/HyperInt runtime smoke remains valid** — it is
+  independent of which basis is integrated, and is unaffected by Method.12R/13.
+- **The runner and dry-run remain reusable.** `scripts/run_external_int2_hyperint.py`
+  is stdlib-only and never imports RREF, modular-record or normal-form code.
+  Resolution: cmaple via `MAPLE_CLI` → `MAPLE_HOME/bin.*/cmaple[.exe]` → `PATH`;
+  HyperInt via `HYPERINT_HOME`. Deterministic paths per master `<M>`:
+
+  | Role | Path |
+  |------|------|
+  | Input (historical fixture) | `validation/hyperint/external_int2_lf_<M>.mpl` |
+  | Generated driver | `outputs/hyperint/<M>/driver_<M>.mpl` |
+  | Result | `validation/hyperint/results/external_int2_lf_<M>_result.mpl` |
+  | Meta | `validation/hyperint/results/external_int2_lf_<M>_meta.json` |
+  | Log | `outputs/hyperint/<M>/<M>_run.log` |
+
+  `outputs/` is gitignored, so logs are never committed. The driver sets
+  `currentdir` to `HYPERINT_HOME` and reads the input by absolute path, so the
+  input's own relative `read "HyperInt.mpl"` and the `periodLookups.m` autoload
+  resolve without editing the input file. The `hyperInt`/`fibrationBasis` calls
+  are appended by the driver using exactly the `fser` and `intOrder` the input
+  defines; no mathematics is changed.
+
+- **Actual External Int2 L1 execution is refused by the provenance gate.**
+  Every non-dry-run invocation calls `check_basis_status()` first; a revoked,
+  legacy-unchecked, missing or ambiguous artifact prints a refusal naming each
+  failed field, exits non-zero (code `4`), and never invokes cmaple. Any
+  revocation marker (`Revoked`, `Invalidated`, `Method.12R`) fails the gate
+  outright.
+- **No override is provided.** `--force` governs overwriting a completed result
+  only. `--basis-status PATH` selects *which* artifact is checked, for a future
+  corrected basis, but that artifact must still satisfy all four conditions.
+
+Dry run remains the only supported mode for the L1–L4 fixtures:
+
+```
+python scripts/run_external_int2_hyperint.py --master L1 --dry-run
+```
