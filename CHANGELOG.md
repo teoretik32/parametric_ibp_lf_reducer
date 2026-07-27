@@ -3,6 +3,17 @@
 ## Unreleased
 
 ### Added
+- **External Int2 Method.11: экспорт сертифицированной LF-редукции как
+  `ReductionResult`-артефактов.** Новый `scripts/export_external_int2_lf_masters.py`
+  читает ТОЛЬКО готовые артефакты (family + reconstruction audit + Phase C
+  certificate), прогоняет 4 гейта (verdict=`certified`; sympy-тождество
+  audit↔certificate коэффициентов; полиэдральный LF-чек мастеров True /
+  таргета False; строгий `Success`-гейт пакета) и пишет
+  `validation/external_int2_lf_result.m` (Wolfram-текст `ReductionResult`,
+  `AllLocallyFinite -> True`, 4 терма, n_records=152) и
+  `validation/external_int2_lf_full_formula.m` — самодостаточную формулу с
+  ПОЛНЫМИ интеграндами (`x2^(ep)·G0^(ep-1)…`), определениями G0–G3 и
+  scope-note сертификата (аналитический Laurent-кросс-чек — отдельная фаза).
 - **External Int2 Method.11c (развязка): `ep=6,r=57/11` — базисная/pivot
   специализация, а НЕ special zero; все 4 генерических LF-коэффициента
   реконструированы из существующего кэша (без новых редукций) и валидированы.**

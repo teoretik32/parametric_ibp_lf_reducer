@@ -1091,3 +1091,19 @@ Status: **complete, verified**.
   `tests/test_method11c_support_validation.py` новый; полный набор зелёный.
 - Итог: «38 точек недостаточно» снято — точек хватало, мешал zero-fill;
   Stage-5-пакет из 8 точек не нужен.
+
+
+## External Int2 Method.11: экспорт certified LF-редукции (ReductionResult)
+
+- `scripts/export_external_int2_lf_masters.py` — экспорт из готовых артефактов
+  (family + `external_int2_method11_reconstruction_audit.json` +
+  `external_int2_lf_certificate.json`), без пере-деривации. Гейты: verdict
+  `certified`; sympy-тождество audit↔certificate; полиэдральный LF-чек —
+  мастера True, таргет False; строгий `Success`-гейт
+  `build_reduction_result_from_reconstruction`.
+- Артефакты: `validation/external_int2_lf_result.m` (`Status -> "Success"`,
+  `AllLocallyFinite -> True`, 4 терма, n_records=152) и
+  `validation/external_int2_lf_full_formula.m` (G0–G3, полные интегранды
+  `x2^(ep)*G0^(ep-1)*…`, C1–C4, `JTarget == C1*I1 + … + C4*I4`).
+- Scope не расширен: сертифицирована row-span-связь на точных точках по
+  модулю prime'ов; аналитическое Laurent-значение — отдельная фаза.
