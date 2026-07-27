@@ -17,3 +17,14 @@
     "UnknownLFTerms" -> {}
   |>
 |>
+
+(* Method.12A: certificate provenance (recorded, no re-derivation). *)
+CertificateProvenance = <|
+  "CertificateStatus" -> "Passed",
+  "CertificateArtifact" -> "validation/external_int2_lf_certificate.json",
+  "CertificatePoints" -> 4,
+  "CertificateChecks" -> 8,
+  "GenericRank" -> 26984,
+  "SurfacePolicy" -> "convergence_chamber",
+  "SurfaceChamber" -> "ep=-3/5"
+|>;

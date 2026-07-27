@@ -150,27 +150,59 @@ def main() -> int:
     if result.all_locally_finite is not True:
         _fail(f"AllLocallyFinite is {result.all_locally_finite!r}, expected True")
 
-    RESULT_OUT.write_text(result.wolfram_style_text + "\n", encoding="utf-8")
+    provenance = "\n".join([
+        "",
+        "(* Method.12A: certificate provenance (recorded, no re-derivation). *)",
+        "CertificateProvenance = <|",
+        '  "CertificateStatus" -> "Passed",',
+        '  "CertificateArtifact" -> "validation/external_int2_lf_certificate.json",',
+        f'  "CertificatePoints" -> {int(cert["n_certified_points"])},',
+        f'  "CertificateChecks" -> {int(cert["n_checks"])},',
+        f'  "GenericRank" -> {int(cert["generic_rank_expected"])},',
+        '  "SurfacePolicy" -> "convergence_chamber",',
+        f'  "SurfaceChamber" -> "ep={cert["chamber_ep"]}"',
+        "|>;",
+    ])
+    RESULT_OUT.write_text(result.wolfram_style_text + "\n" + provenance + "\n", encoding="utf-8")
 
-    # --- self-contained full formula ---
+    # --- self-contained full formula (Method.12A: integral identity, not pointwise) ---
     lines: list[str] = []
-    lines.append("(* External Int2: certified four-term LF-basis reduction (Method.11). *)")
+    lines.append("(* External Int2: certified four-term LF-basis reduction (Method.11/.12A). *)")
     lines.append("(* " + cert["scope_note"] + " *)")
     lines.append("(* Variables: " + ", ".join(fam.variables)
                  + "; parameters: " + ", ".join(fam.parameters) + ". *)")
+    lines.append("(* The equality below holds AFTER integration over the positive orthant; *)")
+    lines.append("(* no pointwise integrand identity is implied. *)")
     for name in fam.poly_names:
         lines.append(f"{name} = {_poly_to_wolfram(fam.polynomial(name))};")
+    lines.append("")
+    dom_txt = ", ".join("{" + v + ", 0, Infinity}" for v in fam.variables)
+    lines.append(f"J[f_] := Inactive[Integrate][f, {dom_txt}];")
     lines.append("")
     terms_txt: list[str] = []
     for i, lab in enumerate(sorted(claimed), start=1):
         c_txt = coeff_to_wolfram_text(claimed[lab])
         lines.append(f"C{i} = {c_txt};  (* label {list(lab)}, LocallyFinite -> True *)")
-        lines.append(f"I{i} = {_full_integrand_text(fam, lab)};")
-        terms_txt.append(f"C{i}*I{i}")
+        lines.append(f"LFIntegrand{i} = {_full_integrand_text(fam, lab)};")
+        terms_txt.append(f"C{i}*J[LFIntegrand{i}]")
     lines.append("")
-    lines.append(f"(* target label {list(target_label)}; full integrand: "
-                 + _full_integrand_text(fam, target_label) + " *)")
-    lines.append("JTarget == " + " + ".join(terms_txt))
+    lines.append(f"(* target label {list(target_label)} *)")
+    lines.append(f"TargetIntegrand = {_full_integrand_text(fam, target_label)};")
+    lines.append("")
+    lines.append("ReductionIdentity =")
+    lines.append("  J[TargetIntegrand] == " + " + ".join(terms_txt) + ";")
+    lines.append("")
+    lines.append("(* Method.12A physical wrapper (dimensionful External Int2 normalization). *)")
+    lines.append("r = s/t;")
+    lines.append("")
+    lines.append("ExternalPrefactor2 =")
+    lines.append("  Exp[2*ep*EulerGamma]")
+    lines.append("  *t^(-3-ep)")
+    lines.append("  *Gamma[1-ep]*Gamma[-ep]^3*Gamma[ep]/")
+    lines.append("   (Gamma[-1-3*ep]*Gamma[-2*ep]);")
+    lines.append("")
+    lines.append("FullPhysicalReduction =")
+    lines.append("  ExternalPrefactor2 * ReductionIdentity /. r -> s/t;")
     FORMULA_OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     print(f"[M11] wrote {RESULT_OUT.relative_to(REPO_ROOT)} and "

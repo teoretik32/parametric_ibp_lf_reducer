@@ -1,0 +1,1546 @@
+{
+ "schema": "external-int2-lf-linear-reducibility/v1",
+ "method": "External Int2 Method.12A",
+ "family": "examples/external_int2_dimensionless_input.wl.txt",
+ "certificate": "validation/external_int2_lf_certificate.json",
+ "variables": [
+  "x2",
+  "x5",
+  "x7"
+ ],
+ "parameters": [
+  "r"
+ ],
+ "masters": [
+  {
+   "index": 1,
+   "name": "L1",
+   "label": [
+    -1,
+    0,
+    0,
+    -1,
+    -1,
+    0,
+    0
+   ],
+   "integrand_maple": "x2^(ep) * (x2 + 1)^(ep - 1) * (x5 + 1)^(ep - 1) * (x7 + 1)^(-ep - 1) * (r*x2*x5 + x2*x7 + x7 + 1)^(ep - 1)",
+   "initial_polynomials": [
+    "r*x2*x5 + x2*x7 + x7 + 1",
+    "x2",
+    "x2 + 1",
+    "x5",
+    "x5 + 1",
+    "x7",
+    "x7 + 1"
+   ],
+   "orders": [
+    {
+     "order": [
+      "x2",
+      "x5",
+      "x7"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x2",
+      "x7",
+      "x5"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x5",
+      "x2",
+      "x7"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x5",
+      "x7",
+      "x2"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x7",
+      "x2",
+      "x5"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x7",
+      "x5",
+      "x2"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    }
+   ],
+   "n_valid_orders": 6,
+   "chosen_order": [
+    "x2",
+    "x5",
+    "x7"
+   ],
+   "alphabet": [
+    "-r + x7",
+    "r*x2*x5 + x2*x7 + x7 + 1",
+    "r*x5 + x7",
+    "r*x5 - 1",
+    "x2",
+    "x2 + 1",
+    "x5",
+    "x5 + 1",
+    "x7",
+    "x7 + 1"
+   ],
+   "linearly_reducible": true,
+   "required_ep_order": 2,
+   "hyperint_input": "validation/hyperint/external_int2_lf_L1.mpl"
+  },
+  {
+   "index": 2,
+   "name": "L2",
+   "label": [
+    -1,
+    0,
+    0,
+    0,
+    -1,
+    0,
+    -1
+   ],
+   "integrand_maple": "x2^(ep) * (x2 + 1)^(ep) * (x5 + 1)^(ep - 1) * (x7 + 1)^(-ep - 1) * (r*x2*x5 + x2*x7 + x7 + 1)^(ep - 2)",
+   "initial_polynomials": [
+    "r*x2*x5 + x2*x7 + x7 + 1",
+    "x2",
+    "x2 + 1",
+    "x5",
+    "x5 + 1",
+    "x7",
+    "x7 + 1"
+   ],
+   "orders": [
+    {
+     "order": [
+      "x2",
+      "x5",
+      "x7"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x2",
+      "x7",
+      "x5"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x5",
+      "x2",
+      "x7"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x5",
+      "x7",
+      "x2"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x7",
+      "x2",
+      "x5"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x7",
+      "x5",
+      "x2"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    }
+   ],
+   "n_valid_orders": 6,
+   "chosen_order": [
+    "x2",
+    "x5",
+    "x7"
+   ],
+   "alphabet": [
+    "-r + x7",
+    "r*x2*x5 + x2*x7 + x7 + 1",
+    "r*x5 + x7",
+    "r*x5 - 1",
+    "x2",
+    "x2 + 1",
+    "x5",
+    "x5 + 1",
+    "x7",
+    "x7 + 1"
+   ],
+   "linearly_reducible": true,
+   "required_ep_order": 3,
+   "hyperint_input": "validation/hyperint/external_int2_lf_L2.mpl"
+  },
+  {
+   "index": 3,
+   "name": "L3",
+   "label": [
+    0,
+    0,
+    0,
+    -1,
+    0,
+    0,
+    -1
+   ],
+   "integrand_maple": "x2^(ep + 1) * (x2 + 1)^(ep - 1) * (x5 + 1)^(ep) * (x7 + 1)^(-ep - 1) * (r*x2*x5 + x2*x7 + x7 + 1)^(ep - 2)",
+   "initial_polynomials": [
+    "r*x2*x5 + x2*x7 + x7 + 1",
+    "x2",
+    "x2 + 1",
+    "x5",
+    "x5 + 1",
+    "x7",
+    "x7 + 1"
+   ],
+   "orders": [
+    {
+     "order": [
+      "x2",
+      "x5",
+      "x7"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x2",
+      "x7",
+      "x5"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x5",
+      "x2",
+      "x7"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x5",
+      "x7",
+      "x2"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x7",
+      "x2",
+      "x5"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x7",
+      "x5",
+      "x2"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    }
+   ],
+   "n_valid_orders": 6,
+   "chosen_order": [
+    "x2",
+    "x5",
+    "x7"
+   ],
+   "alphabet": [
+    "-r + x7",
+    "r*x2*x5 + x2*x7 + x7 + 1",
+    "r*x5 + x7",
+    "r*x5 - 1",
+    "x2",
+    "x2 + 1",
+    "x5",
+    "x5 + 1",
+    "x7",
+    "x7 + 1"
+   ],
+   "linearly_reducible": true,
+   "required_ep_order": 4,
+   "hyperint_input": "validation/hyperint/external_int2_lf_L3.mpl"
+  },
+  {
+   "index": 4,
+   "name": "L4",
+   "label": [
+    0,
+    0,
+    1,
+    -1,
+    0,
+    0,
+    -1
+   ],
+   "integrand_maple": "x2^(ep + 1) * x7^(1) * (x2 + 1)^(ep - 1) * (x5 + 1)^(ep) * (x7 + 1)^(-ep - 1) * (r*x2*x5 + x2*x7 + x7 + 1)^(ep - 2)",
+   "initial_polynomials": [
+    "r*x2*x5 + x2*x7 + x7 + 1",
+    "x2",
+    "x2 + 1",
+    "x5",
+    "x5 + 1",
+    "x7",
+    "x7 + 1"
+   ],
+   "orders": [
+    {
+     "order": [
+      "x2",
+      "x5",
+      "x7"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x2",
+      "x7",
+      "x5"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x5 + x7",
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x5",
+      "x2",
+      "x7"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r + x7",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x5",
+      "x7",
+      "x2"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ]
+      },
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "-r*x2 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x2*x7 + x7 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x7",
+      "x2",
+      "x5"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x5 - 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    },
+    {
+     "order": [
+      "x7",
+      "x5",
+      "x2"
+     ],
+     "valid": true,
+     "steps": [
+      {
+       "variable": "x7",
+       "polynomials_before": [
+        "r*x2*x5 + x2*x7 + x7 + 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1",
+        "x7",
+        "x7 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ]
+      },
+      {
+       "variable": "x5",
+       "polynomials_before": [
+        "r*x2*x5 + 1",
+        "r*x5 - 1",
+        "x2",
+        "x2 + 1",
+        "x5",
+        "x5 + 1"
+       ],
+       "reduction_set_after": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ]
+      },
+      {
+       "variable": "x2",
+       "polynomials_before": [
+        "r*x2 - 1",
+        "x2",
+        "x2 + 1"
+       ],
+       "reduction_set_after": []
+      }
+     ],
+     "obstruction": null
+    }
+   ],
+   "n_valid_orders": 6,
+   "chosen_order": [
+    "x2",
+    "x5",
+    "x7"
+   ],
+   "alphabet": [
+    "-r + x7",
+    "r*x2*x5 + x2*x7 + x7 + 1",
+    "r*x5 + x7",
+    "r*x5 - 1",
+    "x2",
+    "x2 + 1",
+    "x5",
+    "x5 + 1",
+    "x7",
+    "x7 + 1"
+   ],
+   "linearly_reducible": true,
+   "required_ep_order": 4,
+   "hyperint_input": "validation/hyperint/external_int2_lf_L4.mpl"
+  }
+ ],
+ "all_linearly_reducible": true,
+ "scope_note": "Audit only: enumerates HyperInt integration orders and polynomial reduction sets for the four certified LF masters.  The certified LF basis, labels, coefficients and certificate semantics are unchanged.  No RREF, no modular records, no integration performed."
+}
