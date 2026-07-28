@@ -29,7 +29,7 @@
     "verdict": "PASS"
   },
   "driver_probe": {
-    "purpose": "validate the runner's absolute-path loading of the certified L1 input WITHOUT starting the integration",
+    "purpose": "validate the runner's absolute-path loading of the L1 input (since revoked by Method.12R) WITHOUT starting the integration",
     "input": "validation/hyperint/external_int2_lf_L1.mpl",
     "epsOrder": 2,
     "intOrder": "[x2, x5, x7]",
@@ -40,8 +40,12 @@
   },
   "verdict": "PASS",
   "notes": [
-    "Setup and smoke tests only; no External Int2 L1 integration was executed.",
-    "Certified LF basis (4 labels, 4 coefficients), surface policy and certificate are unchanged.",
+    "SCOPE: this artifact attests ONLY that the Maple + HyperInt runtime is installed and working.",
+    "It does NOT attest the correctness of any External Int2 LF basis, master, coefficient, surface policy or certificate.",
+    "The Method.11c four-master basis was subsequently REVOKED by External Int2 Method.12R: on the mixed ray (0,-1,-1) (x5, x7 -> Infinity at fixed x2) master L4 [0,0,1,-1,0,0,-1] is NOT locally finite (base_score == 0), and the four-term relation is not a valid integral identity.",
+    "The prepared L1-L4 HyperInt inputs in validation/hyperint/ are retained ONLY as historical setup fixtures; they are not a runnable workload.",
+    "Real HyperInt master runs are blocked by the provenance gate in scripts/run_external_int2_hyperint.py until a NEW basis artifact confirms all of: Status == \"Success\", AllLocallyFinite == True, IntegralIdentityStatus valid (not revoked), SurfaceValidationStatus == \"Passed\". The gate has no override flag.",
+    "Setup and smoke tests only; no External Int2 master integration was executed.",
     "No RREF, no modular record regeneration.",
     "HyperInt source lives outside the repository and is not committed.",
     "No Maple license information is stored in the repository."
