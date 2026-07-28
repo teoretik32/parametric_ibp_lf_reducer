@@ -49,6 +49,7 @@ from .result import (
     FAILURE_RESOURCE_LIMIT_REACHED,
     FAILURE_TARGET_NOT_REDUCIBLE,
     FAILURE_VERIFICATION_FAILED,
+    SURFACE_VALIDATION_UNKNOWN,
     ReductionResult,
     build_reduction_result_from_reconstruction,
 )
@@ -562,6 +563,7 @@ def reduce_family_adaptive(
             {},
             {},
             resource_limit_reached=True,
+            surface_validation_status=SURFACE_VALIDATION_UNKNOWN,  # no rows were ever generated
             messages=(f"adaptive search stopped before any level ran: {detail}",),
         )
 

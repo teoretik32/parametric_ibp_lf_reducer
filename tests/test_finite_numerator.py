@@ -32,6 +32,7 @@ from parametric_ibp_lf_reducer.finite_numerator import (
     STATUS_ALREADY_LF,
     STATUS_FOUND,
     STATUS_IMPOSSIBLE,
+    STATUS_NONE,
     decorated_label,
     finite_numerator_search,
     full_integrand_lf,
@@ -190,30 +191,43 @@ def test_int2_sector_search(int2_family):
     by_name = {}
     for rep in payload["reports"]:
         by_name.setdefault(rep["sector_name"], []).append(rep)
-    for name in ("1/(x2*G0*G1)", "1/(x2*G1*G3)", "1/(G0*G3)", "x7/(G0*G3)"):
+    for name in ("1/(x2*G0*G1)", "1/(x2*G1*G3)", "1/(G0*G3)"):
         assert all(r["status"] == STATUS_ALREADY_LF for r in by_name[name])
+    # Method.12R: "x7/(G0*G3)" is NOT already LF — it is marginal (base_score == 0) on the joint
+    # infinity ray (0,-1,-1), which the old heuristic candidate set never tested. Its only failing
+    # ray is componentwise <= 0, so the lemma applies: no numerator cures it at any degree.
+    for r in by_name["x7/(G0*G3)"]:
+        assert r["status"] == STATUS_IMPOSSIBLE
+        assert r["numerator_cure_impossible_any_degree"] is True
+        assert r["candidates"] == []
+        assert [f["direction"] for f in r["failing_rays"]] == [[0, -1, -1]]
+    # The complete polyhedral ray set also exposes mixed failing rays (e.g. (-1,1,0): x2 -> oo with
+    # x5 -> 0) for these three sectors. A numerator CAN raise the score on a ray with a positive
+    # component, so the any-degree lemma no longer applies and the honest verdict downgrades from
+    # "impossible" to "none found within the searched degrees" — still no cure, never a false LF.
     for name in ("1/G1", "1/G2", "1/(G1*G3)"):
         for r in by_name[name]:
-            assert r["status"] == STATUS_IMPOSSIBLE
-            assert r["numerator_cure_impossible_any_degree"] is True
+            assert r["status"] == STATUS_NONE
+            assert r["numerator_cure_impossible_any_degree"] is False
             assert r["candidates"] == []
-            # all failing rays componentwise <= 0: x -> oo divergences
-            assert all(
-                all(c <= 0 for c in f["direction"]) for f in r["failing_rays"]
-            )
+            assert any(
+                any(c > 0 for c in f["direction"]) for f in r["failing_rays"]
+            ), "expected at least one mixed failing ray from the complete ray set"
     assert payload["new_lf_masters_found"] is False
     assert payload["lemma_consistent_everywhere"] is True
 
 
 def test_int2_reducer_facing_verdicts_unchanged(int2_family):
-    # The search is read-only: the gate verdicts it builds on stay as certified.
+    # The search is read-only: the gate verdicts it builds on are whatever the LF gate says.
+    # "x7/(G0*G3)" flipped to False in Method.12R (marginal on the joint ray (0,-1,-1)); every
+    # other sector verdict is unchanged by the ray-completeness correction.
     expected = {
         "1/(x2*G0*G1)": True,
         "1/(x2*G1*G3)": True,
         "1/(G0*G3)": True,
         "1/G1": False,
         "1/G2": False,
-        "x7/(G0*G3)": True,
+        "x7/(G0*G3)": False,
         "1/(G1*G3)": False,
     }
     for name, sector in INT2_SECTORS.items():

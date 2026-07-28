@@ -12,6 +12,7 @@ from parametric_ibp_lf_reducer import (
     FAILURE_INTERPOLATION_FAILED,
     FAILURE_NORMAL_FORM_NOT_LOCALLY_FINITE,
     FAILURE_RESOURCE_LIMIT_REACHED,
+    FAILURE_SURFACE_NOT_VALIDATED,
     FAILURE_TARGET_NOT_REDUCIBLE,
     FAILURE_VERIFICATION_FAILED,
     STATUS_SUCCESS,
@@ -53,11 +54,17 @@ def _family():
 
 
 def _verified_kwargs(**over):
-    """Reconstruction evidence for a genuinely-verified reduction (overridable per test)."""
+    """Reconstruction evidence for a genuinely-verified reduction (overridable per test).
+
+    Method.13: a genuinely-verified modern run also carries surface_validation_status="Passed"
+    (its rows came through the corrected complete-face filters); the builder default is
+    "LegacyUnchecked" and is tested separately below.
+    """
     base = dict(
         reconstruction_verified=True,
         independent_validation_passed=True,
         formal_success=True,
+        surface_validation_status="Passed",
     )
     base.update(over)
     return base
@@ -163,6 +170,53 @@ def test_resource_limit_reached_is_failure():
         **_verified_kwargs(resource_limit_reached=True),
     )
     assert res.status == FAILURE_RESOURCE_LIMIT_REACHED
+
+
+# --- Method.13: surface-validation gate -------------------------------------------------------
+def test_legacy_unchecked_never_gates_to_success():
+    """The default surface status is LegacyUnchecked; it must block Success even when everything
+    else is verified — legacy results must not silently receive Passed."""
+    res = build_reduction_result_from_reconstruction(
+        _family(), TARGET, _coeffs(), {L1: True, L2: True},
+        reconstruction_verified=True, independent_validation_passed=True, formal_success=True,
+        # surface_validation_status deliberately NOT passed -> default LegacyUnchecked
+    )
+    assert res.status == FAILURE_SURFACE_NOT_VALIDATED
+    assert res.success is False
+    assert res.surface_validation_status == "LegacyUnchecked"
+    assert res.all_locally_finite == "Unknown"  # failure never advertises True
+    text = res.wolfram_style_text
+    assert '"SurfaceValidationStatus" -> "LegacyUnchecked"' in text
+    assert '"Error" -> "SurfaceValidationNotPassed"' in text
+
+
+def test_surface_failed_and_unknown_block_success():
+    for status in ("Failed", "Unknown"):
+        res = build_reduction_result_from_reconstruction(
+            _family(), TARGET, _coeffs(), {L1: True, L2: True},
+            **_verified_kwargs(surface_validation_status=status),
+        )
+        assert res.status == FAILURE_SURFACE_NOT_VALIDATED
+        assert res.surface_validation_status == status
+
+
+def test_success_exports_surface_validation_passed():
+    res = build_reduction_result_from_reconstruction(
+        _family(), TARGET, _coeffs(), {L1: True, L2: True}, **_verified_kwargs()
+    )
+    assert res.status == STATUS_SUCCESS
+    assert res.surface_validation_status == "Passed"
+    assert '"SurfaceValidationStatus" -> "Passed"' in res.wolfram_style_text
+
+
+def test_unknown_surface_status_value_is_rejected():
+    import pytest
+
+    with pytest.raises(ValueError):
+        build_reduction_result_from_reconstruction(
+            _family(), TARGET, _coeffs(), {L1: True, L2: True},
+            **_verified_kwargs(surface_validation_status="passed"),  # wrong case: not a status
+        )
 
 
 # --- zero-reduction handling -----------------------------------------------------------------

@@ -38,6 +38,28 @@ FAILURE_RESOURCE_LIMIT_REACHED = "ResourceLimitReached"
 # Input-level failure (Pass 2I.3): the text API refuses to guess an integrand factorization
 # (spec §3.2) — an input without an explicit family is an honest typed Failure, never a stub run.
 FAILURE_PARSER_NEEDS_EXPLICIT_FAMILY = "ParserNeedsExplicitFamily"
+# Method.13: every contributing row must be surface-validated under the complete-face criterion.
+FAILURE_SURFACE_NOT_VALIDATED = "SurfaceValidationNotPassed"
+
+# --- surface-validation statuses (Method.13, External Int2) ----------------------------------
+# ``Passed``          — every contributing row was accepted by the corrected complete-face
+#                       surface filters (docs/TORIC_SURFACE_VALIDATION.md) in THIS run.
+# ``Failed``          — at least one contributing row is known to fail the corrected criterion.
+# ``Unknown``         — surface validity could not be decided (symbolic signs / ray budget).
+# ``LegacyUnchecked`` — the rows predate Method.13 and were never re-validated. This is the
+#                       DEFAULT: legacy results must not silently receive ``Passed``.
+SURFACE_VALIDATION_PASSED = "Passed"
+SURFACE_VALIDATION_FAILED = "Failed"
+SURFACE_VALIDATION_UNKNOWN = "Unknown"
+SURFACE_VALIDATION_LEGACY = "LegacyUnchecked"
+ALL_SURFACE_VALIDATION_STATUSES = frozenset(
+    {
+        SURFACE_VALIDATION_PASSED,
+        SURFACE_VALIDATION_FAILED,
+        SURFACE_VALIDATION_UNKNOWN,
+        SURFACE_VALIDATION_LEGACY,
+    }
+)
 
 
 class FailureReason:
@@ -49,6 +71,7 @@ class FailureReason:
     VERIFICATION_FAILED = FAILURE_VERIFICATION_FAILED
     RESOURCE_LIMIT_REACHED = FAILURE_RESOURCE_LIMIT_REACHED
     PARSER_NEEDS_EXPLICIT_FAMILY = FAILURE_PARSER_NEEDS_EXPLICIT_FAMILY
+    SURFACE_NOT_VALIDATED = FAILURE_SURFACE_NOT_VALIDATED
 
 
 ALL_FAILURE_REASONS = frozenset(
@@ -59,6 +82,7 @@ ALL_FAILURE_REASONS = frozenset(
         FAILURE_VERIFICATION_FAILED,
         FAILURE_RESOURCE_LIMIT_REACHED,
         FAILURE_PARSER_NEEDS_EXPLICIT_FAMILY,
+        FAILURE_SURFACE_NOT_VALIDATED,
     }
 )
 
@@ -88,6 +112,7 @@ class ReductionDiagnostics:
     n_records: int = 0
     n_skipped_records: int = 0
     zero_reduction: bool = False
+    surface_validation_status: str = SURFACE_VALIDATION_LEGACY  # Method.13: legacy by default
     messages: tuple = ()
     extra: dict = field(default_factory=dict)
 
@@ -103,6 +128,8 @@ class ReductionResult:
     formal_success: bool = False
     error: str | None = None
     diagnostics: ReductionDiagnostics = field(default_factory=ReductionDiagnostics)
+    # Method.13 contract: Success additionally requires this to be exactly "Passed".
+    surface_validation_status: str = SURFACE_VALIDATION_LEGACY
 
     @property
     def success(self) -> bool:
@@ -143,6 +170,7 @@ def build_reduction_result_from_reconstruction(
     allow_zero_reduction: bool = False,
     n_records: int = 0,
     n_skipped_records: int = 0,
+    surface_validation_status: str = SURFACE_VALIDATION_LEGACY,
     messages: Iterable[str] = (),
 ) -> ReductionResult:
     """Assemble a :class:`ReductionResult`, applying the strict ``Success`` gate.
@@ -150,9 +178,17 @@ def build_reduction_result_from_reconstruction(
     ``reconstructed_coefficients`` maps ``label -> C_label`` (SymPy/ParamExpr) or is ``None`` when
     reconstruction produced nothing. ``lf_flags`` maps ``label -> True|False|"Unknown"``. The gate
     order is: resource limit -> target not reducible -> interpolation failed -> verification not
-    passed -> local-finiteness -> (non-empty or explicit zero) -> ``Success``.
+    passed -> surface validation (Method.13) -> local-finiteness -> (non-empty or explicit zero)
+    -> ``Success``.
+
+    ``surface_validation_status`` (Method.13): must be exactly ``"Passed"`` for ``Success`` —
+    i.e. every contributing row was accepted by the corrected complete-face surface filters in
+    the run that produced the coefficients. The default is ``"LegacyUnchecked"`` so that results
+    assembled from pre-Method.13 evidence can never silently gate to ``Success``.
     """
     messages = tuple(messages)
+    if surface_validation_status not in ALL_SURFACE_VALIDATION_STATUSES:
+        raise ValueError(f"unknown surface_validation_status {surface_validation_status!r}")
 
     # Build the formal terms (if any) so failures still expose the formal normal form + LF flags.
     terms: list[ReductionTerm] = []
@@ -198,6 +234,7 @@ def build_reduction_result_from_reconstruction(
         n_records=n_records,
         n_skipped_records=n_skipped_records,
         zero_reduction=zero_reduction,
+        surface_validation_status=surface_validation_status,
         messages=messages,
     )
 
@@ -214,6 +251,7 @@ def build_reduction_result_from_reconstruction(
             formal_success=formal_success,
             error=error,
             diagnostics=diag,
+            surface_validation_status=surface_validation_status,
         )
 
     # --- gate (fail fast, most-fundamental problem first) ---
@@ -240,6 +278,14 @@ def build_reduction_result_from_reconstruction(
             FAILURE_VERIFICATION_FAILED,
             all_lf,
             "reconstruction was not verified on independent samples",
+        )
+    if surface_validation_status != SURFACE_VALIDATION_PASSED:
+        return _result(
+            FAILURE_SURFACE_NOT_VALIDATED,
+            all_lf,
+            f"surface validation is {surface_validation_status!r}, not 'Passed': the "
+            "contributing rows were not (re-)validated under the complete-face criterion "
+            "(docs/TORIC_SURFACE_VALIDATION.md); legacy evidence never gates to Success",
         )
     if non_lf:
         return _result(
@@ -287,6 +333,7 @@ def result_to_wolfram_text(result: ReductionResult) -> str:
     lines.append(f'  "Status" -> "{result.exported_status}",')
     lines.append(f'  "TargetLabel" -> {label_to_wolfram_text(result.target_label)},')
     lines.append(f'  "AllLocallyFinite" -> {_wl_tribool(result.all_locally_finite)},')
+    lines.append(f'  "SurfaceValidationStatus" -> "{result.surface_validation_status}",')
 
     if result.terms:
         term_lines = [

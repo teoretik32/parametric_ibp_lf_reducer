@@ -105,6 +105,14 @@
   "[0, 0, 1, -1, 0, 0, -1]": "(ep - 1)*(2*ep - 1)*(2*ep*r + ep + 1)/(6*ep**2*r*(3*ep + 1))"
  },
  "coefficient_source": "B:\\Soft\\math_scratch\\validation\\external_int2_method11_reconstruction_audit.json",
+ "downgrade": {
+  "status": "formal_row_span_only",
+  "refuted_by": "Method.12R",
+  "evidence": "validation/external_int2_method12r.json",
+  "reason": "the four-term relation is not a valid integral identity: numerically it fails at ep=-3/5, r=1 (relative residual ~1.07) and symbolically its RHS carries an ep^-3 pole -1/(6*r^2) absent from the target (-2/(3*r*ep^2) + O(1/ep)); master [0,0,1,-1,0,0,-1] is not locally finite (base_score == 0 on the joint infinity ray (0,-1,-1))",
+  "scope": "the modular row-span checks below are unaffected and stand as recorded; they never claimed the analytic value. What is revoked is the reading of the row-span membership as an integral identity, together with the Status=Success / AllLocallyFinite=True export.",
+  "date": "2026-07-28"
+ },
  "elapsed_seconds": 3284.2,
  "generic_rank_expected": 26984,
  "level": 0,

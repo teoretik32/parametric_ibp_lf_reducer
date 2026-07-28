@@ -355,16 +355,21 @@ def test_d4_reducer_relation_equivalent_to_reference(d4_full_result, d4_rows):
 # --- Test 8 (D4.4, diagnostic): WHY the basis is 3-term — M4, M5 are themselves reducible -----
 @pytest.mark.integration
 @pytest.mark.parametrize("m_label", [M4, M5], ids=["M4", "M5"])
-def test_d4_m4_m5_reduce_to_smaller_basis(d4_rows, m_label):
-    """Diagnostic (no Success involved): with M1..M3 preferred free, M4 and M5 each reduce to a
-    combination of {M1,M2,M3} inside the same row system — which is exactly why the reducer's
-    LF basis is 3-term rather than the reference 5-term one."""
+def test_d4_m4_m5_reduce_to_lf_labels(d4_rows, m_label):
+    """Diagnostic (no Success involved): with M1..M3 preferred free, M4 and M5 each still reduce
+    inside the row system, and every label of their normal forms is locally finite.
+
+    Pre-Method.13 the (larger, partially surface-invalid) row system reduced M4 and M5 all the
+    way into {M1, M2, M3}; the corrected complete-face filters remove those invalid rows, so the
+    normal forms now involve additional LF labels (e.g. x2*x3/(G0^2*G1^2)). The Success-facing
+    claims are covered by tests 2/2b/7 — this diagnostic only pins that the smaller system still
+    reduces M4/M5 honestly onto locally finite masters."""
     family, rows, _ = d4_rows
     ep, r, prime = CERT_POINTS[0]
     nf = modular_normal_form(
         family, rows, m_label, {"ep": ep, "r": r}, prime, preferred_masters=[M1, M2, M3]
     )
     assert nf.status == "Reduced"
-    assert set(nf.terms) <= {M1, M2, M3}, (
-        f"{m_label} reduced to labels outside M1..M3: {sorted(set(nf.terms) - {M1, M2, M3})}"
-    )
+    assert nf.terms, "empty normal form would be vacuous"
+    for lab in nf.terms:
+        assert is_locally_finite(family, lab) is True, (m_label, lab)

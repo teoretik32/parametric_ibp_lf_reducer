@@ -1,0 +1,1132 @@
+{
+ "chamber_ep": "-3/5",
+ "elapsed_seconds": 569.3,
+ "findings": [
+  "laurent_order_contradiction",
+  "lf_gate_ray_gap",
+  "numeric_identity_refuted"
+ ],
+ "method": "External Int2 Method.12R: mixed-boundary contradiction audit",
+ "phase_a_laurent_consistency": {
+  "coefficients": {
+   "L1": {
+    "expr": "(-2*ep*r + ep - 1)/(6*r*(3*ep + 1))",
+    "leading_coefficient": "-1/(6*r)",
+    "leading_order": 0
+   },
+   "L2": {
+    "expr": "-(ep - 1)**2*(r + 1)/(6*ep*r*(3*ep + 1))",
+    "leading_coefficient": "(-r - 1)/(6*r)",
+    "leading_order": -1
+   },
+   "L3": {
+    "expr": "(ep - 1)*(4*ep**2*r + ep**2 - 2*ep*r - 1)/(6*ep**2*r*(3*ep + 1))",
+    "leading_coefficient": "1/(6*r)",
+    "leading_order": -2
+   },
+   "L4": {
+    "expr": "(ep - 1)*(2*ep - 1)*(2*ep*r + ep + 1)/(6*ep**2*r*(3*ep + 1))",
+    "leading_coefficient": "1/(6*r)",
+    "leading_order": -2
+   }
+  },
+  "laurent_orders_match": false,
+  "master_model": {
+   "L1": "l1",
+   "L2": "l2",
+   "L3": "l3",
+   "L4": "ep*l41 + l40 - 1/(ep*r)"
+  },
+  "rhs_ep_minus_3": "-1/(6*r**2)",
+  "rhs_ep_minus_3_depends_on_finite_parts": false,
+  "rhs_ep_minus_3_from_C4_L4_alone": "-1/(6*r**2)",
+  "rhs_leading_order": -3,
+  "target_leading": "-2/(3*ep**2*r)",
+  "target_leading_order": -2,
+  "verdict": "INCONSISTENT: RHS carries an ep^-3 pole that the target does not have"
+ },
+ "phase_b_ray_completeness": {
+  "enumeration_complete": true,
+  "genericity_check": {
+   "family": "examples/d4_cli_example_input.wl.txt",
+   "label": [
+    1,
+    1,
+    1,
+    0,
+    -1,
+    0,
+    -1
+   ],
+   "locally_finite": "False",
+   "n_complete_rays": 52,
+   "n_heuristic_rays": 20,
+   "ray": [
+    -1,
+    0,
+    -1,
+    0
+   ],
+   "ray_in_heuristic_set": false,
+   "score_at_ep0": "0"
+  },
+  "mixed_ray": [
+   0,
+   -1,
+   -1
+  ],
+  "mixed_ray_in_heuristic_set": false,
+  "n_complete_polyhedral_rays": 18,
+  "n_heuristic_rays": 12,
+  "per_label": {
+   "L1": {
+    "chamber_failing_rays": [],
+    "failing_rays": [],
+    "label": [
+     -1,
+     0,
+     0,
+     -1,
+     -1,
+     0,
+     0
+    ],
+    "locally_finite": "True",
+    "score_on_mixed_ray": "1 - ep",
+    "score_on_mixed_ray_at_ep0": "1",
+    "score_on_mixed_ray_in_chamber": "8/5"
+   },
+   "L2": {
+    "chamber_failing_rays": [],
+    "failing_rays": [],
+    "label": [
+     -1,
+     0,
+     0,
+     0,
+     -1,
+     0,
+     -1
+    ],
+    "locally_finite": "True",
+    "score_on_mixed_ray": "2 - ep",
+    "score_on_mixed_ray_at_ep0": "2",
+    "score_on_mixed_ray_in_chamber": "13/5"
+   },
+   "L3": {
+    "chamber_failing_rays": [],
+    "failing_rays": [],
+    "label": [
+     0,
+     0,
+     0,
+     -1,
+     0,
+     0,
+     -1
+    ],
+    "locally_finite": "True",
+    "score_on_mixed_ray": "1 - ep",
+    "score_on_mixed_ray_at_ep0": "1",
+    "score_on_mixed_ray_in_chamber": "8/5"
+   },
+   "L4": {
+    "chamber_failing_rays": [],
+    "failing_rays": [
+     {
+      "direction": [
+       0,
+       -1,
+       -1
+      ],
+      "kind": "polyhedral",
+      "score": "0"
+     }
+    ],
+    "label": [
+     0,
+     0,
+     1,
+     -1,
+     0,
+     0,
+     -1
+    ],
+    "locally_finite": "False",
+    "score_on_mixed_ray": "-ep",
+    "score_on_mixed_ray_at_ep0": "0",
+    "score_on_mixed_ray_in_chamber": "3/5"
+   },
+   "Target": {
+    "chamber_failing_rays": [],
+    "failing_rays": [
+     {
+      "direction": [
+       -1,
+       0,
+       0
+      ],
+      "kind": "coordInf",
+      "score": "-1"
+     },
+     {
+      "direction": [
+       0,
+       -1,
+       0
+      ],
+      "kind": "coordInf",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -1,
+       0,
+       -1
+      ],
+      "kind": "newton",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -1,
+       -1,
+       0
+      ],
+      "kind": "newton",
+      "score": "-1"
+     },
+     {
+      "direction": [
+       -1,
+       -1,
+       -1
+      ],
+      "kind": "mixed",
+      "score": "-1"
+     },
+     {
+      "direction": [
+       -1,
+       1,
+       0
+      ],
+      "kind": "polyhedral",
+      "score": "0"
+     },
+     {
+      "direction": [
+       0,
+       -1,
+       -1
+      ],
+      "kind": "polyhedral",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -1,
+       1,
+       1
+      ],
+      "kind": "polyhedral",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -1,
+       0,
+       1
+      ],
+      "kind": "polyhedral",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -3,
+       0,
+       -2
+      ],
+      "kind": "random",
+      "score": "-1"
+     },
+     {
+      "direction": [
+       -3,
+       -3,
+       -2
+      ],
+      "kind": "random",
+      "score": "-3"
+     },
+     {
+      "direction": [
+       -2,
+       -3,
+       2
+      ],
+      "kind": "random",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -1,
+       1,
+       0
+      ],
+      "kind": "random",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -2,
+       -3,
+       -2
+      ],
+      "kind": "random",
+      "score": "-2"
+     },
+     {
+      "direction": [
+       -2,
+       -1,
+       2
+      ],
+      "kind": "random",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -3,
+       2,
+       2
+      ],
+      "kind": "random",
+      "score": "-1"
+     },
+     {
+      "direction": [
+       -1,
+       0,
+       0
+      ],
+      "kind": "random",
+      "score": "-1"
+     },
+     {
+      "direction": [
+       -2,
+       -1,
+       1
+      ],
+      "kind": "random",
+      "score": "-1"
+     },
+     {
+      "direction": [
+       -1,
+       1,
+       1
+      ],
+      "kind": "random",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -3,
+       -3,
+       -1
+      ],
+      "kind": "random",
+      "score": "-3"
+     },
+     {
+      "direction": [
+       -3,
+       2,
+       -1
+      ],
+      "kind": "random",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -1,
+       0,
+       1
+      ],
+      "kind": "random",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -3,
+       -1,
+       -3
+      ],
+      "kind": "random",
+      "score": "-1"
+     },
+     {
+      "direction": [
+       0,
+       -1,
+       0
+      ],
+      "kind": "random",
+      "score": "0"
+     },
+     {
+      "direction": [
+       -3,
+       -1,
+       -2
+      ],
+      "kind": "random",
+      "score": "-2"
+     },
+     {
+      "direction": [
+       -1,
+       -1,
+       0
+      ],
+      "kind": "random",
+      "score": "-1"
+     },
+     {
+      "direction": [
+       -1,
+       0,
+       -1
+      ],
+      "kind": "random",
+      "score": "0"
+     }
+    ],
+    "label": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "locally_finite": "False",
+    "score_on_mixed_ray": "-ep",
+    "score_on_mixed_ray_at_ep0": "0",
+    "score_on_mixed_ray_in_chamber": "3/5"
+   }
+  },
+  "rays_missing_from_heuristic_set": [
+   [
+    -1,
+    1,
+    0
+   ],
+   [
+    1,
+    -1,
+    0
+   ],
+   [
+    0,
+    -1,
+    -1
+   ],
+   [
+    0,
+    1,
+    1
+   ],
+   [
+    1,
+    -1,
+    -1
+   ],
+   [
+    -1,
+    1,
+    1
+   ],
+   [
+    1,
+    0,
+    -1
+   ],
+   [
+    -1,
+    0,
+    1
+   ],
+   [
+    -1,
+    2,
+    1
+   ],
+   [
+    1,
+    -2,
+    -1
+   ]
+  ],
+  "verdict": "L4 IS NOT LOCALLY FINITE (marginal on the joint infinity ray); the heuristic ray set never tested that ray"
+ },
+ "phase_c_row_revalidation": {
+  "chamber_only_revalidation": {
+   "by_kind": {
+    "algebraic": {
+     "newly_rejected": 0,
+     "still_valid": 0
+    },
+    "coordinate_ibp": {
+     "newly_rejected": 457,
+     "still_valid": 567
+    },
+    "tangent_ibp": {
+     "newly_rejected": 713,
+     "still_valid": 965
+    }
+   },
+   "examples_rejected": [
+    {
+     "kind": "coordinate_ibp",
+     "provenance": {
+      "P": [
+       0,
+       2,
+       0
+      ],
+      "kind": "coordinate_ibp",
+      "label": [
+       -1,
+       0,
+       0,
+       -3,
+       0,
+       -3,
+       0
+      ],
+      "var": 1
+     },
+     "witness_ray": [
+      1,
+      -1,
+      0
+     ],
+     "witness_score": "-1"
+    },
+    {
+     "kind": "coordinate_ibp",
+     "provenance": {
+      "P": [
+       0,
+       2,
+       0
+      ],
+      "kind": "coordinate_ibp",
+      "label": [
+       -1,
+       0,
+       0,
+       -3,
+       0,
+       -2,
+       0
+      ],
+      "var": 1
+     },
+     "witness_ray": [
+      1,
+      -1,
+      0
+     ],
+     "witness_score": "-1"
+    },
+    {
+     "kind": "coordinate_ibp",
+     "provenance": {
+      "P": [
+       0,
+       2,
+       0
+      ],
+      "kind": "coordinate_ibp",
+      "label": [
+       -1,
+       0,
+       0,
+       -3,
+       0,
+       -1,
+       0
+      ],
+      "var": 1
+     },
+     "witness_ray": [
+      1,
+      -1,
+      0
+     ],
+     "witness_score": "-1"
+    },
+    {
+     "kind": "coordinate_ibp",
+     "provenance": {
+      "P": [
+       0,
+       2,
+       0
+      ],
+      "kind": "coordinate_ibp",
+      "label": [
+       -1,
+       0,
+       0,
+       -3,
+       0,
+       0,
+       0
+      ],
+      "var": 1
+     },
+     "witness_ray": [
+      1,
+      -1,
+      0
+     ],
+     "witness_score": "-1"
+    },
+    {
+     "kind": "coordinate_ibp",
+     "provenance": {
+      "P": [
+       0,
+       2,
+       0
+      ],
+      "kind": "coordinate_ibp",
+      "label": [
+       -1,
+       0,
+       0,
+       -2,
+       0,
+       -3,
+       0
+      ],
+      "var": 1
+     },
+     "witness_ray": [
+      1,
+      -1,
+      0
+     ],
+     "witness_score": "-1"
+    },
+    {
+     "kind": "coordinate_ibp",
+     "provenance": {
+      "P": [
+       0,
+       2,
+       0
+      ],
+      "kind": "coordinate_ibp",
+      "label": [
+       -1,
+       0,
+       0,
+       -2,
+       0,
+       -2,
+       0
+      ],
+      "var": 1
+     },
+     "witness_ray": [
+      1,
+      -1,
+      0
+     ],
+     "witness_score": "-1"
+    },
+    {
+     "kind": "coordinate_ibp",
+     "provenance": {
+      "P": [
+       0,
+       2,
+       0
+      ],
+      "kind": "coordinate_ibp",
+      "label": [
+       -1,
+       0,
+       0,
+       -2,
+       0,
+       -1,
+       0
+      ],
+      "var": 1
+     },
+     "witness_ray": [
+      1,
+      -1,
+      0
+     ],
+     "witness_score": "-1"
+    },
+    {
+     "kind": "coordinate_ibp",
+     "provenance": {
+      "P": [
+       0,
+       2,
+       0
+      ],
+      "kind": "coordinate_ibp",
+      "label": [
+       -1,
+       0,
+       0,
+       -2,
+       0,
+       0,
+       0
+      ],
+      "var": 1
+     },
+     "witness_ray": [
+      1,
+      -1,
+      0
+     ],
+     "witness_score": "-1"
+    }
+   ],
+   "newly_rejected": 1170,
+   "still_surface_valid": 1532
+  },
+  "fast_flux_filter_gate": {
+   "chamber_complete_rays": {
+    "disagreements": 0,
+    "pairs_checked": 240
+   },
+   "chamber_heuristic_rays": {
+    "disagreements": 0,
+    "pairs_checked": 240
+   },
+   "limit_complete_rays": {
+    "disagreements": 0,
+    "pairs_checked": 240
+   },
+   "limit_heuristic_rays": {
+    "disagreements": 0,
+    "pairs_checked": 240
+   }
+  },
+  "n_rays_used": 22,
+  "note": "A row is declared invalid only when EVERY accepted justification of it fails the corrected criteria. No row is added to or removed from any production artifact here.",
+  "production_limit_policy_revalidation": {
+   "by_kind": {
+    "algebraic": {
+     "newly_rejected": 0,
+     "still_valid": 12288
+    },
+    "coordinate_ibp": {
+     "newly_rejected": 7183,
+     "still_valid": 18049
+    },
+    "tangent_ibp": {
+     "newly_rejected": 2682,
+     "still_valid": 6535
+    }
+   },
+   "newly_rejected": 9865,
+   "still_surface_valid": 36872
+  },
+  "ray_enumeration_complete": true,
+  "rows": {
+   "chamber_only_by_kind": {
+    "coordinate_ibp": 1024,
+    "tangent_ibp": 1678
+   },
+   "n_chamber": 49439,
+   "n_chamber_only": 2702,
+   "n_limit": 46737,
+   "n_limit_only": 0,
+   "recorded_method10": {
+    "chamber_only_by_kind": {
+     "coordinate_ibp": 1024,
+     "tangent_ibp": 1678
+    },
+    "n_chamber": 49439,
+    "n_chamber_only": 2702,
+    "n_limit": 46737,
+    "n_limit_only": 0
+   },
+   "reproduces_recorded_chamber_only": true
+  },
+  "witness_rescreening": [
+   {
+    "n_breaks_recorded_rows": 1685,
+    "n_breaks_surviving_rows": 1362,
+    "n_chamber_only": 2702,
+    "prime": 2147483647,
+    "sample": [
+     [
+      "ep",
+      "15/7"
+     ],
+     [
+      "r",
+      "32/11"
+     ]
+    ]
+   },
+   {
+    "n_breaks_recorded_rows": 1685,
+    "n_breaks_surviving_rows": 1362,
+    "n_chamber_only": 2702,
+    "prime": 2147483629,
+    "sample": [
+     [
+      "ep",
+      "15/7"
+     ],
+     [
+      "r",
+      "32/11"
+     ]
+    ]
+   },
+   {
+    "n_breaks_recorded_rows": 1685,
+    "n_breaks_surviving_rows": 1362,
+    "n_chamber_only": 2702,
+    "prime": 2147483647,
+    "sample": [
+     [
+      "ep",
+      "18/7"
+     ],
+     [
+      "r",
+      "43/11"
+     ]
+    ]
+   },
+   {
+    "n_breaks_recorded_rows": 1685,
+    "n_breaks_surviving_rows": 1362,
+    "n_chamber_only": 2702,
+    "prime": 2147483629,
+    "sample": [
+     [
+      "ep",
+      "18/7"
+     ],
+     [
+      "r",
+      "43/11"
+     ]
+    ]
+   },
+   {
+    "n_breaks_recorded_rows": 1685,
+    "n_breaks_surviving_rows": 1362,
+    "n_chamber_only": 2702,
+    "prime": 2147483647,
+    "sample": [
+     [
+      "ep",
+      "24/7"
+     ],
+     [
+      "r",
+      "28/11"
+     ]
+    ]
+   },
+   {
+    "n_breaks_recorded_rows": 1685,
+    "n_breaks_surviving_rows": 1362,
+    "n_chamber_only": 2702,
+    "prime": 2147483629,
+    "sample": [
+     [
+      "ep",
+      "24/7"
+     ],
+     [
+      "r",
+      "28/11"
+     ]
+    ]
+   }
+  ]
+ },
+ "phase_d_numeric_identity": {
+  "coefficients_exact": {
+   "L1": "1/12",
+   "L2": "-16/9",
+   "L3": "50/27",
+   "L4": "44/27"
+  },
+  "coefficients_float": {
+   "L1": 0.08333333333333333,
+   "L2": -1.7777777777777777,
+   "L3": 1.8518518518518519,
+   "L4": 1.6296296296296295
+  },
+  "identity": {
+   "route_2d_preintegrated": {
+    "quadrature_error_estimate": 0.021406945406954078,
+    "residual_abs": 4.20796643874574,
+    "residual_over_error": 196.57014855462637,
+    "residual_rel": 1.0719123821652377,
+    "rhs": -0.2823037551542442,
+    "target": 3.925662683591496
+   },
+   "route_3d_tensor": {
+    "quadrature_error_estimate": 0.007164284218934579,
+    "residual_abs": 4.215700126578362,
+    "residual_over_error": 588.4328423817461,
+    "residual_rel": 1.0735994760327965,
+    "rhs": -0.2890028612663776,
+    "target": 3.9266972653119847
+   }
+  },
+  "per_integral": {
+   "L1": {
+    "route_2d_preintegrated": {
+     "ladder": [
+      2.0829855471638923,
+      2.115645247910173,
+      2.133269954368062
+     ],
+     "last_increment": 0.01762470645788916,
+     "rel_last_increment": 0.008261826601833016,
+     "value": 2.133269954368062
+    },
+    "route_3d_tensor": {
+     "ladder": [
+      2.0914780975641163,
+      2.1221443299151472,
+      2.1356635663637915,
+      2.141999890795278
+     ],
+     "last_increment": 0.006336324431486684,
+     "rel_last_increment": 0.002958134806035935,
+     "value": 2.141999890795278
+    },
+    "route_agreement_abs": 0.008729936427215979,
+    "route_agreement_rel": 0.004075600780714672
+   },
+   "L2": {
+    "route_2d_preintegrated": {
+     "ladder": [
+      1.007866644274742,
+      1.0242123316370733,
+      1.0330277299211588
+     ],
+     "last_increment": 0.008815398284085507,
+     "rel_last_increment": 0.008533554355562462,
+     "value": 1.0330277299211588
+    },
+    "route_3d_tensor": {
+     "ladder": [
+      1.0121184666995569,
+      1.027463374807734,
+      1.0342247189284304,
+      1.0373931609702605
+     ],
+     "last_increment": 0.0031684420418300885,
+     "rel_last_increment": 0.0030542345573848642,
+     "value": 1.0373931609702605
+    },
+    "route_agreement_abs": 0.004365431049101698,
+    "route_agreement_rel": 0.004208077721486776
+   },
+   "L3": {
+    "route_2d_preintegrated": {
+     "ladder": [
+      0.30534043803121047,
+      0.3053225651263495,
+      0.3053191932379213
+     ],
+     "last_increment": 3.3718884281941364e-06,
+     "rel_last_increment": 1.1043814155393035e-05,
+     "value": 0.3053191932379213
+    },
+    "route_3d_tensor": {
+     "ladder": [
+      0.30533415252393087,
+      0.30532089763869225,
+      0.30531899227368026,
+      0.30531868571773074
+     ],
+     "last_increment": 3.0655594951412013e-07,
+     "rel_last_increment": 1.0040523684080484e-06,
+     "value": 0.30531868571773074
+    },
+    "route_agreement_abs": 5.075201905402338e-07,
+    "route_agreement_rel": 1.6622610100529988e-06
+   },
+   "L4": {
+    "route_2d_preintegrated": {
+     "ladder": [
+      0.495373058248624,
+      0.49703672174784036,
+      0.4976661951778823
+     ],
+     "last_increment": 0.000629473430041938,
+     "rel_last_increment": 0.0012648506893600507,
+     "value": 0.4976661951778823
+    },
+    "route_3d_tensor": {
+     "ladder": [
+      0.49576811734933807,
+      0.497267987074252,
+      0.4977225983212431,
+      0.4978718280046453
+     ],
+     "last_increment": 0.00014922968340219667,
+     "rel_last_increment": 0.00029973514267773413,
+     "value": 0.4978718280046453
+    },
+    "route_agreement_abs": 0.00020563282676300254,
+    "route_agreement_rel": 0.00041302362414666273
+   },
+   "Target": {
+    "route_2d_preintegrated": {
+     "ladder": [
+      3.9136765917824734,
+      3.9224283356848977,
+      3.925662683591496
+     ],
+     "last_increment": 0.003234347906598156,
+     "rel_last_increment": 0.0008238985789882303,
+     "value": 3.925662683591496
+    },
+    "route_3d_tensor": {
+     "ladder": [
+      3.91568543459405,
+      3.9235920599598946,
+      3.925937550791045,
+      3.9266972653119847
+     ],
+     "last_increment": 0.0007597145209397027,
+     "rel_last_increment": 0.0001934741767976202,
+     "value": 3.9266972653119847
+    },
+    "route_agreement_abs": 0.0010345817204888696,
+    "route_agreement_rel": 0.0002634737670327305
+   }
+  },
+  "point": {
+   "ep": "-3/5",
+   "r": "1"
+  },
+  "relation_holds_numerically": false,
+  "verdict": "RELATION FAILS numerically: target and RHS differ far beyond every error estimate",
+  "x7_closed_form_checks": [
+   {
+    "form": "F",
+    "ok": true,
+    "relative_difference": 1.842028664273384e-30,
+    "x2": 0.3,
+    "x5": 0.7
+   },
+   {
+    "form": "F2",
+    "ok": true,
+    "relative_difference": 3.049254035237488e-29,
+    "x2": 0.3,
+    "x5": 0.7
+   },
+   {
+    "form": "F4",
+    "ok": true,
+    "relative_difference": 3.3915334642568386e-29,
+    "x2": 0.3,
+    "x5": 0.7
+   },
+   {
+    "form": "F",
+    "ok": true,
+    "relative_difference": 1.0381781584814334e-31,
+    "x2": 2.0,
+    "x5": 0.5
+   },
+   {
+    "form": "F2",
+    "ok": true,
+    "relative_difference": 5.334554109872307e-31,
+    "x2": 2.0,
+    "x5": 0.5
+   },
+   {
+    "form": "F4",
+    "ok": true,
+    "relative_difference": 7.582143693042285e-31,
+    "x2": 2.0,
+    "x5": 0.5
+   },
+   {
+    "form": "F",
+    "ok": true,
+    "relative_difference": 5.902968224941895e-31,
+    "x2": 0.1,
+    "x5": 5.0
+   },
+   {
+    "form": "F2",
+    "ok": true,
+    "relative_difference": 2.4941947632767856e-30,
+    "x2": 0.1,
+    "x5": 5.0
+   },
+   {
+    "form": "F4",
+    "ok": true,
+    "relative_difference": 1.82326554470347e-30,
+    "x2": 0.1,
+    "x5": 5.0
+   },
+   {
+    "form": "F",
+    "ok": true,
+    "relative_difference": 3.838828030754881e-29,
+    "x2": 4.0,
+    "x5": 1.001
+   },
+   {
+    "form": "F2",
+    "ok": true,
+    "relative_difference": 5.987491268603319e-26,
+    "x2": 4.0,
+    "x5": 1.001
+   },
+   {
+    "form": "F4",
+    "ok": true,
+    "relative_difference": 5.980477937726073e-26,
+    "x2": 4.0,
+    "x5": 1.001
+   }
+  ]
+ },
+ "scope_note": "Audit only. No RREF, no modular solve, no new records, no HyperInt, no re-derivation of the reduction. Coefficients, labels, surface policy and the Method.10/Method.7 artifacts are read as recorded. Phase B changes the local-finiteness GATE only (complete polyhedral ray set); production row generation is untouched and phase C reports what correcting it would remove.",
+ "script": "scripts/audit_external_int2_method12r.py",
+ "stages_run": [
+  "a",
+  "b",
+  "c",
+  "d"
+ ],
+ "verdict": "FOUR_TERM_RELATION_INVALID"
+}

@@ -1,0 +1,279 @@
+{
+ "chamber_new_gained": {
+  "by_kind": {
+   "tangent_ibp": 127
+  },
+  "n": 127
+ },
+ "chamber_old_invalidated": {
+  "by_kind": {
+   "coordinate_ibp": 6229,
+   "tangent_ibp": 3303
+  },
+  "n": 9532
+ },
+ "chamber_only": {
+  "by_kind_old": {
+   "coordinate_ibp": 1024,
+   "tangent_ibp": 1678
+  },
+  "by_kind_remaining": {
+   "coordinate_ibp": 589,
+   "tangent_ibp": 965
+  },
+  "n_old": 2702,
+  "n_remaining_valid": 1554
+ },
+ "comparison_with_method12r": {
+  "chamber_only_rejected_12r": 1170,
+  "chamber_only_rejected_13": 1148,
+  "explanation": "Method.12R phase C was a preliminary bound: its tangent check was per-term on the complete rays with NO exact cancellation and INCLUDING tangential (d_i = 0) components, i.e. strictly harsher than the true normal-flux criterion; its coordinate check is identical to Method.13. The Method.13 counts below therefore differ only in the tangent column (fewer tangent rows are invalidated, and some fields the OLD per-term test rejected are now legitimately gained back).",
+  "limit_rejected_12r": 9865,
+  "limit_rejected_13": 9523
+ },
+ "elapsed_seconds": 1143.5,
+ "engine_gate": {
+  "chamber": {
+   "coordinate_pairs": 150,
+   "disagreements": 0,
+   "tangent_pairs": 150
+  },
+  "limit": {
+   "coordinate_pairs": 150,
+   "disagreements": 0,
+   "tangent_pairs": 150
+  }
+ },
+ "int2_lf_verdicts": {
+  "(-1, 0, 0, -1, -1, 0, 0)": "True",
+  "(-1, 0, 0, 0, -1, 0, -1)": "True",
+  "(0, 0, 0, -1, 0, 0, -1)": "True",
+  "(0, 0, 0, 0, 0, 0, 0)": "False",
+  "(0, 0, 1, -1, 0, 0, -1)": "False"
+ },
+ "lf_feasibility_preflight": {
+  "n_lf_true_labels": 1741,
+  "note": "1-prime/3-sample preflight on the CORRECTED chamber row set (Phase D item 16). Feasible = the target lies in the row span through LF-True columns at these points only; NOT an LF basis, NOT a reconstruction.",
+  "points": [
+   {
+    "detail": "",
+    "n_allowed": 1741,
+    "n_forbidden": 23091,
+    "n_projected_rows": 36054,
+    "nrows": 40034,
+    "prime": 2147483647,
+    "rank": 20690,
+    "residual_support": [],
+    "sample": [
+     [
+      "ep",
+      "15/7"
+     ],
+     [
+      "r",
+      "32/11"
+     ]
+    ],
+    "solve_seconds": 235.9,
+    "status": "Feasible"
+   },
+   {
+    "detail": "",
+    "n_allowed": 1741,
+    "n_forbidden": 23091,
+    "n_projected_rows": 36054,
+    "nrows": 40034,
+    "prime": 2147483647,
+    "rank": 20690,
+    "residual_support": [],
+    "sample": [
+     [
+      "ep",
+      "18/7"
+     ],
+     [
+      "r",
+      "43/11"
+     ]
+    ],
+    "solve_seconds": 234.4,
+    "status": "Feasible"
+   },
+   {
+    "detail": "",
+    "n_allowed": 1741,
+    "n_forbidden": 23091,
+    "n_projected_rows": 36054,
+    "nrows": 40034,
+    "prime": 2147483647,
+    "rank": 20690,
+    "residual_support": [],
+    "sample": [
+     [
+      "ep",
+      "24/7"
+     ],
+     [
+      "r",
+      "28/11"
+     ]
+    ],
+    "solve_seconds": 236.0,
+    "status": "Feasible"
+   }
+  ],
+  "prime": 2147483647,
+  "verdict": "Feasible(modular)"
+ },
+ "limit_new_gained": {
+  "by_kind": {
+   "tangent_ibp": 151
+  },
+  "n": 151
+ },
+ "limit_old_invalidated": {
+  "by_kind": {
+   "coordinate_ibp": 6841,
+   "tangent_ibp": 2682
+  },
+  "n": 9523
+ },
+ "method10_recorded": {
+  "chamber_only_by_kind": {
+   "coordinate_ibp": 1024,
+   "tangent_ibp": 1678
+  },
+  "n_chamber": 49439,
+  "n_chamber_only": 2702,
+  "n_limit": 46737,
+  "n_limit_only": 0
+ },
+ "n_complete_rays": 18,
+ "n_labels": 3072,
+ "old_counts_reproduce_method10": true,
+ "rows_chamber_new": {
+  "by_kind": {
+   "algebraic": 12288,
+   "coordinate_ibp": 20027,
+   "tangent_ibp": 7719
+  },
+  "total": 40034
+ },
+ "rows_chamber_old": {
+  "by_kind": {
+   "algebraic": 12288,
+   "coordinate_ibp": 26256,
+   "tangent_ibp": 10895
+  },
+  "total": 49439
+ },
+ "rows_limit_new": {
+  "by_kind": {
+   "algebraic": 12288,
+   "coordinate_ibp": 18391,
+   "tangent_ibp": 6686
+  },
+  "total": 37365
+ },
+ "rows_limit_old": {
+  "by_kind": {
+   "algebraic": 12288,
+   "coordinate_ibp": 25232,
+   "tangent_ibp": 9217
+  },
+  "total": 46737
+ },
+ "scope_note": "Method.13 Phase D surface re-audit: rebuild-only comparison of the Method.10 Level-0 candidate rows under the legacy vs the corrected complete-face surface criteria (docs/TORIC_SURFACE_VALIDATION.md). No production artifact is modified; the preflight (if present) is the only RREF and is span evidence only.",
+ "witness_rescreening": [
+  {
+   "breaks_old_chamber_only": 1685,
+   "breaks_remaining_valid": 1383,
+   "prime": 2147483647,
+   "sample": [
+    [
+     "ep",
+     "15/7"
+    ],
+    [
+     "r",
+     "32/11"
+    ]
+   ]
+  },
+  {
+   "breaks_old_chamber_only": 1685,
+   "breaks_remaining_valid": 1383,
+   "prime": 2147483629,
+   "sample": [
+    [
+     "ep",
+     "15/7"
+    ],
+    [
+     "r",
+     "32/11"
+    ]
+   ]
+  },
+  {
+   "breaks_old_chamber_only": 1685,
+   "breaks_remaining_valid": 1383,
+   "prime": 2147483647,
+   "sample": [
+    [
+     "ep",
+     "18/7"
+    ],
+    [
+     "r",
+     "43/11"
+    ]
+   ]
+  },
+  {
+   "breaks_old_chamber_only": 1685,
+   "breaks_remaining_valid": 1383,
+   "prime": 2147483629,
+   "sample": [
+    [
+     "ep",
+     "18/7"
+    ],
+    [
+     "r",
+     "43/11"
+    ]
+   ]
+  },
+  {
+   "breaks_old_chamber_only": 1685,
+   "breaks_remaining_valid": 1383,
+   "prime": 2147483647,
+   "sample": [
+    [
+     "ep",
+     "24/7"
+    ],
+    [
+     "r",
+     "28/11"
+    ]
+   ]
+  },
+  {
+   "breaks_old_chamber_only": 1685,
+   "breaks_remaining_valid": 1383,
+   "prime": 2147483629,
+   "sample": [
+    [
+     "ep",
+     "24/7"
+    ],
+    [
+     "r",
+     "28/11"
+    ]
+   ]
+  }
+ ]
+}

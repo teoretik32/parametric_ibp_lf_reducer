@@ -1,21 +1,30 @@
-"""Surface-free filters for IBP rows (spec §7, method review §4).
+"""Surface-free filters for IBP rows (spec §7; corrected by External Int2 Method.13).
 
 An IBP identity ``0 = integral of a total derivative`` is only valid *for the integral* when the
-primitive/flux contributes nothing on the boundary of the domain. This module decides that,
-conservatively, in the regulated region ``epsilon -> 0^-`` (or ``0^+``):
+primitive/flux contributes nothing on the boundary of the domain. This module decides that with
+the exact toric criteria derived in ``docs/TORIC_SURFACE_VALIDATION.md``:
 
-- ``coordinate_primitive_surface_free`` — for a coordinate primitive ``d/dx_i (P F)`` it checks
-  ONLY the two boundaries of that component, ``x_i = 0`` and ``x_i = infinity``. It deliberately
-  does NOT demand vanishing along every toric ray (that would be over-strict and drop valid
-  rows — spec §7.1).
-- ``vector_field_surface_free`` — for a vector/tangent primitive ``div(Q F)`` it checks the
-  normal flux across toric boundary rays.
+- ``coordinate_primitive_surface_free`` — for a coordinate primitive ``d/dx_i (P F)`` the
+  boundary term at the ``x_i`` facets is an ``(N-1)``-dimensional *transverse integral*, not a
+  pointwise limit. It vanishes iff for EVERY boundary ray ``d`` of the complete polyhedral set
+  with ``d_i != 0`` the facet score ``score(P F, d) - d_i`` is strictly positive, where ``score``
+  is the full-measure scaling score. On the pure coordinate rays ``+-e_i`` this reduces exactly
+  to the historical component-local exponent test; the mixed rays are the new content. The
+  pre-Method.13 component-local acceptance admitted invalid rows (the External Int2 Method.12R
+  counterexample) and is gone.
+- ``vector_field_surface_free`` — for a vector/tangent primitive ``div(Q F)`` the flux across
+  the face of ray ``d`` is governed by the *normal component* ``N_d = sum_i d_i Q_i / x_i``.
+  ``N_d`` is assembled with exact coefficient arithmetic (terms from different components may
+  cancel EXACTLY); every surviving monomial ``x^m`` must satisfy ``score(x^m F, d) > 0``.
+  Components with ``d_i = 0`` are tangential to the face and contribute nothing.
 
-Row generation itself is NOT here (later pass). Whenever assumptions are insufficient to decide
-a sign, these return ``"Unknown"`` rather than a possibly-wrong ``True``.
+Strictness (Method.13 items 8): exact arithmetic only; an exactly-zero score fails the row; an
+unresolved symbolic sign gives ``"Unknown"``; an incomplete ray enumeration (budget) can never
+produce ``True`` — the verdict degrades to ``"Unknown"``.
 
 Both filters accept an explicit :class:`SurfacePolicy` (regulated-limit reading vs an exact
-rational chamber point); the default is the historical ``epsilon -> 0^-`` limit reading.
+rational chamber point); the default is the historical ``epsilon -> 0^-`` limit reading. Both
+policies use the SAME complete ray set — only the sign reading differs.
 """
 
 from __future__ import annotations
@@ -29,7 +38,7 @@ import sympy as sp
 from .family import ParametricFamily
 from .labels import Label
 from .sparse_poly import SparsePoly
-from .valuations import compute_candidate_rays, score_from_exponents
+from .valuations import boundary_ray_data, score_from_exponents
 
 
 def regulated_sign(expr, regulators, direction: str = "minus") -> str:
@@ -163,6 +172,70 @@ def _label_exps_symbolic(family: ParametricFamily, label: Label):
     return [pe.to_sympy() for pe in e], [pe.to_sympy() for pe in f]
 
 
+# --- per-family exact score machinery (Method.13) ----------------------------------------------
+# The scaling score along ray ``d`` of ``x^p * F_label`` decomposes as
+#
+#     score = S0(d) + sum_k d_k*(n_k + p_k) + sum_l val_d(G_l)*m_l
+#
+# where ``S0(d)`` is the (possibly regulator-dependent) score of the ZERO label and everything
+# else is exact integer arithmetic. ``S0(d)`` and the per-ray polynomial valuations are cached on
+# the family; sign decisions are memoized per (policy, ray, integer shift), keyed additionally by
+# the identity of the module-level ``regulated_sign`` so a diagnostic monkeypatch of that function
+# (Method.9-style) is never served a stale verdict.
+
+
+def _surface_cache(family: ParametricFamily) -> dict:
+    cache = family.__dict__.get("_surface_filter_cache")
+    if cache is None:
+        dirs, complete = boundary_ray_data(family)
+        zero = tuple([0] * (family.nvars + family.npolys))
+        e0, f0 = _label_exps_symbolic(family, zero)
+        vals = {
+            d: tuple(family.polynomials[name].valuation(d) for name in family.poly_names)
+            for d in dirs
+        }
+        base = {d: sp.expand(score_from_exponents(e0, f0, family, d)) for d in dirs}
+        cache = {
+            "dirs": dirs,
+            "complete": complete,
+            "vals": vals,
+            "base": base,
+            "sign_memo": {},
+        }
+        object.__setattr__(family, "_surface_filter_cache", cache)
+    return cache
+
+
+def _direction_vals(family: ParametricFamily, cache: dict, d) -> tuple:
+    vals = cache["vals"].get(d)
+    if vals is None:
+        vals = tuple(family.polynomials[name].valuation(d) for name in family.poly_names)
+        cache["vals"][d] = vals
+    return vals
+
+
+def _base_expr(family: ParametricFamily, cache: dict, d):
+    expr = cache["base"].get(d)
+    if expr is None:
+        zero = tuple([0] * (family.nvars + family.npolys))
+        e0, f0 = _label_exps_symbolic(family, zero)
+        expr = sp.expand(score_from_exponents(e0, f0, family, d))
+        cache["base"][d] = expr
+    return expr
+
+
+def _score_sign(family: ParametricFamily, cache: dict, pol: SurfacePolicy, d, shift: int) -> str:
+    """Sign of ``S0(d) + shift`` under ``pol`` — memoized, monkeypatch-safe (see above)."""
+    patch_id = id(regulated_sign) if pol.mode == "limit" else 0
+    key = (pol.mode, pol.direction, pol.point_items, patch_id, d, shift)
+    memo = cache["sign_memo"]
+    sign = memo.get(key)
+    if sign is None:
+        sign = pol.sign_at(_base_expr(family, cache, d) + shift, family.regulators)
+        memo[key] = sign
+    return sign
+
+
 def coordinate_primitive_surface_free(
     family: ParametricFamily,
     label: Label,
@@ -171,38 +244,53 @@ def coordinate_primitive_surface_free(
     eps_direction: str = "minus",
     policy: SurfacePolicy | None = None,
 ):
-    """Is the coordinate primitive ``P * F_label`` surface-free at ``x_i = 0`` and ``x_i = inf``?
+    """Is the coordinate primitive ``P * F_label`` surface-free at the ``x_i`` facets?
 
     ``multiplier_exps`` is the monomial ``P = prod_k x_k^(p_k)`` (a tuple of length ``nvars``;
-    ``None`` means ``P = 1``). Only the ``x_i`` component matters at this component's boundaries:
+    ``None`` means ``P = 1``). The boundary term of ``integral d/dx_i (P F)`` at ``x_i -> 0`` /
+    ``x_i -> infinity`` is the ``(N-1)``-dimensional transverse integral of ``P F`` over the
+    facet, so pointwise decay in ``x_i`` alone is NOT sufficient (Method.12R counterexample).
+    Exact criterion (derived in ``docs/TORIC_SURFACE_VALIDATION.md``): for every boundary ray
+    ``d`` of the complete polyhedral set with ``d_i != 0``,
 
-        exp at x_i -> 0   = p_i + e_i + sum_l f_l * min_power_i(G_l)   must be > 0
-        exp at x_i -> inf = p_i + e_i + sum_l f_l * max_power_i(G_l)   must be < 0
+        surface_score(d, i) = score(P F, d) - d_i  must be strictly > 0,
 
-    Returns ``True`` / ``False`` / ``"Unknown"``. This is intentionally component-local: it does
-    NOT require vanishing along mixed toric rays.
+    where ``score`` is the full-measure scaling score. On ``+-e_i`` this is exactly the
+    historical ``exp_zero > 0`` / ``exp_inf < 0`` component test; the mixed rays additionally
+    demand convergence-with-decay of the transverse facet integral.
+
+    Returns ``True`` / ``False`` / ``"Unknown"``. Exactly-zero scores fail (marginal boundary
+    term); undecidable symbolic signs and an over-budget (incomplete) ray enumeration give
+    ``"Unknown"`` — never a possibly-wrong ``True``.
     """
     if not 0 <= var_index < family.nvars:
         raise IndexError(f"var_index {var_index} out of range")
-    e_syms, f_syms = _label_exps_symbolic(family, label)
-    p_i = 0 if multiplier_exps is None else int(multiplier_exps[var_index])
-    unit_i = tuple(1 if k == var_index else 0 for k in range(family.nvars))
-
-    exp_zero = p_i + e_syms[var_index]
-    exp_inf = p_i + e_syms[var_index]
-    for j, name in enumerate(family.poly_names):
-        poly = family.polynomials[name]
-        exp_zero += f_syms[j] * poly.valuation(unit_i)  # min power of x_i in G_l
-        exp_inf += f_syms[j] * poly.degree_in(var_index)  # max power of x_i in G_l
-
     pol = _resolve_policy(policy, eps_direction)
-    s_zero = pol.sign_at(exp_zero, family.regulators)
-    s_inf = pol.sign_at(exp_inf, family.regulators)
-    if s_zero == "pos" and s_inf == "neg":
-        return True
-    if s_zero == "unknown" or s_inf == "unknown":
+    cache = _surface_cache(family)
+    nvars = family.nvars
+    n = label[:nvars]
+    m = label[nvars:]
+    p = (0,) * nvars if multiplier_exps is None else tuple(int(x) for x in multiplier_exps)
+
+    saw_unknown = False
+    for d in cache["dirs"]:
+        di = d[var_index]
+        if di == 0:
+            continue  # the ray stays inside the x_i facet family's transverse directions
+        vals = cache["vals"][d]
+        shift = (
+            sum(dk * (nk + pk) for dk, nk, pk in zip(d, n, p))
+            + sum(v * ml for v, ml in zip(vals, m))
+            - di
+        )
+        sign = _score_sign(family, cache, pol, d, shift)
+        if sign in ("neg", "zero"):
+            return False
+        if sign == "unknown":
+            saw_unknown = True
+    if saw_unknown or not cache["complete"]:
         return "Unknown"
-    return False
+    return True
 
 
 def vector_field_surface_free(
@@ -213,39 +301,70 @@ def vector_field_surface_free(
     rays=None,
     policy: SurfacePolicy | None = None,
 ):
-    """Is ``div(Q F_label)`` surface-free, i.e. does its normal flux vanish on all toric rays?
+    """Is ``div(Q F_label)`` surface-free, i.e. does its normal flux vanish on all toric faces?
 
     ``vector_field`` is ``Q = (Q_1, ..., Q_N)`` as one :class:`SparsePoly` per variable. For each
-    toric ray ``rho`` and each monomial ``c`` of each ``Q_i`` the flux term ``x^c / x_i * F`` must
-    be boundary-suppressed (positive scaling score in the regulated region). Any non-positive or
-    marginal contribution fails the row; undecidable ones give ``"Unknown"``.
+    boundary ray ``d`` the flux across the corresponding face is governed by the exact *normal
+    component* (``docs/TORIC_SURFACE_VALIDATION.md``)
 
-    Unlike the coordinate check, this uses the full set of toric candidate rays (spec §7.2).
+        N_d(x) = sum_{i : d_i != 0} d_i * Q_i(x) / x_i,
+
+    assembled with exact :class:`ParamExpr` coefficient arithmetic so that terms contributed by
+    different components may cancel EXACTLY (and only exactly — no modular or floating
+    cancellation). Every surviving monomial ``x^m`` of ``N_d`` must be boundary-suppressed:
+    ``score(x^m F, d) > 0`` with the full-measure scaling score. A component with ``d_i = 0`` is
+    tangential to the face and imposes no condition on that ray. A row is therefore NOT rejected
+    merely because one component looks marginal in isolation, and NOT accepted merely because
+    each component separately passes a per-term heuristic.
+
+    ``rays=None`` uses the family's complete polyhedral boundary set (with the completeness flag
+    honored: over budget -> ``"Unknown"``); an explicit ``rays`` list restricts the test to those
+    directions (caller-owned scope, e.g. diagnostics).
+
+    Returns ``True`` / ``False`` / ``"Unknown"`` with the same strictness rules as the
+    coordinate filter: zero scores fail, undecidable signs give ``"Unknown"``.
     """
     if len(vector_field) != family.nvars:
         raise ValueError(f"vector_field must have {family.nvars} components")
-    e_syms, f_syms = _label_exps_symbolic(family, label)
-    directions = (
-        list(rays)
-        if rays is not None
-        else [ray.direction for ray in compute_candidate_rays(family)]
-    )
     pol = _resolve_policy(policy, eps_direction)
+    cache = _surface_cache(family)
+    nvars = family.nvars
+    n = label[:nvars]
+    m = label[nvars:]
+    if rays is None:
+        directions = cache["dirs"]
+        complete = cache["complete"]
+    else:
+        directions = [tuple(int(x) for x in d) for d in rays]
+        complete = True  # caller-supplied scope is taken as authoritative for that scope
+
     saw_unknown = False
-    for direction in directions:
-        for i in range(family.nvars):
+    for d in directions:
+        vals = _direction_vals(family, cache, d)
+        label_shift = sum(dk * nk for dk, nk in zip(d, n)) + sum(
+            v * ml for v, ml in zip(vals, m)
+        )
+        # exact normal component N_d = sum_i d_i Q_i / x_i
+        terms: dict[tuple, object] = {}
+        for i in range(nvars):
+            if d[i] == 0:
+                continue
             qi = vector_field[i]
             if qi.is_zero:
                 continue
-            for c in qi.support():
-                e_shift = list(e_syms)
-                for k in range(family.nvars):
-                    e_shift[k] = e_shift[k] + c[k]
-                e_shift[i] = e_shift[i] - 1
-                score = score_from_exponents(e_shift, f_syms, family, direction)
-                sign = pol.sign_at(score, family.regulators)
-                if sign in ("neg", "zero"):
-                    return False
-                if sign == "unknown":
-                    saw_unknown = True
-    return "Unknown" if saw_unknown else True
+            for c, coeff in qi.terms.items():
+                mono = tuple(c[k] - (1 if k == i else 0) for k in range(nvars))
+                contrib = coeff.scale_int(d[i])
+                terms[mono] = terms[mono] + contrib if mono in terms else contrib
+        for mono, coeff in terms.items():
+            if coeff.is_zero:
+                continue  # exact cancellation between components: no flux from this monomial
+            shift = label_shift + sum(dk * mk for dk, mk in zip(d, mono))
+            sign = _score_sign(family, cache, pol, d, shift)
+            if sign in ("neg", "zero"):
+                return False
+            if sign == "unknown":
+                saw_unknown = True
+    if saw_unknown or not complete:
+        return "Unknown"
+    return True
