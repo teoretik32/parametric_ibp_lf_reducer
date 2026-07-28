@@ -1,0 +1,53 @@
+{
+  "phase": "External Int2 Method.12A - HyperInt environment smoke test",
+  "timestamp_utc": "2026-07-27T19:55:48+00:00",
+  "maple": {
+    "version": "Maple 2025.1, X86 64 WINDOWS, Jun 12 2025, Build ID 1932578",
+    "cmaple_path": "K:\\_TOOLS\\Maple2025\\bin.X86_64_WINDOWS\\cmaple.exe",
+    "maple_home": "K:\\_TOOLS\\Maple2025",
+    "smoke_expression": "kernelopts(version); printf(\"MAPLE_SMOKE=%d\\n\", 1+1)",
+    "smoke_result": "MAPLE_SMOKE=2",
+    "verdict": "PASS"
+  },
+  "hyperint": {
+    "source_path": "K:\\_TOOLS\\HyperInt",
+    "origin": "https://bitbucket.org/PanzerErik/hyperint.git",
+    "revision": "ce15b287022e698d3e3b884d5c827620d20499bd",
+    "revision_date": "2023-07-31T20:12:16+01:00",
+    "revision_subject": "spelling corrected",
+    "reported_version": "HyperInt, version 1.0, Copyright (C) 2014 Erik Panzer",
+    "files_located": {
+      "HyperInt.mpl": true,
+      "periodLookups.m": true,
+      "HyperTests.mpl": true,
+      "documentation": "doc/HyperInt.tex, doc/HyperInt.bbl, doc/graphs, Manual.mw, README.md"
+    },
+    "load_mode": "absolute path; _hyper_autoload_periods set to K:/_TOOLS/HyperInt/periodLookups.m before read",
+    "smoke_expression": "hyperInt(1/(1+x)^2, x=0..infinity)",
+    "smoke_result": "1",
+    "smoke_expected": "1",
+    "verdict": "PASS"
+  },
+  "driver_probe": {
+    "purpose": "validate the runner's absolute-path loading of the L1 input (since revoked by Method.12R) WITHOUT starting the integration",
+    "input": "validation/hyperint/external_int2_lf_L1.mpl",
+    "epsOrder": 2,
+    "intOrder": "[x2, x5, x7]",
+    "fser_terms": 21,
+    "hyperInt_and_fibrationBasis_defined": true,
+    "integration_executed": false,
+    "verdict": "PASS"
+  },
+  "verdict": "PASS",
+  "notes": [
+    "SCOPE: this artifact attests ONLY that the Maple + HyperInt runtime is installed and working.",
+    "It does NOT attest the correctness of any External Int2 LF basis, master, coefficient, surface policy or certificate.",
+    "The Method.11c four-master basis was subsequently REVOKED by External Int2 Method.12R: on the mixed ray (0,-1,-1) (x5, x7 -> Infinity at fixed x2) master L4 [0,0,1,-1,0,0,-1] is NOT locally finite (base_score == 0), and the four-term relation is not a valid integral identity.",
+    "The prepared L1-L4 HyperInt inputs in validation/hyperint/ are retained ONLY as historical setup fixtures; they are not a runnable workload.",
+    "Real HyperInt master runs are blocked by the provenance gate in scripts/run_external_int2_hyperint.py until a NEW basis artifact confirms all of: Status == \"Success\", AllLocallyFinite == True, IntegralIdentityStatus valid (not revoked), SurfaceValidationStatus == \"Passed\". The gate has no override flag.",
+    "Setup and smoke tests only; no External Int2 master integration was executed.",
+    "No RREF, no modular record regeneration.",
+    "HyperInt source lives outside the repository and is not committed.",
+    "No Maple license information is stored in the repository."
+  ]
+}
