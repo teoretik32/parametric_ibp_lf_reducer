@@ -1,0 +1,705 @@
+{
+ "frozen": {
+  "schema": "external-int2-lf-numeric-expansion/v1",
+  "script": "scripts/numeric_external_int2_lf_expansion.py",
+  "arithmetic": "float64 quadrature; exact-Fraction C_k series; mpmath dps=60 prefactor series; mpmath dps=25 tanh-sinh spot checks",
+  "quadrature": {
+   "transform": "x = u/(1-u), Jacobian 1/(1-u)^2, per axis",
+   "mesh": "dyadic graded Gauss-Legendre tensor mesh",
+   "configs": {
+    "base": {
+     "min_exp": 8,
+     "gl_order": 12
+    },
+    "precision_up": {
+     "min_exp": 8,
+     "gl_order": 20
+    },
+    "subdivision_up": {
+     "min_exp": 12,
+     "gl_order": 12
+    },
+    "final": {
+     "min_exp": 12,
+     "gl_order": 20
+    }
+   }
+  },
+  "masters": [
+   {
+    "file": "validation/hyperint/external_int2_lf_L1.mpl",
+    "label": [
+     -1,
+     0,
+     0,
+     -1,
+     -1,
+     0,
+     0
+    ],
+    "eps_order": 2,
+    "integrand": "x2^(ep) * (x2 + 1)^(ep - 1) * (x5 + 1)^(ep - 1) * (x7 + 1)^(-ep - 1) * (r*x2*x5 + x2*x7 + x7 + 1)^(ep - 1)",
+    "coefficient": "-(2*ep*r - ep + 1)/(6*r*(3*ep + 1))"
+   },
+   {
+    "file": "validation/hyperint/external_int2_lf_L2.mpl",
+    "label": [
+     -1,
+     0,
+     0,
+     0,
+     -1,
+     0,
+     -1
+    ],
+    "eps_order": 3,
+    "integrand": "x2^(ep) * (x2 + 1)^(ep) * (x5 + 1)^(ep - 1) * (x7 + 1)^(-ep - 1) * (r*x2*x5 + x2*x7 + x7 + 1)^(ep - 2)",
+    "coefficient": "-(ep - 1)**2*(r + 1)/(6*ep*r*(3*ep + 1))"
+   },
+   {
+    "file": "validation/hyperint/external_int2_lf_L3.mpl",
+    "label": [
+     0,
+     0,
+     0,
+     -1,
+     0,
+     0,
+     -1
+    ],
+    "eps_order": 4,
+    "integrand": "x2^(ep + 1) * (x2 + 1)^(ep - 1) * (x5 + 1)^(ep) * (x7 + 1)^(-ep - 1) * (r*x2*x5 + x2*x7 + x7 + 1)^(ep - 2)",
+    "coefficient": "(ep - 1)*(4*ep**2*r + ep**2 - 2*ep*r - 1)/(6*ep**2*r*(3*ep + 1))"
+   },
+   {
+    "file": "validation/hyperint/external_int2_lf_L4.mpl",
+    "label": [
+     0,
+     0,
+     1,
+     -1,
+     0,
+     0,
+     -1
+    ],
+    "eps_order": 4,
+    "integrand": "x2^(ep + 1) * x7^(1) * (x2 + 1)^(ep - 1) * (x5 + 1)^(ep) * (x7 + 1)^(-ep - 1) * (r*x2*x5 + x2*x7 + x7 + 1)^(ep - 2)",
+    "coefficient": "(ep - 1)*(2*ep - 1)*(2*ep*r + ep + 1)/(6*ep**2*r*(3*ep + 1))"
+   }
+  ],
+  "points": [
+   {
+    "s": "1",
+    "t": "1",
+    "r": "1",
+    "per_master": {
+     "[-1, 0, 0, -1, -1, 0, 0]": {
+      "status": "converged",
+      "coefficients": {
+       "0": {
+        "value": 2.7620658620036953,
+        "err_est": 7.43842891433033e-05,
+        "stab_precision": 0.00012040806895141642,
+        "stab_subdivision": 0.00018554566717110532,
+        "mpmath_dps25_check": 2.762071906228924,
+        "mpmath_rel_diff": 2.1882939452561663e-06
+       },
+       "1": {
+        "value": 9.711306370570385,
+        "err_est": 0.0014603165630457937,
+        "stab_precision": 0.00211813616389378,
+        "stab_subdivision": 0.0033788796471441174
+       },
+       "2": {
+        "value": 39.45646455067629,
+        "err_est": 0.018259361599071156,
+        "stab_precision": 0.024405826585812918,
+        "stab_subdivision": 0.0399871691257232
+       }
+      }
+     },
+     "[-1, 0, 0, 0, -1, 0, -1]": {
+      "status": "converged",
+      "coefficients": {
+       "0": {
+        "value": 1.2336999506203628,
+        "err_est": 8.992547842368026e-06,
+        "stab_precision": 1.627282122718121e-05,
+        "stab_subdivision": 2.4248243803537406e-05,
+        "mpmath_dps25_check": 1.2337005501361697,
+        "mpmath_rel_diff": 4.859492094188248e-07
+       },
+       "1": {
+        "value": 4.259640323589325,
+        "err_est": 0.0003662155250960808,
+        "stab_precision": 0.0005872830569160215,
+        "stab_subdivision": 0.000907530155266123
+       },
+       "2": {
+        "value": 18.013859590307476,
+        "err_est": 0.009601657675577968,
+        "stab_precision": 0.013727429858931828,
+        "stab_subdivision": 0.02200173462046351
+       },
+       "3": {
+        "value": 61.55274032032434,
+        "err_est": 0.13537393612735826,
+        "stab_precision": 0.17200127730837522,
+        "stab_subdivision": 0.28678107272618547
+       }
+      }
+     },
+     "[0, 0, 0, -1, 0, 0, -1]": {
+      "status": "converged",
+      "coefficients": {
+       "0": {
+        "value": 1.6449280605962437,
+        "err_est": 7.381417367890997e-05,
+        "stab_precision": 0.00011937617770096942,
+        "stab_subdivision": 0.00018400796960293953,
+        "mpmath_dps25_check": 1.6449340668482264,
+        "mpmath_rel_diff": 3.6513633608233765e-06
+       },
+       "1": {
+        "value": 9.215058858014965,
+        "err_est": 0.001817154729051751,
+        "stab_precision": 0.0026850244314005067,
+        "stab_subdivision": 0.004257517917693576
+       },
+       "2": {
+        "value": 39.21736828313229,
+        "err_est": 0.025533645067092436,
+        "stab_precision": 0.03459481864735636,
+        "stab_subdivision": 0.05642939293583282
+       },
+       "3": {
+        "value": 143.6544198511327,
+        "err_est": 0.27320397657098283,
+        "stab_precision": 0.33877841328848035,
+        "stab_subdivision": 0.5694636678197753
+       },
+       "4": {
+        "value": 487.28163022373093,
+        "err_est": 2.4185935183037373,
+        "stab_precision": 2.725347861742648,
+        "stab_subdivision": 4.738536904025636
+       }
+      }
+     },
+     "[0, 0, 1, -1, 0, 0, -1]": {
+      "status": "divergent_termwise",
+      "growth_diagnostic": {
+       "0": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         10.020636322212612,
+         12.793036394806995,
+         15.565610758670557,
+         18.338198419003465
+        ],
+        "increments": [
+         2.772400072594383,
+         2.772574363863562,
+         2.772587660332908
+        ]
+       },
+       "1": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         95.55505359388154,
+         140.05656781320695,
+         192.24817171762464,
+         252.1272949723563
+        ],
+        "increments": [
+         44.501514219325415,
+         52.19160390441769,
+         59.87912325473167
+        ]
+       },
+       "2": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         568.4618730138994,
+         945.0902550613564,
+         1455.7829200413669,
+         2121.8409659380236
+        ],
+        "increments": [
+         376.62838204745697,
+         510.6926649800105,
+         666.0580458966567
+        ]
+       },
+       "3": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         2626.422490781843,
+         4879.486073975386,
+         8357.574875095068,
+         13462.049300540057
+        ],
+        "increments": [
+         2253.063583193543,
+         3478.088801119682,
+         5104.474425444989
+        ]
+       },
+       "4": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         10368.257595134177,
+         21149.963963335933,
+         39786.27324453264,
+         70220.3626095272
+        ],
+        "increments": [
+         10781.706368201756,
+         18636.309281196707,
+         30434.089364994565
+        ]
+       },
+       "log_slope_n0": 0.9999996169980551,
+       "predicted_slope_1_over_r": 1.0
+      },
+      "analysis": "log-divergent at the joint (x5,x7)->infinity face; J(ep) = -1/(r*ep) + O(1) as ep->0-, so a term-wise Taylor expansion at ep=0 does not exist"
+     }
+    },
+    "sweep_elapsed_seconds": 81.39
+   },
+   {
+    "s": "3/2",
+    "t": "1",
+    "r": "3/2",
+    "per_master": {
+     "[-1, 0, 0, -1, -1, 0, 0]": {
+      "status": "converged",
+      "coefficients": {
+       "0": {
+        "value": 2.3858924545482805,
+        "err_est": 5.237240084099426e-05,
+        "stab_precision": 8.530436689024867e-05,
+        "stab_subdivision": 0.000131197793085569,
+        "mpmath_dps25_check": 2.3858966695553834,
+        "mpmath_rel_diff": 1.7666343881057226e-06
+       },
+       "1": {
+        "value": 8.014522089404005,
+        "err_est": 0.0010033459577769577,
+        "stab_precision": 0.0014614452851269277,
+        "stab_subdivision": 0.0023280979557736003
+       },
+       "2": {
+        "value": 32.80174185157412,
+        "err_est": 0.013201587888957533,
+        "stab_precision": 0.017808673903360273,
+        "stab_subdivision": 0.029087685070585678
+       }
+      }
+     },
+     "[-1, 0, 0, 0, -1, 0, -1]": {
+      "status": "converged",
+      "coefficients": {
+       "0": {
+        "value": 0.9649060171901711,
+        "err_est": 8.016588623038778e-06,
+        "stab_precision": 1.4494601611625413e-05,
+        "stab_subdivision": 2.1605204563623914e-05
+       },
+       "1": {
+        "value": 3.0390216102615963,
+        "err_est": 0.00025812756024068406,
+        "stab_precision": 0.00041347797493518357,
+        "stab_subdivision": 0.000639173670403892
+       },
+       "2": {
+        "value": 13.021328706407813,
+        "err_est": 0.006836515483053418,
+        "stab_precision": 0.009774467464421122,
+        "stab_subdivision": 0.01566586759085986
+       },
+       "3": {
+        "value": 43.63400896975029,
+        "err_est": 0.09347827331786362,
+        "stab_precision": 0.11885986681397043,
+        "stab_subdivision": 0.1981240642562625
+       }
+      }
+     },
+     "[0, 0, 0, -1, 0, 0, -1]": {
+      "status": "converged",
+      "coefficients": {
+       "0": {
+        "value": 1.0966198471121618,
+        "err_est": 3.572635614257358e-05,
+        "stab_precision": 5.8339891785941234e-05,
+        "stab_subdivision": 8.965492368329109e-05
+       },
+       "1": {
+        "value": 5.892616488781503,
+        "err_est": 0.0009465938521762141,
+        "stab_precision": 0.001416868734861687,
+        "stab_subdivision": 0.0022373309898258142
+       },
+       "2": {
+        "value": 24.763261914462,
+        "err_est": 0.014197347265248794,
+        "stab_precision": 0.019473581295290643,
+        "stab_subdivision": 0.0316347733771245
+       },
+       "3": {
+        "value": 89.95394000417808,
+        "err_est": 0.16059321748267052,
+        "stab_precision": 0.20094228426245309,
+        "stab_subdivision": 0.3367302097186524
+       },
+       "4": {
+        "value": 303.7564332991629,
+        "err_est": 1.4795208469946601,
+        "stab_precision": 1.6754456175550558,
+        "stab_subdivision": 2.9080413312473183
+       }
+      }
+     },
+     "[0, 0, 1, -1, 0, 0, -1]": {
+      "status": "divergent_termwise",
+      "growth_diagnostic": {
+       "0": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         6.880698921304003,
+         8.729002439167305,
+         10.577388219189322,
+         12.425780207731316
+        ],
+        "increments": [
+         1.848303517863302,
+         1.8483857800220171,
+         1.8483919885419944
+        ]
+       },
+       "1": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         64.0482614351514,
+         93.52260349351965,
+         128.12300645496526,
+         167.84835938313896
+        ],
+        "increments": [
+         29.47434205836825,
+         34.60040296144561,
+         39.72535292817369
+        ]
+       },
+       "2": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         376.64212527458784,
+         624.6297408079417,
+         961.4486933851819,
+         1401.3057234515907
+        ],
+        "increments": [
+         247.9876155333539,
+         336.8189525772401,
+         439.8570300664088
+        ]
+       },
+       "3": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         1726.9936026041287,
+         3202.890975624563,
+         5486.066768330477,
+         8842.644717586052
+        ],
+        "increments": [
+         1475.8973730204343,
+         2283.1757927059143,
+         3356.577949255575
+        ]
+       },
+       "4": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         6782.261922564406,
+         13814.139701966058,
+         25996.883464183953,
+         45931.49097856916
+        ],
+        "increments": [
+         7031.877779401652,
+         12182.743762217895,
+         19934.60751438521
+        ]
+       },
+       "log_slope_n0": 0.6666664888721062,
+       "predicted_slope_1_over_r": 0.6666666666666666
+      },
+      "analysis": "log-divergent at the joint (x5,x7)->infinity face; J(ep) = -1/(r*ep) + O(1) as ep->0-, so a term-wise Taylor expansion at ep=0 does not exist"
+     }
+    },
+    "sweep_elapsed_seconds": 77.83
+   },
+   {
+    "s": "1",
+    "t": "3/2",
+    "r": "2/3",
+    "per_master": {
+     "[-1, 0, 0, -1, -1, 0, 0]": {
+      "status": "converged",
+      "coefficients": {
+       "0": {
+        "value": 3.171992289772084,
+        "err_est": 0.00010709246203033373,
+        "stab_precision": 0.00017250082228459362,
+        "stab_subdivision": 0.00026623017165450236,
+        "mpmath_dps25_check": 3.172001057184975,
+        "mpmath_rel_diff": 2.7640006206613547e-06
+       },
+       "1": {
+        "value": 11.667907336013938,
+        "err_est": 0.0021195827064577344,
+        "stab_precision": 0.0030604969704413065,
+        "stab_subdivision": 0.004889425949038184
+       },
+       "2": {
+        "value": 47.20825199272226,
+        "err_est": 0.025410904153915226,
+        "stab_precision": 0.03365868697061103,
+        "stab_subdivision": 0.055317023299245704
+       }
+      }
+     },
+     "[-1, 0, 0, 0, -1, 0, -1]": {
+      "status": "converged",
+      "coefficients": {
+       "0": {
+        "value": 1.5628413156918772,
+        "err_est": 1.1449903500659886e-05,
+        "stab_precision": 2.071757532484675e-05,
+        "stab_subdivision": 3.0872553020477866e-05
+       },
+       "1": {
+        "value": 5.879638322464926,
+        "err_est": 0.0005415268724293654,
+        "stab_precision": 0.0008681793799842907,
+        "stab_subdivision": 0.0013417523216290306
+       },
+       "2": {
+        "value": 24.755075161498187,
+        "err_est": 0.01383471019165583,
+        "stab_precision": 0.019753014027131144,
+        "stab_subdivision": 0.03167365028052771
+       },
+       "3": {
+        "value": 86.12508782519554,
+        "err_est": 0.1978869706390043,
+        "stab_precision": 0.2509340076562552,
+        "stab_subdivision": 0.41867795901360694
+       }
+      }
+     },
+     "[0, 0, 0, -1, 0, 0, -1]": {
+      "status": "converged",
+      "coefficients": {
+       "0": {
+        "value": 2.4673882057671537,
+        "err_est": 0.00015678830950616174,
+        "stab_precision": 0.00025178371527667665,
+        "stab_subdivision": 0.0003889624184636453
+       },
+       "1": {
+        "value": 14.437388176068053,
+        "err_est": 0.0036338897685759264,
+        "stab_precision": 0.005307861680105219,
+        "stab_subdivision": 0.008448051382851318
+       },
+       "2": {
+        "value": 62.37474095846912,
+        "err_est": 0.047928978018177304,
+        "stab_precision": 0.06409686512888157,
+        "stab_subdivision": 0.10501014374023043
+       },
+       "3": {
+        "value": 230.64960741916158,
+        "err_est": 0.4822101486401493,
+        "stab_precision": 0.5912834480902234,
+        "stab_subdivision": 0.9977625868813504
+       },
+       "4": {
+        "value": 786.4885890691977,
+        "err_est": 4.065162898281528,
+        "stab_precision": 4.547521764601811,
+        "stab_subdivision": 7.927117118387855
+       }
+      }
+     },
+     "[0, 0, 1, -1, 0, 0, -1]": {
+      "status": "divergent_termwise",
+      "growth_diagnostic": {
+       "0": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         14.50475167718632,
+         18.66323149810938,
+         22.822083599998287,
+         26.980964380233978
+        ],
+        "increments": [
+         4.158479820923059,
+         4.1588521018889075,
+         4.158880780235691
+        ]
+       },
+       "1": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         141.30405670746902,
+         208.2809565288296,
+         286.795115716436,
+         376.8407571123704
+        ],
+        "increments": [
+         66.97689982136058,
+         78.5141591876064,
+         90.04564139593441
+        ]
+       },
+       "2": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         848.7928240538322,
+         1417.4154068748273,
+         2187.7852977619036,
+         3191.835050623772
+        ],
+        "increments": [
+         568.6225828209951,
+         770.3698908870763,
+         1004.0497528618685
+        ]
+       },
+       "3": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         3945.049034175907,
+         7356.282195240515,
+         12616.353356266067,
+         20328.912178937655
+        ],
+        "increments": [
+         3411.233161064608,
+         5260.071161025552,
+         7712.558822671588
+        ]
+       },
+       "4": {
+        "depths": [
+         8,
+         12,
+         16,
+         20
+        ],
+        "values": [
+         15634.753415572171,
+         31999.04593767576,
+         60249.42875260013,
+         106333.20686643512
+        ],
+        "increments": [
+         16364.29252210359,
+         28250.382814924367,
+         46083.778113835
+        ]
+       },
+       "log_slope_n0": 1.4999991693236137,
+       "predicted_slope_1_over_r": 1.5
+      },
+      "analysis": "log-divergent at the joint (x5,x7)->infinity face; J(ep) = -1/(r*ep) + O(1) as ep->0-, so a term-wise Taylor expansion at ep=0 does not exist"
+     }
+    },
+    "sweep_elapsed_seconds": 81.04
+   }
+  ],
+  "all_masters_termwise_convergent": false,
+  "verdict": "FAILURE_TERMWISE_EXPANSION_DIVERGENT"
+ },
+ "frozen_sha256": "27f041bb5602cf197a0bb63e156cfb78b8d595919de837e024fffb7d97fc50a3",
+ "oracle_read_during_compute": false,
+ "comparison": {
+  "status": "not_run",
+  "reason": "assembly impossible: at least one master has no term-wise epsilon expansion at ep=0 (divergent coefficient integrals); comparing a partial sum against the oracle would be meaningless"
+ }
+}
