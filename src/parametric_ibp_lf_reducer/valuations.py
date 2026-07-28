@@ -14,11 +14,17 @@ STRICT RULE: ``base_score == 0`` at ``epsilon = 0`` is NOT locally finite, even 
 ``epsilon`` term would regulate the integral for one sign of ``epsilon``. We never look at the
 sign of the regulator here.
 
-Ray candidates (MVP): coordinate zero rays ``+e_i``, infinity rays ``-e_i``, and simple
-Newton-support rays (support monomials of each ``G_l`` and per-polynomial variable diagonals).
+Ray candidates: coordinate zero rays ``+e_i``, infinity rays ``-e_i``, simple Newton-support rays
+(support monomials of each ``G_l`` and per-polynomial variable diagonals), and — since External
+Int2 Method.12R — the **complete polyhedral ray set** (:func:`complete_polyhedral_rays`), which
+covers joint/mixed boundary faces such as ``x_j, x_k -> infinity`` at fixed ``x_i``. The heuristic
+set alone is NOT sufficient: it missed the marginal ray ``(0,-1,-1)`` of the External Int2 family,
+where the certified master ``[0,0,1,-1,0,0,-1]`` has ``base_score == 0`` (a logarithmic
+divergence, confirmed numerically in Method.12N) yet was reported locally finite.
+
 An adaptive random-ray safety net catches missed divergences; anything the deterministic test
-cannot settle (symbolic exponents, possible bulk/interior zeros without positivity assumptions)
-yields ``"Unknown"`` — never ``True``.
+cannot settle (symbolic exponents, possible bulk/interior zeros without positivity assumptions,
+or an incomplete ray enumeration) yields ``"Unknown"`` — never ``True``.
 """
 
 from __future__ import annotations
@@ -28,7 +34,8 @@ import re
 from dataclasses import dataclass
 from fractions import Fraction
 from functools import lru_cache
-from math import gcd
+from itertools import combinations
+from math import comb, gcd
 
 import sympy as sp
 
@@ -55,8 +62,14 @@ def _primitive(vec) -> Direction | None:
     return tuple(int(x) // g for x in vec)
 
 
-def compute_candidate_rays(family: ParametricFamily) -> list[Ray]:
-    """Deterministic candidate boundary rays (coordinate + simple Newton-support)."""
+def heuristic_candidate_rays(family: ParametricFamily) -> list[Ray]:
+    """Historical candidate rays: coordinate rays + simple Newton-support rays.
+
+    This set is NOT complete — it contains no joint/mixed boundary faces beyond the per-polynomial
+    "occurring" diagonals (External Int2 Method.12R). It is kept as a separate function because the
+    surface filters still run on it while the row-level consequences of the correction are being
+    audited; the local-finiteness gate uses :func:`compute_candidate_rays` instead.
+    """
     n = family.nvars
     rays: list[Ray] = []
     seen: set[Direction] = set()
@@ -82,6 +95,129 @@ def compute_candidate_rays(family: ParametricFamily) -> list[Ray]:
                     occurring[k] = 1
         add(tuple(occurring), "mixed")
         add(tuple(-x for x in occurring), "mixed")
+    return rays
+
+
+#: Maximum number of ``(nvars - 1)``-subsets of wall normals intersected by
+#: :func:`complete_polyhedral_rays`. Beyond this the enumeration reports ``complete=False`` and the
+#: LF verdict degrades to ``"Unknown"`` rather than silently trusting an incomplete ray set.
+RAY_ENUMERATION_BUDGET = 50_000
+
+
+def newton_wall_normals(family: ParametricFamily) -> list[Direction]:
+    """Primitive normals of the hyperplanes across which ``base_score`` can change slope.
+
+    ``base_score`` is linear in the ray except through the tropical valuations
+    ``val_rho(G_l) = min_{a in supp G_l} (a . rho)``, whose minimiser can only switch on a
+    hyperplane ``(a - a') . rho = 0`` with ``a, a'`` monomials of the *same* ``G_l``. These
+    hyperplanes are exactly the walls of the common refinement of the polynomials' normal fans.
+    Signs are normalised (first nonzero entry positive) so opposite normals collapse to one.
+    """
+    normals: set[Direction] = set()
+    for name in family.poly_names:
+        support = sorted(family.polynomials[name].support())
+        for a, b in ((a, b) for i, a in enumerate(support) for b in support[i + 1 :]):
+            p = _primitive(tuple(x - y for x, y in zip(a, b)))
+            if p is None:
+                continue
+            lead = next((c for c in p if c), 0)
+            normals.add(tuple(-x for x in p) if lead < 0 else p)
+    return sorted(normals)
+
+
+def _int_det(mat: list[list[int]]) -> int:
+    """Bareiss fraction-free determinant of a small square integer matrix (exact)."""
+    n = len(mat)
+    if n == 0:
+        return 1
+    m = [row[:] for row in mat]
+    sign = 1
+    prev = 1
+    for k in range(n - 1):
+        if m[k][k] == 0:
+            for i in range(k + 1, n):
+                if m[i][k]:
+                    m[k], m[i] = m[i], m[k]
+                    sign = -sign
+                    break
+            else:
+                return 0
+        for i in range(k + 1, n):
+            for j in range(k + 1, n):
+                m[i][j] = (m[i][j] * m[k][k] - m[i][k] * m[k][j]) // prev
+        prev = m[k][k]
+    return sign * m[n - 1][n - 1]
+
+
+def _null_direction(rows: list[Direction], n: int) -> Direction | None:
+    """Primitive integer generator of the line orthogonal to ``n - 1`` rows (None if dependent)."""
+    out = []
+    for k in range(n):
+        minor = [[row[j] for j in range(n) if j != k] for row in rows]
+        out.append((-1) ** k * _int_det(minor))
+    return _primitive(out)
+
+
+def complete_polyhedral_rays(
+    family: ParametricFamily, budget: int = RAY_ENUMERATION_BUDGET
+) -> tuple[list[Ray], bool]:
+    """Complete boundary-ray set for the strict scaling test, plus a completeness flag.
+
+    ``base_score`` is linear on every cone of the common refinement of the polynomials' normal
+    fans (a complete fan in ``R^nvars``), so it is positive on the whole punctured space iff it is
+    positive on every extreme ray of that fan. Each extreme ray of a complete fan lies on at least
+    ``nvars - 1`` independent walls, hence is the intersection of ``nvars - 1`` independent
+    hyperplanes from :func:`newton_wall_normals`; enumerating those intersections (plus the
+    coordinate rays, which the fan need not expose) therefore yields a *superset* of the extreme
+    rays — a superset only makes the test more conservative, never less.
+
+    Returns ``(rays, complete)``. ``complete`` is ``False`` when the number of ``nvars - 1``
+    subsets exceeds ``budget``; callers must then refuse a ``True`` verdict.
+    """
+    n = family.nvars
+    normals = newton_wall_normals(family)
+    rays: list[Ray] = []
+    seen: set[Direction] = set()
+
+    def add(direction: Direction | None, kind: str) -> None:
+        if direction is None or direction in seen:
+            return
+        seen.add(direction)
+        rays.append(Ray(direction, kind))
+
+    for i in range(n):
+        add(tuple(1 if k == i else 0 for k in range(n)), "coord0")
+        add(tuple(-1 if k == i else 0 for k in range(n)), "coordInf")
+
+    if n < 2:
+        return rays, True
+    n_subsets = comb(len(normals), n - 1)
+    if n_subsets > budget:
+        return rays, False
+    for combo in combinations(normals, n - 1):
+        d = _null_direction([list(c) for c in combo], n)
+        if d is None:
+            continue  # dependent walls: no 1-dimensional intersection
+        add(d, "polyhedral")
+        add(tuple(-x for x in d), "polyhedral")
+    return rays, True
+
+
+def compute_candidate_rays(family: ParametricFamily) -> list[Ray]:
+    """Deterministic candidate boundary rays used by the local-finiteness gate.
+
+    Union of :func:`heuristic_candidate_rays` and :func:`complete_polyhedral_rays`; the heuristic
+    rays are redundant for the decision but keep the historical provenance tags in reports. When
+    the polyhedral enumeration exceeds its budget the returned set is only heuristic — callers
+    that need the completeness flag must use :func:`complete_polyhedral_rays` directly (the LF
+    gate does, through the per-family cache).
+    """
+    rays = heuristic_candidate_rays(family)
+    seen = {ray.direction for ray in rays}
+    for ray in complete_polyhedral_rays(family)[0]:
+        if ray.direction not in seen:
+            seen.add(ray.direction)
+            rays.append(ray)
     return rays
 
 
@@ -172,8 +308,13 @@ def _family_cache(family: ParametricFamily) -> dict:
     cache = family.__dict__.get("_valuations_cache")
     if cache is None:
         possyms = _positive_symbols(family.assumptions)
+        poly_rays, rays_complete = complete_polyhedral_rays(family)
+        rays = list(heuristic_candidate_rays(family))
+        seen = {ray.direction for ray in rays}
+        rays += [ray for ray in poly_rays if ray.direction not in seen]
         cache = {
-            "rays": tuple(compute_candidate_rays(family)),
+            "rays": tuple(rays),
+            "rays_complete": rays_complete,
             "positive_symbols": possyms,
             "pos_subs": {sp.Symbol(s): sp.Symbol(s, positive=True) for s in possyms},
             "dir_vals": {},  # Direction -> per-polynomial tropical valuations
@@ -342,6 +483,10 @@ def _is_locally_finite_impl(
 
     if saw_unknown:
         return "Unknown"
+    if not cache["rays_complete"]:
+        # The polyhedral enumeration was cut off by its budget: unseen boundary faces could still
+        # be marginal or divergent, so ``True`` is not justified (Method.12R).
+        return "Unknown"
     if not _bulk_safe_cached(family, f0, cache):
         return "Unknown"
     return True
@@ -502,6 +647,12 @@ def explain_local_finiteness(
     elif unknown:
         explain_verdict = "Unknown"
         notes.append("no failing ray, but at least one ray sign is undecidable")
+    elif not cache["rays_complete"]:
+        explain_verdict = "Unknown"
+        notes.append(
+            "no failing ray, but the polyhedral ray enumeration exceeded its budget "
+            "(the candidate set is not provably complete)"
+        )
     elif not bulk:
         explain_verdict = "Unknown"
         notes.append(

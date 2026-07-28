@@ -3,9 +3,49 @@
 Живой handoff-документ фактического состояния (обновляется в конце каждого pass). Полный
 инженерный контекст — в `notes/assumptions.md` (A1–A26). План — `notes/implementation_plan.md`.
 
-## Текущий статус (2026-07-22)
+## Текущий статус (2026-07-28)
 
-- **Последний завершённый блок: #41 — External Int2 Method.7 (dual-witness
+- **Последний завершённый блок: External Int2 Method.12R — mixed-boundary
+  contradiction audit. Сертифицированное четырёхчленное соотношение ОТОЗВАНО.**
+  - Вердикт `FOUR_TERM_RELATION_INVALID`. Три независимых свидетельства:
+    точный Laurent-порядок (`[ep^-3]` RHS `= -1/(6*r^2)`, у цели такого полюса
+    нет), прямая численная проверка в камере `ep=-3/5, r=1` (относительная
+    невязка **1.07**, два независимых маршрута квадратуры, residual/error
+    197 и 588), и LF-гейт (мастер `[0,0,1,-1,0,0,-1]` маргинален,
+    `base_score == 0`, на луче `(0,-1,-1)`).
+  - **Первый дефект реализации:** `compute_candidate_rays` выдавал неполный
+    набор лучей (12 вместо 18 для этого семейства); совместного луча
+    бесконечности `(0,-1,-1)` в нём не было, а случайная страховочная сетка
+    (64 направления) его не поймала. Исправлено полным полиэдральным
+    перечислением (`newton_wall_normals` + `complete_polyhedral_rays`),
+    **только в LF-гейте**.
+  - **Не исправлено намеренно (нужно решение):** `vector_field_surface_free`
+    и `coordinate_primitive_surface_free` остались на эвристическом наборе /
+    компонент-локальном критерии — их правка удаляет production-строки и
+    требует пере-прогона Method.10/11. Счётчики того, что бы изменилось, — в
+    фазе C артефакта.
+  - Артефакты: `validation/external_int2_method12r.json`,
+    `notes/EXTERNAL_INT2_METHOD12R_CONTRADICTION_AUDIT.md`,
+    `scripts/audit_external_int2_method12r.py`,
+    `tests/test_external_int2_method12r.py`. Отозваны:
+    `external_int2_lf_result.m` (`Status -> "Revoked(Method.12R)"`),
+    `external_int2_lf_full_formula.m` (баннер REVOKED), ключ `downgrade` в
+    `external_int2_lf_certificate.json`.
+  - **Держится запрет:** новый поиск LF-базиса не запускать до разбора этого
+    аудита; базис обязан строиться против полного набора лучей.
+- **Ранее: External Int2 Method.12N** — прямое численное ep-разложение
+  четырёх сертифицированных мастеров: L1–L3 сошлись, **L4 term-wise расходится**
+  (`J_4 = -1/(r*ep) + O(1)`, лог-наклон против `1/r` совпал до ~1e-6 в трёх
+  точках). Артефакт заморожен (`frozen_sha256 = 27f041bb…`), оракул не читался,
+  вердикт `FAILURE_TERMWISE_EXPANSION_DIVERGENT`. Именно этот отрицательный
+  результат запустил Method.12R.
+- **Ранее: External Int2 Method.12B Phase 0** — BLOCKED: на хосте нет Maple и
+  пакета HyperInt (`notes/EXTERNAL_INT2_HYPERINT_SETUP.md`); интеграция не
+  запускалась и не подменялась.
+
+## Предыдущий статус (2026-07-22)
+
+- **Блок #41 — External Int2 Method.7 (dual-witness
   stability + pairing-only candidate screening, Level 0)** (read-only
   диагностика; ядро, сертификаты и LF-гейты НЕ тронуты):
   - Сделано: раннер `scripts/run_external_int2_method7.py` (без `--phase`

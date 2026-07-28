@@ -18,6 +18,14 @@ Outputs:
 
 Scope note is propagated verbatim from the certificate: this certifies the row-span relation at
 exact rational points modulo primes; it does NOT claim the analytic Laurent value.
+
+Method.12R (2026-07-28): **this export now fails Gate 3 by design and must not be re-run to
+"repair" the committed artifacts.** With the corrected (complete polyhedral) candidate-ray set the
+master ``[0, 0, 1, -1, 0, 0, -1]`` is not locally finite -- its scaling score is exactly 0 on the
+joint infinity ray ``(0, -1, -1)`` -- and the four-term relation was refuted numerically in the
+convergence chamber. The committed ``*_lf_result.m`` / ``*_lf_full_formula.m`` carry the revocation
+banner instead of a Success claim; see ``validation/external_int2_method12r.json`` and
+``notes/EXTERNAL_INT2_METHOD12R_CONTRADICTION_AUDIT.md``.
 """
 from __future__ import annotations
 

@@ -165,9 +165,12 @@ from .valuations import (
     RayVerdict,
     ShiftRecommendation,
     base_score,
+    complete_polyhedral_rays,
     compute_candidate_rays,
     explain_local_finiteness,
+    heuristic_candidate_rays,
     is_locally_finite,
+    newton_wall_normals,
     report_to_payload,
     valuation_poly,
 )
@@ -207,6 +210,9 @@ __all__ = [
     # valuations / local finiteness + surface (Pass 1C)
     "Ray",
     "compute_candidate_rays",
+    "heuristic_candidate_rays",
+    "complete_polyhedral_rays",
+    "newton_wall_normals",
     "valuation_poly",
     "base_score",
     "is_locally_finite",

@@ -2,6 +2,50 @@
 
 ## Unreleased
 
+### Changed (BREAKING for External Int2 claims)
+- **External Int2 Method.12R: сертифицированное четырёхчленное соотношение
+  ОТОЗВАНО как интегральное тождество.** Три независимых свидетельства:
+  (1) точно: `[ep^-3]` правой части `= -1/(6*r^2)` и не зависит от конечных
+  частей мастеров, тогда как цель `= -2/(3*r*ep^2) + O(1/ep)`;
+  (2) численно в камере сходимости `ep=-3/5, r=1` (все пять интегралов
+  сходятся): `Target = 3.9267` против `RHS = -0.2891`, относительная невязка
+  **1.07**, в 197–588 раз выше оценок погрешности по двум независимым
+  маршрутам (3-D градуированная GL в float64; точное преинтегрирование по
+  `x7` + 2-D GL в mpmath dps=30);
+  (3) LF-гейт: мастер `[0,0,1,-1,0,0,-1]` **не локально конечен** —
+  `base_score == 0` на совместном луче бесконечности `(0,-1,-1)`.
+  Method.11c переклассифицирован как **formal row-span only**;
+  `validation/external_int2_lf_result.m` → `Status -> "Revoked(Method.12R)"`,
+  `AllLocallyFinite -> False`, `NonLFTerms -> {{0,0,1,-1,0,0,-1}}`;
+  `external_int2_lf_full_formula.m` — баннер REVOKED + `Method12RRefutation`;
+  в `external_int2_lf_certificate.json` добавлен ключ `downgrade` (сами
+  модульные проверки, ранги и коэффициенты не тронуты). Артефакт
+  `validation/external_int2_method12r.json`, заметка
+  `notes/EXTERNAL_INT2_METHOD12R_CONTRADICTION_AUDIT.md`, скрипт
+  `scripts/audit_external_int2_method12r.py` (фазы A/B/C/D, без RREF и
+  модульных решений), тесты `tests/test_external_int2_method12r.py`.
+- **LF-гейт: полный полиэдральный набор лучей** (`valuations.py`). Новые
+  `newton_wall_normals` и `complete_polyhedral_rays`: стены = гиперплоскости
+  `(a-a').d = 0` по парам мономов одного `G_l` (стены общего измельчения
+  нормальных вееров), лучи = примитивные образующие пересечений любых `N-1`
+  независимых стен + координатные оси; это надмножество экстремальных лучей
+  полного веера, поэтому тест `score > 0` на нём достаточен. Старый
+  эвристический набор сохранён как `heuristic_candidate_rays`. При выходе за
+  бюджет перечисления `is_locally_finite` возвращает `"Unknown"`, а не `True`.
+  Для External Int2: 12 лучей → 18, отсутствовал именно `(0,-1,-1)`.
+  Изменён **только LF-гейт**; фильтры генерации строк намеренно остались на
+  эвристическом наборе до разбора аудита (`surface.py`, явный комментарий).
+  Побочный эффект: сектор `x7/(G0*G3)` в `finite_numerator` больше не
+  `SectorAlreadyLF`, а `NumeratorCureImpossibleAnyDegree`; три сектора
+  `1/G1`, `1/G2`, `1/(G1*G3)` честно понижены до
+  `NoFiniteNumeratorWithinDegree` (появились смешанные failing-лучи с
+  положительной компонентой, где лемма «невозможно при любой степени» не
+  применима). Мастера всех валидационных кейсов (D4, example4_star,
+  external_int1) остаются LF-True.
+- `scripts/export_external_int2_lf_masters.py` теперь **ожидаемо** падает на
+  Gate 3 (`master (0,0,1,-1,0,0,-1) failed the LF check: False`); повторной
+  генерацией артефакты «чинить» нельзя (записано в docstring).
+
 ### Added
 - **External Int2 Method.11: экспорт сертифицированной LF-редукции как
   `ReductionResult`-артефактов.** Новый `scripts/export_external_int2_lf_masters.py`

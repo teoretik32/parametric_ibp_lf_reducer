@@ -29,7 +29,7 @@ import sympy as sp
 from .family import ParametricFamily
 from .labels import Label
 from .sparse_poly import SparsePoly
-from .valuations import compute_candidate_rays, score_from_exponents
+from .valuations import heuristic_candidate_rays, score_from_exponents
 
 
 def regulated_sign(expr, regulators, direction: str = "minus") -> str:
@@ -220,15 +220,21 @@ def vector_field_surface_free(
     be boundary-suppressed (positive scaling score in the regulated region). Any non-positive or
     marginal contribution fails the row; undecidable ones give ``"Unknown"``.
 
-    Unlike the coordinate check, this uses the full set of toric candidate rays (spec §7.2).
+    Unlike the coordinate check, this uses the toric candidate rays (spec §7.2) — currently the
+    heuristic set, see the note at the ``directions`` assignment below (Method.12R).
     """
     if len(vector_field) != family.nvars:
         raise ValueError(f"vector_field must have {family.nvars} components")
     e_syms, f_syms = _label_exps_symbolic(family, label)
+    # Method.12R: deliberately the *heuristic* ray set, not the complete polyhedral one used by the
+    # LF gate. The correction is known (mixed boundary faces are missing here too), but changing it
+    # removes production rows, which the Method.12R audit defers until its row-level counts are
+    # reviewed — see notes/EXTERNAL_INT2_METHOD12R_CONTRADICTION_AUDIT.md. Pass ``rays=`` to
+    # evaluate the corrected criterion without touching row generation.
     directions = (
         list(rays)
         if rays is not None
-        else [ray.direction for ray in compute_candidate_rays(family)]
+        else [ray.direction for ray in heuristic_candidate_rays(family)]
     )
     pol = _resolve_policy(policy, eps_direction)
     saw_unknown = False
