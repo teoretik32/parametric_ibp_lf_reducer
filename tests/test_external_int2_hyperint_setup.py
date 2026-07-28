@@ -186,6 +186,214 @@ def test_force_flag_exists() -> None:
     assert "--force" in RUNNER.read_text(encoding="utf-8")
 
 
+# ------------------------------------------------------- basis-status gate
+#
+# Method.12R revoked the Method.11c four-master basis.  No real master run may
+# start unless a basis-status artifact confirms all four required fields.
+
+REVOKED_ARTIFACT = """\
+(* REVOKED by External Int2 Method.12R (mixed-boundary contradiction audit). *)
+<|
+  "Status" -> "Revoked(Method.12R)",
+  "AllLocallyFinite" -> False,
+  "Diagnostics" -> <| "NonLFTerms" -> {{0,0,1,-1,0,0,-1}} |>
+|>
+Method12RInvalidation = <| "Method12RStatus" -> "Invalidated" |>;
+"""
+
+LEGACY_ARTIFACT = """\
+<|
+  "Status" -> "Success",
+  "AllLocallyFinite" -> True,
+  "Diagnostics" -> <| "NonLFTerms" -> {} |>
+|>
+"""
+
+VALID_ARTIFACT = """\
+<|
+  "Status" -> "Success",
+  "AllLocallyFinite" -> True,
+  "IntegralIdentityStatus" -> "Verified",
+  "SurfaceValidationStatus" -> "Passed"
+|>
+"""
+
+
+def _write(tmp_path: Path, name: str, text: str) -> Path:
+    path = tmp_path / name
+    path.write_text(text, encoding="utf-8")
+    return path
+
+
+def test_gate_refuses_revoked_basis(tmp_path: Path) -> None:
+    allowed, report = runner.check_basis_status(_write(tmp_path, "revoked.m", REVOKED_ARTIFACT))
+    assert allowed is False
+    assert report["fields"]["Status"] == "Revoked(Method.12R)"
+    assert report["fields"]["AllLocallyFinite"] == "False"
+    assert any("revocation marker" in f for f in report["failures"])
+
+
+def test_gate_refuses_legacy_unchecked_basis(tmp_path: Path) -> None:
+    """Status=Success + AllLocallyFinite=True is NOT enough: the pre-12R case."""
+    allowed, report = runner.check_basis_status(_write(tmp_path, "legacy.m", LEGACY_ARTIFACT))
+    assert allowed is False
+    assert report["fields"]["IntegralIdentityStatus"] == runner.MISSING
+    assert report["fields"]["SurfaceValidationStatus"] == runner.MISSING
+
+
+def test_gate_refuses_missing_artifact(tmp_path: Path) -> None:
+    allowed, report = runner.check_basis_status(tmp_path / "absent.m")
+    assert allowed is False
+    assert any("not found" in f for f in report["failures"])
+
+
+@pytest.mark.parametrize(
+    "field,bad",
+    [
+        ("Status", '"Status" -> "Partial"'),
+        ("AllLocallyFinite", '"AllLocallyFinite" -> False'),
+        ("IntegralIdentityStatus", '"IntegralIdentityStatus" -> "Unknown"'),
+        ("SurfaceValidationStatus", '"SurfaceValidationStatus" -> "Failed"'),
+    ],
+)
+def test_gate_requires_every_field(tmp_path: Path, field: str, bad: str) -> None:
+    """Breaking any single required field alone closes the gate."""
+    original = [ln for ln in VALID_ARTIFACT.splitlines() if f'"{field}"' in ln][0]
+    text = VALID_ARTIFACT.replace(original.strip().rstrip(","), bad)
+    allowed, _ = runner.check_basis_status(_write(tmp_path, f"{field}.m", text))
+    assert allowed is False
+
+
+def test_gate_accepts_valid_synthetic_provenance(tmp_path: Path) -> None:
+    allowed, report = runner.check_basis_status(_write(tmp_path, "ok.m", VALID_ARTIFACT))
+    assert allowed is True, report["failures"]
+    assert report["failures"] == []
+
+
+def test_gate_accepts_valid_json_provenance(tmp_path: Path) -> None:
+    artifact = _write(
+        tmp_path,
+        "ok.json",
+        json.dumps(
+            {
+                "Status": "Success",
+                "AllLocallyFinite": True,
+                "IntegralIdentityStatus": "Valid",
+                "SurfaceValidationStatus": "Passed",
+            }
+        ),
+    )
+    allowed, report = runner.check_basis_status(artifact)
+    assert allowed is True, report["failures"]
+
+
+def test_committed_basis_artifact_is_currently_blocked() -> None:
+    """The repository's own artifact must not open the gate today."""
+    allowed, report = runner.check_basis_status()
+    assert allowed is False
+    assert report["failures"]
+
+
+def _env(monkeypatch, tmp_path: Path) -> None:
+    cmaple = tmp_path / "cmaple.exe"
+    cmaple.write_text("", encoding="utf-8")
+    hyper = tmp_path / "HyperInt"
+    hyper.mkdir(exist_ok=True)
+    (hyper / "HyperInt.mpl").write_text("", encoding="utf-8")
+    monkeypatch.setenv("MAPLE_CLI", str(cmaple))
+    monkeypatch.setenv("HYPERINT_HOME", str(hyper))
+
+
+def test_real_run_refused_before_subprocess_launch(tmp_path, monkeypatch, capsys) -> None:
+    """A revoked basis must stop the run *before* cmaple is ever invoked."""
+    _env(monkeypatch, tmp_path)
+    artifact = _write(tmp_path, "revoked.m", REVOKED_ARTIFACT)
+
+    def _boom(*args, **kwargs):  # pragma: no cover - must never run
+        raise AssertionError("subprocess.run was called despite a revoked basis")
+
+    monkeypatch.setattr(runner.subprocess, "run", _boom)
+    rc = runner.main(["--master", "L1", "--basis-status", str(artifact)])
+    assert rc != 0
+    err = capsys.readouterr().err
+    assert "REFUSED" in err
+    assert "No cmaple process was started." in err
+    assert not runner.driver_path("L1").exists()
+
+
+def test_real_run_refused_when_provenance_missing(tmp_path, monkeypatch, capsys) -> None:
+    _env(monkeypatch, tmp_path)
+
+    def _boom(*args, **kwargs):  # pragma: no cover - must never run
+        raise AssertionError("subprocess.run was called with no provenance artifact")
+
+    monkeypatch.setattr(runner.subprocess, "run", _boom)
+    rc = runner.main(["--master", "L1", "--basis-status", str(tmp_path / "absent.m")])
+    assert rc != 0
+    assert "REFUSED" in capsys.readouterr().err
+
+
+def test_force_does_not_bypass_the_gate(tmp_path, monkeypatch) -> None:
+    _env(monkeypatch, tmp_path)
+    artifact = _write(tmp_path, "revoked.m", REVOKED_ARTIFACT)
+
+    def _boom(*args, **kwargs):  # pragma: no cover - must never run
+        raise AssertionError("--force bypassed the basis-status gate")
+
+    monkeypatch.setattr(runner.subprocess, "run", _boom)
+    assert runner.main(["--master", "L1", "--force", "--basis-status", str(artifact)]) != 0
+
+
+def test_no_override_flag_exists() -> None:
+    """No CLI switch may skip the gate."""
+    text = RUNNER.read_text(encoding="utf-8").lower()
+    for flag in ("--skip-basis", "--no-gate", "--ignore-revoked", "--allow-revoked",
+                 "--bypass", "--i-know-what-i-am-doing"):
+        assert flag not in text
+
+
+def test_valid_provenance_lets_the_command_be_prepared(tmp_path, monkeypatch) -> None:
+    """With a valid artifact the gate opens and the driver/command are built."""
+    _env(monkeypatch, tmp_path)
+    artifact = _write(tmp_path, "ok.m", VALID_ARTIFACT)
+    calls: list[list[str]] = []
+
+    class _Proc:
+        stdout = "HYPERINT_STATUS=complete\n"
+        stderr = ""
+        returncode = 0
+
+    def _fake_run(cmd, **kwargs):
+        calls.append(cmd)
+        return _Proc()
+
+    monkeypatch.setattr(runner.subprocess, "run", _fake_run)
+    monkeypatch.setattr(runner, "RESULT_DIR", tmp_path / "res")
+    monkeypatch.setattr(runner, "result_path", lambda m: tmp_path / "res" / f"{m}.mpl")
+    monkeypatch.setattr(runner, "meta_path", lambda m: tmp_path / "res" / f"{m}.json")
+    monkeypatch.setattr(runner, "driver_path", lambda m: tmp_path / "drv" / f"{m}.mpl")
+    monkeypatch.setattr(runner, "log_path", lambda m: tmp_path / "drv" / f"{m}.log")
+    (tmp_path / "res").mkdir()
+    (tmp_path / "res" / "L1.mpl").write_text("1;\n", encoding="utf-8")
+
+    assert runner.main(["--master", "L1", "--basis-status", str(artifact)]) == 0
+    assert len(calls) == 1
+    assert calls[0][1] == "-q"
+    assert (tmp_path / "drv" / "L1.mpl").is_file()
+
+
+def test_refusal_message_names_every_failed_field(tmp_path: Path) -> None:
+    _, report = runner.check_basis_status(_write(tmp_path, "legacy.m", LEGACY_ARTIFACT))
+    msg = runner.format_refusal("L1", report)
+    for key in ("Status", "AllLocallyFinite", "IntegralIdentityStatus",
+                "SurfaceValidationStatus"):
+        assert key in msg
+    assert "REFUSED" in msg
+    assert "Method.12R" in msg
+    assert "no override flag" in msg
+    assert "No cmaple process was started." in msg
+
+
 # ------------------------------------------------------------------ hygiene
 
 
@@ -249,9 +457,54 @@ def test_setup_notes_exist_and_record_provenance() -> None:
     assert "bitbucket.org/PanzerErik/hyperint" in text
 
 
-def test_certified_inputs_untouched_by_this_session() -> None:
+def test_hyperint_smoke_metadata_unchanged() -> None:
+    """Method.12R invalidates the basis, not the runtime: smoke facts must persist."""
+    data = json.loads(SMOKE_JSON.read_text(encoding="utf-8"))
+    assert data["maple"]["version"].startswith("Maple 2025.1")
+    assert data["maple"]["smoke_result"] == "MAPLE_SMOKE=2"
+    assert data["maple"]["verdict"] == "PASS"
+    assert data["hyperint"]["revision"] == "ce15b287022e698d3e3b884d5c827620d20499bd"
+    assert data["hyperint"]["smoke_expression"] == "hyperInt(1/(1+x)^2, x=0..infinity)"
+    assert data["hyperint"]["smoke_result"] == "1"
+    assert data["hyperint"]["verdict"] == "PASS"
+
+
+def test_master_inputs_untouched_by_this_session() -> None:
     """The prepared master inputs still carry their review gate, uncommented."""
     for master in runner.MASTERS:
         text = runner.input_path(master).read_text(encoding="utf-8")
         assert "# result := hyperInt(" in text
         assert "intOrder := [x2, x5, x7]" in text
+
+
+# ----------------------------------------------- stale-claim audit (Method.12R)
+
+
+def test_notes_record_the_method12r_revocation() -> None:
+    text = SETUP_NOTES.read_text(encoding="utf-8")
+    assert "Method.12R" in text
+    assert "REVOKED" in text
+    assert "historical" in text.lower() and "fixture" in text.lower()
+    # runtime setup is explicitly still usable
+    assert "reusable" in text.lower()
+
+
+def test_notes_contain_no_stale_readiness_claim() -> None:
+    """The old 'L1 is ready, just needs approval' framing must be gone."""
+    text = SETUP_NOTES.read_text(encoding="utf-8")
+    assert "Blocked **only** on the Method.12N" not in text
+    assert "Readiness for the real L1 run" not in text
+    assert "Not ready" in text
+
+
+def test_notes_do_not_call_the_current_basis_certified() -> None:
+    """No surviving sentence may present the revoked basis as certified."""
+    text = SETUP_NOTES.read_text(encoding="utf-8")
+    for stale in (
+        "the certified LF basis (4 labels, 4 coefficients), the surface\npolicy and the "
+        "certificate are unchanged",
+        "certified L1 input",
+        "without editing the certified\ninput file",
+        "Input (certified, unchanged)",
+    ):
+        assert stale not in text, f"stale claim still present: {stale!r}"

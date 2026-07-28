@@ -8,10 +8,16 @@ and the certificate are inputs, never outputs, of this script.
 Deliberately stdlib-only.  It must never import RREF, modular-record or
 normal-form machinery -- see ``tests/test_external_int2_hyperint_setup.py``.
 
+Method.12R revoked the Method.11c four-master basis, so every real (non-dry-run)
+invocation is guarded by :func:`check_basis_status`: a master integration starts
+only if a basis-status artifact positively confirms Status == "Success",
+AllLocallyFinite == True, a valid IntegralIdentityStatus and
+SurfaceValidationStatus == "Passed".  There is no override flag.
+
 Usage::
 
-    python scripts/run_external_int2_hyperint.py --master L1 --dry-run
-    python scripts/run_external_int2_hyperint.py --master L1
+    python scripts/run_external_int2_hyperint.py --master L1 --dry-run   # always OK
+    python scripts/run_external_int2_hyperint.py --master L1             # gated
 """
 
 from __future__ import annotations
@@ -20,6 +26,7 @@ import argparse
 import datetime as _dt
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -189,6 +196,153 @@ def build_command(cmaple: Path, master: str) -> list[str]:
 
 
 # --------------------------------------------------------------------------
+# basis-status gate
+# --------------------------------------------------------------------------
+#
+# External Int2 Method.12R revoked the Method.11c four-master basis: the
+# four-term relation is not a valid integral identity, and master
+# [0, 0, 1, -1, 0, 0, -1] is not locally finite on the joint infinity ray
+# (0, -1, -1).  No real master integration may be launched against a basis that
+# has not passed the *corrected* complete-ray LF gate and surface validation.
+#
+# There is deliberately no override flag.  The only way past this gate is an
+# artifact that positively confirms all four required fields.
+
+#: Default artifact consulted before any real master run.
+BASIS_STATUS_PATH = REPO_ROOT / "validation" / "external_int2_lf_result.m"
+
+REQUIRED_STATUS = "Success"
+REQUIRED_SURFACE = "Passed"
+#: Values of IntegralIdentityStatus that count as a positive, current confirmation.
+VALID_IDENTITY = frozenset({"valid", "verified", "confirmed", "passed", "holds"})
+#: Substrings that mark an artifact as revoked/withdrawn no matter what else it says.
+REVOCATION_MARKERS = ("revoked", "invalidated", "method12rinvalidation", "method.12r")
+
+MISSING = "<missing>"
+
+
+def _extract_field(text: str, key: str) -> str:
+    """Read ``key`` from a Wolfram-style association or a JSON object."""
+    for pattern in (
+        rf'"{key}"\s*->\s*"([^"]*)"',  # Wolfram string
+        rf'"{key}"\s*->\s*(True|False|None)\b',  # Wolfram boolean
+        rf'"{key}"\s*:\s*"([^"]*)"',  # JSON string
+        rf'"{key}"\s*:\s*(true|false|null)\b',  # JSON boolean
+    ):
+        match = re.search(pattern, text)
+        if match:
+            return match.group(1)
+    return MISSING
+
+
+def check_basis_status(path: Path | None = None) -> tuple[bool, dict]:
+    """Decide whether a real master integration is permitted.
+
+    Returns ``(allowed, report)``.  ``allowed`` is True only when the artifact
+    positively confirms every one of: Status == "Success",
+    AllLocallyFinite == True, a valid (non-revoked) IntegralIdentityStatus, and
+    SurfaceValidationStatus == "Passed".  Missing, legacy-unchecked, revoked or
+    ambiguous artifacts all yield False.
+    """
+    path = BASIS_STATUS_PATH if path is None else path
+    report: dict = {"artifact": str(path), "fields": {}, "failures": []}
+
+    if not path.is_file():
+        report["failures"].append(f"basis-status artifact not found: {path}")
+        report["fields"] = dict.fromkeys(
+            ("Status", "AllLocallyFinite", "IntegralIdentityStatus", "SurfaceValidationStatus"),
+            MISSING,
+        )
+        return False, report
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        report["failures"].append(f"basis-status artifact unreadable: {exc}")
+        return False, report
+
+    status = _extract_field(text, "Status")
+    all_lf = _extract_field(text, "AllLocallyFinite")
+    identity = _extract_field(text, "IntegralIdentityStatus")
+    surface = _extract_field(text, "SurfaceValidationStatus")
+    report["fields"] = {
+        "Status": status,
+        "AllLocallyFinite": all_lf,
+        "IntegralIdentityStatus": identity,
+        "SurfaceValidationStatus": surface,
+    }
+
+    lowered = text.lower()
+    hit = next((m for m in REVOCATION_MARKERS if m in lowered), None)
+    if hit is not None:
+        report["failures"].append(
+            f"artifact carries a revocation marker ({hit!r}); the basis it describes is withdrawn"
+        )
+
+    if status != REQUIRED_STATUS:
+        report["failures"].append(
+            f'Status is {status!r}, required "{REQUIRED_STATUS}"'
+            + (" (legacy artifact predating the Method.12R audit)" if status == MISSING else "")
+        )
+    if all_lf not in ("True", "true"):
+        report["failures"].append(f"AllLocallyFinite is {all_lf!r}, required True")
+    if identity == MISSING:
+        report["failures"].append(
+            "IntegralIdentityStatus is absent -- the artifact never states that the "
+            "relation was checked as an integral identity (legacy unchecked)"
+        )
+    elif identity.strip().lower() not in VALID_IDENTITY:
+        report["failures"].append(
+            f"IntegralIdentityStatus is {identity!r}, which is not a positive confirmation"
+        )
+    if surface != REQUIRED_SURFACE:
+        report["failures"].append(
+            f'SurfaceValidationStatus is {surface!r}, required "{REQUIRED_SURFACE}"'
+        )
+
+    report["allowed"] = not report["failures"]
+    return report["allowed"], report
+
+
+def format_refusal(master: str, report: dict) -> str:
+    """The exact message printed when the gate blocks a real run."""
+    fields = report.get("fields", {})
+    requirements = (
+        ("Status", f'"{REQUIRED_STATUS}"'),
+        ("AllLocallyFinite", "True"),
+        ("IntegralIdentityStatus", "valid / not revoked"),
+        ("SurfaceValidationStatus", f'"{REQUIRED_SURFACE}"'),
+    )
+    lines = [
+        f"REFUSED: master {master} was NOT started -- the basis-status gate is closed.",
+        "",
+        f"  artifact: {report.get('artifact', MISSING)}",
+        "",
+        "  field                     found                     required",
+        "  " + "-" * 68,
+    ]
+    for key, need in requirements:
+        lines.append(f"  {key:<25} {str(fields.get(key, MISSING)):<25} {need}")
+    lines.append("")
+    for failure in report.get("failures", []):
+        lines.append(f"  - {failure}")
+    lines += [
+        "",
+        "  The Method.11c four-master External Int2 LF basis was REVOKED by",
+        "  Method.12R: the four-term relation is not a valid integral identity, and",
+        "  master [0, 0, 1, -1, 0, 0, -1] is not locally finite on the joint infinity",
+        "  ray (0, -1, -1).  The prepared L1..L4 inputs are retained only as historical",
+        "  setup fixtures.",
+        "",
+        "  A real master integration may only run once a NEW basis has passed the",
+        "  corrected complete-ray LF gate and surface validation, and its artifact",
+        "  records all four fields above.  This gate has no override flag.",
+        "",
+        "  No cmaple process was started.",
+    ]
+    return "\n".join(lines)
+
+
+# --------------------------------------------------------------------------
 # run
 # --------------------------------------------------------------------------
 
@@ -205,6 +359,7 @@ def _plan(master: str, cmaple: Path, hyperint_home: Path) -> dict:
         "log": str(log_path(master)),
         "command": build_command(cmaple, master),
         "already_complete": is_complete(master),
+        "basis_status": check_basis_status()[1],
     }
 
 
@@ -222,7 +377,22 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--force",
         action="store_true",
-        help="overwrite an already-completed result for this master",
+        help=(
+            "overwrite an already-completed result for this master; this does NOT "
+            "and cannot bypass the basis-status gate"
+        ),
+    )
+    parser.add_argument(
+        "--basis-status",
+        type=Path,
+        default=None,
+        metavar="PATH",
+        help=(
+            "basis-status/provenance artifact to check before a real run "
+            f"(default: {BASIS_STATUS_PATH.relative_to(REPO_ROOT).as_posix()}). "
+            "Not an override: whatever is named here must still confirm all four "
+            "required fields."
+        ),
     )
     parser.add_argument(
         "--timeout",
@@ -250,7 +420,19 @@ def main(argv: list[str] | None = None) -> int:
     if args.dry_run:
         print(json.dumps(plan, indent=2))
         print(f"\nDRY RUN: would execute:\n  {' '.join(plan['command'])}")
+        if not plan["basis_status"].get("allowed"):
+            print(
+                "\nNOTE: a real (non-dry-run) invocation would be REFUSED by the "
+                "basis-status gate.\n" + format_refusal(master, plan["basis_status"])
+            )
         return 0
+
+    # Hard gate: nothing below this point may start cmaple for a revoked,
+    # legacy-unchecked, missing or ambiguous basis.  No override exists.
+    allowed, basis_report = check_basis_status(args.basis_status)
+    if not allowed:
+        print(format_refusal(master, basis_report), file=sys.stderr)
+        return 4
 
     if plan["already_complete"] and not args.force:
         print(
@@ -307,6 +489,7 @@ def main(argv: list[str] | None = None) -> int:
         "input": str(input_path(master)),
         "result": str(result_path(master)),
         "log": str(log_path(master)),
+        "basis_status": basis_report,
         "started_utc": started.isoformat(),
         "finished_utc": finished.isoformat(),
         "wall_seconds": round((finished - started).total_seconds(), 3),

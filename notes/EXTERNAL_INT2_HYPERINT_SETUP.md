@@ -100,6 +100,18 @@ the L1 integrand.
   | `IntegralIdentityStatus` | valid / not revoked |
   | `SurfaceValidationStatus` | `Passed` |
 
+What must happen before any real master integration:
+
+1. a NEW External Int2 LF basis derived under the corrected complete-ray LF
+   gate (`newton_wall_normals` + `complete_polyhedral_rays`);
+2. that basis passing surface validation (Method.13 complete toric criteria);
+3. an integral-identity check of the new relation — the check Method.12R shows
+   the old one fails;
+4. a fresh linear-reducibility audit for the new integrands, replacing the
+   Method.12A audit;
+5. a basis-status artifact recording all four fields above, so the runtime gate
+   opens.
+
 The repository's current `validation/external_int2_lf_result.m` records
 `Status -> "Revoked(Method.12R)"`, `AllLocallyFinite -> False`,
 `IntegralIdentityStatus -> "Revoked"`, `SurfaceValidationStatus -> "Failed"`,
