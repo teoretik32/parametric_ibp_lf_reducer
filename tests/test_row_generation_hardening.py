@@ -82,7 +82,9 @@ def test_algebraic_rows_one_per_polynomial_each_lowers_distinct_m():
 
 def test_coordinate_rows_custom_dimension_and_m_shift():
     fam = parse_family_text(UVW_ABC)
-    result = generate_coordinate_ibp_rows(fam, [zero_label(3, 3)], max_degree=1)
+    # Method.13: the zero label has no valid coordinate justification under the complete-face
+    # surface criterion (the joint C-face ray (-1,-1,-2) scores -2); seed a label with room.
+    result = generate_coordinate_ibp_rows(fam, [make_label([0, 0, 0], [0, -1, 0])], max_degree=1)
     assert len(result) >= 1  # surface filter admits some rows
     for row in result.rows:
         for label, coeff in row.terms.items():
@@ -129,7 +131,10 @@ def test_rows_do_not_depend_on_labels_being_locally_finite():
     # Rows are formal algebraic/IBP identities: they must be generated regardless of whether the
     # anchor label is locally finite. Use the (non-LF) base target label.
     fam = parse_family_text(UVW_ABC)
-    base = zero_label(3, 3)
+    base = make_label([0, 0, 0], [0, -1, 0])  # NOT locally finite, but surface-justifiable rows
+    from parametric_ibp_lf_reducer import is_locally_finite
+
+    assert is_locally_finite(fam, base) is False
     alg = generate_algebraic_rows(fam, [base])
     coord = generate_coordinate_ibp_rows(fam, [base], max_degree=1)
     assert len(alg) == 3

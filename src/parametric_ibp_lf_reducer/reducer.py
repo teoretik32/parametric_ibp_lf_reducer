@@ -52,7 +52,11 @@ from .reconstruction import (
     select_records_for_reconstruction,
 )
 from .records import collect_normal_form_records, collect_normal_form_records_multi
-from .result import ReductionResult, build_reduction_result_from_reconstruction
+from .result import (
+    SURFACE_VALIDATION_PASSED,
+    ReductionResult,
+    build_reduction_result_from_reconstruction,
+)
 from .row_generation import (
     Row,
     generate_algebraic_rows,
@@ -509,6 +513,10 @@ def _finalize_target(
         verification_failed=verification_failed,
         n_records=run.n_records,
         n_skipped_records=run.n_skipped_records,
+        # Method.13: the rows of THIS run were generated through the corrected complete-face
+        # surface filters (row_generation rejects anything not strictly accepted, including
+        # "Unknown" verdicts), so every contributing row is surface-validated.
+        surface_validation_status=SURFACE_VALIDATION_PASSED,
         messages=st.messages,
     )
     _attach_run_diagnostics(result, run, timings)

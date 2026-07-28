@@ -46,16 +46,37 @@ def test_regulated_sign_numeric_and_epsilon_directions():
     assert regulated_sign(sp.sympify("r"), ["ep"], "minus") == "unknown"
 
 
-def test_coordinate_surface_is_component_local_not_toric_overstrict():
+def test_coordinate_surface_checks_transverse_faces_not_component_only():
+    """Method.13: the x-facet boundary term is the TRANSVERSE integral of P*F over y.
+
+    For ASYMMETRIC (y^-3 G0^-2) the component-local x-exponents of P = x look fine, but the
+    transverse y-integral of P*F diverges at y -> 0 on every x-slice: the mixed ray (1, 1) has
+    facet score ``score(PF, d) - d_x = 0 - 1 = -1``. Pre-Method.13 this row was (wrongly)
+    accepted; the corrected filter rejects it.
+    """
     fam = parse_family_text(ASYMMETRIC)
     lab = zero_label(2, 1)
     xi = fam.variables.index("x")
     yi = fam.variables.index("y")
-    # Coordinate IBP in x with multiplier P = x : surface-free at x=0 and x=inf.
-    assert coordinate_primitive_surface_free(fam, lab, xi, multiplier_exps=(1, 0)) is True
-    # The y-component genuinely diverges at y=0, so its own coordinate check fails -- but that
-    # does NOT make the x-check fail (component-local, not toric-overstrict).
+    assert coordinate_primitive_surface_free(fam, lab, xi, multiplier_exps=(1, 0)) is False
+    # The y-check fails already component-locally (y^-3 at y -> 0).
     assert coordinate_primitive_surface_free(fam, lab, yi, multiplier_exps=(0, 0)) is False
+
+
+def test_coordinate_surface_accepts_ordinary_valid_primitive():
+    """An ordinary valid primitive stays accepted: enough decay on every facet ray."""
+    fam = parse_family_text("""
+    IBPInput = <|
+      "Variables" -> {x, y}, "Parameters" -> {ep}, "Regulators" -> {ep},
+      "Polynomials" -> <| "G0" -> 1 + x + y |>,
+      "MonomialExponents" -> <| x -> 1, y -> 0 |>,
+      "PolynomialExponents" -> <| "G0" -> -3 |>
+    |>
+    """)
+    lab = zero_label(2, 1)
+    xi = fam.variables.index("x")
+    # x * G0^-3, P = 1: facet scores are 1 (+e_x), 2 (-e_x), 2 ((1,1)), 1 ((-1,-1)) — all > 0.
+    assert coordinate_primitive_surface_free(fam, lab, xi, multiplier_exps=(0, 0)) is True
 
 
 def test_vector_field_surface_uses_toric_flux():

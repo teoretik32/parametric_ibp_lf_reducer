@@ -36,13 +36,14 @@ IBPInput = <|
 |>
 """
 
-# x-exponent depends on the regulator: the x-check with P = x gives boundary exponents
-# 1 + ep (at x -> 0) and ep - 1 (at x -> inf), so chamber points decide it differently.
+# x-exponent depends on the regulator: the x-check with P = x is decided by the x -> 0 facet
+# score 1 + ep, so chamber points decide it differently. (Method.13: y-exponent 0, not -3, so
+# no mixed transverse ray interferes with the decision — the deciding facet stays +e_x.)
 EP_FAMILY = """
 IBPInput = <|
   "Variables" -> {x, y}, "Parameters" -> {ep}, "Regulators" -> {ep},
   "Polynomials" -> <| "G0" -> 1 + x + y |>,
-  "MonomialExponents" -> <| x -> ep, y -> -3 |>,
+  "MonomialExponents" -> <| x -> ep, y -> 0 |>,
   "PolynomialExponents" -> <| "G0" -> -2 |>
 |>
 """

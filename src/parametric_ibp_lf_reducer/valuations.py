@@ -159,7 +159,7 @@ def _null_direction(rows: list[Direction], n: int) -> Direction | None:
 
 
 def complete_polyhedral_rays(
-    family: ParametricFamily, budget: int = RAY_ENUMERATION_BUDGET
+    family: ParametricFamily, budget: int | None = None
 ) -> tuple[list[Ray], bool]:
     """Complete boundary-ray set for the strict scaling test, plus a completeness flag.
 
@@ -172,8 +172,14 @@ def complete_polyhedral_rays(
     rays — a superset only makes the test more conservative, never less.
 
     Returns ``(rays, complete)``. ``complete`` is ``False`` when the number of ``nvars - 1``
-    subsets exceeds ``budget``; callers must then refuse a ``True`` verdict.
+    subsets exceeds ``budget`` (``None`` -> the module constant, read at call time so it can be
+    overridden in tests); callers must then refuse a ``True`` verdict.
+
+    Deterministic: coordinate rays first in variable order (``+e_i`` before ``-e_i``), then the
+    polyhedral rays in sorted lexicographic order, deduplicated across both groups.
     """
+    if budget is None:
+        budget = RAY_ENUMERATION_BUDGET
     n = family.nvars
     normals = newton_wall_normals(family)
     rays: list[Ray] = []
@@ -194,12 +200,15 @@ def complete_polyhedral_rays(
     n_subsets = comb(len(normals), n - 1)
     if n_subsets > budget:
         return rays, False
+    poly: set[Direction] = set()
     for combo in combinations(normals, n - 1):
         d = _null_direction([list(c) for c in combo], n)
         if d is None:
             continue  # dependent walls: no 1-dimensional intersection
+        poly.add(d)
+        poly.add(tuple(-x for x in d))
+    for d in sorted(poly):
         add(d, "polyhedral")
-        add(tuple(-x for x in d), "polyhedral")
     return rays, True
 
 
@@ -314,6 +323,7 @@ def _family_cache(family: ParametricFamily) -> dict:
         rays += [ray for ray in poly_rays if ray.direction not in seen]
         cache = {
             "rays": tuple(rays),
+            "poly_dirs": tuple(ray.direction for ray in poly_rays),
             "rays_complete": rays_complete,
             "positive_symbols": possyms,
             "pos_subs": {sp.Symbol(s): sp.Symbol(s, positive=True) for s in possyms},
@@ -323,6 +333,18 @@ def _family_cache(family: ParametricFamily) -> dict:
         }
         object.__setattr__(family, "_valuations_cache", cache)
     return cache
+
+
+def boundary_ray_data(family: ParametricFamily) -> tuple[tuple[Direction, ...], bool]:
+    """``(directions, complete)`` of the complete polyhedral boundary-ray set, cached per family.
+
+    This is the ray set the surface filters must test (Method.13): positivity of the piecewise-
+    linear scaling score on every listed direction certifies positivity on the whole punctured
+    orthant exactly when ``complete`` is ``True``. When ``complete`` is ``False`` (enumeration
+    budget exceeded) callers must degrade a would-be ``True`` to ``"Unknown"``.
+    """
+    cache = _family_cache(family)
+    return cache["poly_dirs"], cache["rays_complete"]
 
 
 def _poly_valuations(family: ParametricFamily, cache: dict, direction: Direction):

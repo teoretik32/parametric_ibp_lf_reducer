@@ -71,8 +71,14 @@ def test_output_text_is_wolfram_style():
     text = reduce_wolfram_style_input_to_text(TINY_EXPLICIT)
     assert "<|" in text and "|>" in text
     assert "->" in text
-    assert "^" in text  # powers rendered Wolfram-style ...
-    assert "**" not in text  # ... never Python-style
+    assert "**" not in text  # powers are never Python-style
+    # Method.13: the tiny family's normal form now comes from the algebraic row alone (the old
+    # coordinate rows were surface-invalid), so its coefficients are 1 and carry no powers.
+    # Pin the Wolfram-style power rendering on an integrand text instead.
+    from parametric_ibp_lf_reducer import parse_family_text
+
+    fam = parse_family_text(TINY_EXPLICIT)
+    assert fam.label_to_wolfram_text((0, 0, -2)) == "1/G0^2"  # '^', never '**'
 
 
 def test_cli_is_still_not_a_success_path():
