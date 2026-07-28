@@ -160,6 +160,21 @@ def test_prime_disagreement_remains_unstable_never_validated():
 
 
 # --- the real 152-record External Int2 cache --------------------------------------------------
+#: Gitignored (``validation/*_records.jsonl``): regenerated evidence, not source, so a clean
+#: checkout does not have it. The two tests below validate the reconstruction against the REAL
+#: cache; a trimmed fixture would not be the same statement, so they skip with a precise reason
+#: rather than erroring at collection. Regenerate with
+#: ``python scripts/run_external_int2_method11.py``.
+requires_cache = pytest.mark.skipif(
+    not CACHE_PATH.is_file(),
+    reason=(
+        f"requires the regenerated modular cache {CACHE_PATH.name} (gitignored via "
+        "'validation/*_records.jsonl', so absent in a clean checkout); regenerate with "
+        "'python scripts/run_external_int2_method11.py'"
+    ),
+)
+
+
 def _load_cache_records():
     path = REPO_ROOT / "scripts" / "run_external_int2_method11.py"
     spec = importlib.util.spec_from_file_location("m11c_cache_loader", path)
@@ -177,6 +192,7 @@ def cache_fit():
     return records, coeffs
 
 
+@requires_cache
 def test_cache_sample_is_basis_specialization(cache_fit):
     """ep=6, r=57/11 in the real cache: generic rank kept, but a basis specialization."""
     records, coeffs = cache_fit
@@ -195,6 +211,7 @@ def test_cache_sample_is_basis_specialization(cache_fit):
     assert entry["missing_nonzero"][0]["label"] == list(LAB_A)
 
 
+@requires_cache
 def test_cache_reconstruction_recovers_generic_functions(cache_fit):
     """Excluding the deviating sample, the 37 stable samples give the exact functions."""
     _, coeffs = cache_fit

@@ -59,6 +59,28 @@ EXPECTED_COEFFS = {
 EP, R = sp.symbols("ep r")
 
 
+#: The 152-record modular cache these audits replay. It is gitignored
+#: (``.gitignore``: ``validation/*_records.jsonl``) because it is regenerated
+#: evidence, not source, so a clean checkout does not have it. Without it these
+#: tests cannot run at all -- and they must not be silently weakened either:
+#: they assert the exact record count, the generic rank and the per-prime CRT
+#: residues, none of which a trimmed fixture could reproduce honestly. So they
+#: skip with a precise reason instead of erroring at collection.
+RECORDS_CACHE = REPO_ROOT / "validation" / "external_int2_method11_records.jsonl"
+
+pytestmark = pytest.mark.skipif(
+    not RECORDS_CACHE.is_file(),
+    reason=(
+        f"requires the regenerated modular cache {RECORDS_CACHE.name} "
+        f"({N_RECORDS} records, gitignored via 'validation/*_records.jsonl', so "
+        "absent in a clean checkout). Regenerate with "
+        "'python scripts/run_external_int2_method11.py'. These audits replay the "
+        "cache exactly (record count, generic rank, per-prime CRT residues) and "
+        "cannot be run against a trimmed fixture."
+    ),
+)
+
+
 @pytest.fixture(scope="module")
 def audit_mod():
     src = str(REPO_ROOT / "src")
