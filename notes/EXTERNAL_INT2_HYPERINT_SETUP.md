@@ -79,7 +79,7 @@ the L1 integrand.
 
 ## Current safety status after Method.12R/13
 
-- The **Method.11c four-master LF basis was revoked**. The four-term relation
+- The **Method.11c four-master LF basis was REVOKED** by Method.12R. The four-term relation
   `J[Target] == C1 J[L1] + ... + C4 J[L4]` is not a valid integral identity:
   the RHS carries an `ep^-3` pole `-1/(6 r^2)` the target cannot have, and in
   the convergence chamber `ep=-3/5, r=1` target `3.9267` vs RHS `-0.2891`.
@@ -99,6 +99,10 @@ the L1 integrand.
   | `AllLocallyFinite` | `True` |
   | `IntegralIdentityStatus` | valid / not revoked |
   | `SurfaceValidationStatus` | `Passed` |
+
+**Readiness: Not ready** — and not merely pending approval. The blocker is
+mathematical, not operational: the basis L1 belongs to was REVOKED, so running
+it would produce a number with no meaning.
 
 What must happen before any real master integration:
 
