@@ -1,0 +1,138 @@
+{
+ "criteria": "docs/TORIC_SURFACE_VALIDATION.md (complete-face surface validation)",
+ "method": "External Int2 Method.13 Phase E: project-wide Success re-audit",
+ "results": {
+  "d4_cli": {
+   "independent_evidence": "validation/expected_d4_coefficients.json (notebook reference)",
+   "input": "examples/d4_cli_example_input.wl.txt",
+   "live_revalidation": "tests/test_d4_vertical.py (reference relation re-certified in the CORRECTED row span at 3 (ep,r,p) points; reducer Success with SurfaceValidationStatus=Passed) and tests/test_d4_cli_e2e.py \u2014 both green in this session's suite",
+   "master_lf_under_complete_rays": {
+    "[0, 1, 1, 0, -2, -1, 0]": "True",
+    "[0, 1, 1, 0, -3, -1, 0]": "True",
+    "[0, 1, 1, 0, -4, -1, 0]": "True",
+    "[1, 1, 0, 0, -2, -1, 0]": "True",
+    "[1, 1, 0, 0, -3, -1, 0]": "True"
+   },
+   "rows": {
+    "n_labels": 80,
+    "new_by_kind": {
+     "algebraic": 240,
+     "coordinate_ibp": 908,
+     "tangent_ibp": 28
+    },
+    "new_gained": 2,
+    "new_total": 1176,
+    "old_by_kind": {
+     "algebraic": 240,
+     "coordinate_ibp": 1826,
+     "tangent_ibp": 26
+    },
+    "old_invalidated": 918,
+    "old_total": 2092
+   },
+   "status": "UnchangedValid",
+   "target_lf": "False"
+  },
+  "example4_star_corrected": {
+   "independent_evidence": "validation/notebook_star_example4_known_value_expansion.txt (known value); validation/example4_star_corrected_diagnostics.json (legacy certificate)",
+   "input": "examples/example4_star_corrected_input.wl.txt",
+   "live_revalidation": null,
+   "master_lf_under_complete_rays": {
+    "[1, 1, 0, -1, 0, 0, 0]": "True",
+    "[1, 1, 0, 0, 0, -1, 0]": "True"
+   },
+   "rows": {
+    "n_labels": 972,
+    "new_by_kind": {
+     "algebraic": 3888,
+     "coordinate_ibp": 4099,
+     "tangent_ibp": 153
+    },
+    "new_gained": 0,
+    "new_total": 8140,
+    "old_by_kind": {
+     "algebraic": 3888,
+     "coordinate_ibp": 8295,
+     "tangent_ibp": 177
+    },
+    "old_invalidated": 4220,
+    "old_total": 12360
+   },
+   "status": "NeedsRecompute",
+   "target_lf": "False"
+  },
+  "external_int1_corrected": {
+   "independent_evidence": "validation/external_int1_laurent_audit.json + notes/EXTERNAL_INT1_LAURENT_AUDIT.md \u2014 independent numeric Laurent comparison of the assembled result (item 19: this evidence stands regardless of row provenance)",
+   "input": "examples/external_int1_corrected_input.wl.txt",
+   "live_revalidation": null,
+   "master_lf_under_complete_rays": {
+    "[0, 0, 0, -1, -1]": "True",
+    "[0, 0, 0, 0, -2]": "True"
+   },
+   "rows": {
+    "n_labels": 108,
+    "new_by_kind": {
+     "algebraic": 324,
+     "coordinate_ibp": 300,
+     "tangent_ibp": 62
+    },
+    "new_gained": 0,
+    "new_total": 686,
+    "old_by_kind": {
+     "algebraic": 324,
+     "coordinate_ibp": 432,
+     "tangent_ibp": 62
+    },
+    "old_invalidated": 132,
+    "old_total": 818
+   },
+   "status": "NeedsRecompute",
+   "target_lf": "False"
+  },
+  "notebook_example1_d4_alt": {
+   "independent_evidence": "validation/notebook_example1_d4_alt_expected.json",
+   "input": "examples/notebook_example1_d4_alt_explicit_family.wl.txt",
+   "live_revalidation": null,
+   "master_lf_under_complete_rays": {
+    "[0, 0, 1, 1, -2, -2, 0]": "True",
+    "[0, 0, 1, 1, -3, -2, 0]": "True",
+    "[0, 0, 2, 1, -3, -2, 0]": "True",
+    "[0, 1, 1, 0, -2, -1, 0]": "True",
+    "[0, 1, 1, 0, -2, -2, 0]": "True",
+    "[0, 1, 1, 0, -3, -2, 0]": "True"
+   },
+   "status": "LegacyInsufficientData",
+   "target_lf": "False"
+  },
+  "notebook_example2_n3_five_term": {
+   "independent_evidence": "validation/notebook_example2_n3_five_term_expected.json",
+   "input": "examples/notebook_example2_n3_five_term_explicit_family.wl.txt",
+   "live_revalidation": "tests/test_adaptive_real_family.py::test_default_schedule_certifies_real_five_term_family \u2014 adaptive Success + certificate Passed + coefficients equal the notebook fixture symbolically, re-run green under the corrected filters in this session",
+   "master_lf_under_complete_rays": {
+    "[0, 1, 0, -1, -1, -1, 0]": "True",
+    "[0, 1, 0, -1, -1, 0, 0]": "True",
+    "[0, 1, 0, -1, -2, 0, 0]": "True",
+    "[0, 1, 0, 0, -2, -1, 0]": "True",
+    "[0, 1, 0, 0, -2, -2, 0]": "True"
+   },
+   "rows": {
+    "n_labels": 72,
+    "new_by_kind": {
+     "algebraic": 288,
+     "coordinate_ibp": 666
+    },
+    "new_gained": 0,
+    "new_total": 954,
+    "old_by_kind": {
+     "algebraic": 288,
+     "coordinate_ibp": 828
+    },
+    "old_invalidated": 162,
+    "old_total": 1116
+   },
+   "status": "UnchangedValid",
+   "target_lf": "False"
+  }
+ },
+ "schema": "surface-reaudit-manifest/v1"
+}
